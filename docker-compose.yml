@@ -1,6 +1,6 @@
 # Local BuildLens stack (Phase 1). Every container has a memory limit (CLAUDE.md rule 10).
-# Memory: postgres 384 MB + grafana 384 MB + buildlens-server 64 MB = 832 MB for P1.
-# Jenkins controller (1 GB) and agent (1.5 GB) join in P2: 3,392 MB (about 3.3 GiB) in total.
+# Memory limits: postgres 384 MB + grafana 384 MB + buildlens-server 64 MB + jenkins 1,024 MB
+# + jenkins-agent 1,536 MB = 3,392 MB (about 3.3 GiB) in total; the plan's target is about 3.5 GB.
 # Grafana is 384 MB, not the plan's 256 MB: it idled at 87 % of 256 MB on 2026-10-04 (decision D-076).
 # Image tags and digests checked on 2026-10-04 (docs/study/P1-design.md, section 9).
 # Secrets come from .env (gitignored); copy .env.example first.
@@ -37,6 +37,7 @@ services:
       BUILDLENS_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
       BUILDLENS_LOG_LEVEL: ${BUILDLENS_LOG_LEVEL:-info}
       BUILDLENS_SHUTDOWN_TIMEOUT: 15s
+      BUILDLENS_INGEST_KEY: ${BUILDLENS_INGEST_KEY:?set BUILDLENS_INGEST_KEY in .env}
       # Tell the Go GC about the container limit (like -XX:MaxRAMPercentage for a JVM).
       GOMEMLIMIT: 56MiB
     ports:
@@ -76,6 +77,70 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: controller/Dockerfile
+    image: buildlens-jenkins:local
+    environment:
+      # 60 % of the 1 GB limit for the heap; the rest is metaspace, threads and native memory.
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false -XX:MaxRAMPercentage=60"
+      CASC_JENKINS_CONFIG: /etc/jenkins/casc/jenkins.yaml
+      JENKINS_ADMIN_USER: ${JENKINS_ADMIN_USER:?set JENKINS_ADMIN_USER in .env}
+      JENKINS_ADMIN_PASSWORD: ${JENKINS_ADMIN_PASSWORD:?set JENKINS_ADMIN_PASSWORD in .env}
+      GITHUB_USERNAME: ${GITHUB_USERNAME:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      BUILDLENS_INGEST_KEY: ${BUILDLENS_INGEST_KEY:?set BUILDLENS_INGEST_KEY in .env}
+    volumes:
+      - jenkins-home:/var/jenkins_home
+      # Configuration as code, mounted read-only so ./tasks.ps1 seed applies an edit without rebuilding.
+      - ./jenkins/casc:/etc/jenkins/casc:ro
+      - ./jenkins/jobs:/etc/jenkins/jobs:ro
+      # The controller writes the agent's secret here; the agent mounts it read-only.
+      - agent-secret:/buildlens-agent
+    ports:
+      - "127.0.0.1:${JENKINS_HOST_PORT:-8080}:8080"
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:8080/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    restart: unless-stopped
+
+  jenkins-agent:
+    build:
+      context: .
+      dockerfile: jenkins/agent/Dockerfile
+    image: buildlens-jenkins-agent:local
+    environment:
+      JENKINS_URL: http://jenkins:8080
+      JENKINS_AGENT_NAME: agent-1
+      JENKINS_WEB_SOCKET: "true"
+      JENKINS_AGENT_WORKDIR: /home/jenkins/agent
+      # Remoting JVM: small; Maven and the Surefire forks get their own JVMs.
+      JAVA_OPTS: "-XX:MaxRAMPercentage=15"
+      MAVEN_OPTS: "-Xmx512m"
+      # Builds on this agent inherit these; the buildlens CLI reads them.
+      BUILDLENS_SERVER_URL: http://buildlens-server:8080
+      BUILDLENS_AGENT_LIFECYCLE: LOCAL
+    volumes:
+      - agent-secret:/buildlens-agent:ro
+      - agent-work:/home/jenkins/agent
+      - maven-repo:/home/jenkins/.m2
+    mem_limit: 1536m
+    depends_on:
+      jenkins:
+        condition: service_started
+      buildlens-server:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   pgdata:
   grafana-data:
+  jenkins-home:
+  agent-secret:
+  agent-work:
+  maven-repo:

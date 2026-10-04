@@ -40,6 +40,7 @@ type Build struct {
 	CostUsd           pgtype.Numeric
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
+	TestedTreeSha     *string
 }
 
 type InfraEvent struct {

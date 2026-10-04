@@ -21,6 +21,7 @@ import (
 	"github.com/nibinrj/buildlens/internal/api"
 	"github.com/nibinrj/buildlens/internal/config"
 	"github.com/nibinrj/buildlens/internal/db"
+	"github.com/nibinrj/buildlens/internal/ingest"
 )
 
 func main() {
@@ -67,11 +68,17 @@ func run(ctx context.Context, getenv func(string) string) error {
 		return fmt.Errorf("listen on %s: %w", cfg.HTTPAddr, err)
 	}
 
+	svc := ingest.NewService(pool)
 	srv := &http.Server{
-		Handler:           api.NewRouter(pool, logger),
+		Handler: api.NewRouter(api.Deps{
+			DB: pool, Ingester: svc, Builds: svc,
+			IngestKey: cfg.IngestKey, MaxUploadBytes: cfg.MaxUploadBytes, Logger: logger,
+		}),
 		ReadHeaderTimeout: 10 * time.Second,
-		IdleTimeout:       60 * time.Second,
-		ErrorLog:          slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		// Bounds a slow upload; the body size is bounded separately by MaxUploadBytes.
+		ReadTimeout: 5 * time.Minute,
+		IdleTimeout: 60 * time.Second,
+		ErrorLog:    slog.NewLogLogger(logger.Handler(), slog.LevelError),
 	}
 
 	logger.InfoContext(ctx, "server listening", "addr", ln.Addr().String())

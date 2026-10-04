@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- HAND-MADE FIXTURE: the xsd makes testcase/@classname optional; the parser falls back to testsuite/@name. -->
+<testsuite name="lab.core.NoClass" time="0.003" tests="1" errors="0" skipped="0" failures="0">
+  <testcase name="stillCounted" time="0.003"/>
+</testsuite>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- HAND-EDITED FIXTURE (BuildLens D-074): the real rerun report from ../rerun with only the testsuite totals
+     changed to the SUREFIRE-1627 pattern, where every rerun attempt is counted as a test. The bug did not
+     reproduce on Surefire 3.6.0, so this header is NOT real output. The testcase elements are unchanged. -->
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="lab.core.CalculatorTest" time="0.007" tests="14" errors="3" skipped="1" failures="3" flakes="2">
+  <properties>
+  </properties>
+  <testcase name="wrongSum" classname="lab.core.CalculatorTest" time="0.07">
+    <failure message="deliberately wrong ==&gt; expected: &lt;5&gt; but was: &lt;4&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: deliberately wrong ==> expected: <5> but was: <4>
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:601)
+	at lab.core.CalculatorTest.wrongSum(CalculatorTest.java:14)
+]]></failure>
+    <rerunFailure message="deliberately wrong ==&gt; expected: &lt;5&gt; but was: &lt;4&gt;" type="org.opentest4j.AssertionFailedError">
+      <stackTrace><![CDATA[org.opentest4j.AssertionFailedError: deliberately wrong ==> expected: <5> but was: <4>
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:601)
+	at lab.core.CalculatorTest.wrongSum(CalculatorTest.java:14)
+]]></stackTrace>
+    </rerunFailure>
+    <rerunFailure message="deliberately wrong ==&gt; expected: &lt;5&gt; but was: &lt;4&gt;" type="org.opentest4j.AssertionFailedError">
+      <stackTrace><![CDATA[org.opentest4j.AssertionFailedError: deliberately wrong ==> expected: <5> but was: <4>
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:601)
+	at lab.core.CalculatorTest.wrongSum(CalculatorTest.java:14)
+]]></stackTrace>
+    </rerunFailure>
+  </testcase>
+  <testcase name="flakyAssertion" classname="lab.core.CalculatorTest" time="0.001">
+    <flakyFailure message="first attempt fails ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">
+      <stackTrace><![CDATA[org.opentest4j.AssertionFailedError: first attempt fails ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:232)
+	at lab.core.CalculatorTest.flakyAssertion(CalculatorTest.java:22)
+]]></stackTrace>
+    </flakyFailure>
+  </testcase>
+  <testcase name="flakyException" classname="lab.core.CalculatorTest" time="0.001">
+    <flakyError message="division by zero" type="java.lang.ArithmeticException">
+      <stackTrace><![CDATA[java.lang.ArithmeticException: division by zero
+	at lab.core.Calculator.divide(Calculator.java:8)
+	at lab.core.CalculatorTest.flakyException(CalculatorTest.java:25)
+]]></stackTrace>
+    </flakyError>
+  </testcase>
+  <testcase name="skippedTest" classname="lab.core.CalculatorTest" time="0.0">
+    <skipped message="fixture: skipped test"/>
+  </testcase>
+  <testcase name="addsNumbers" classname="lab.core.CalculatorTest" time="0.002"/>
+  <testcase name="divideByZero" classname="lab.core.CalculatorTest" time="0.003">
+    <error message="division by zero" type="java.lang.ArithmeticException"><![CDATA[java.lang.ArithmeticException: division by zero
+	at lab.core.Calculator.divide(Calculator.java:8)
+	at lab.core.CalculatorTest.divideByZero(CalculatorTest.java:16)
+]]></error>
+    <rerunError message="division by zero" type="java.lang.ArithmeticException">
+      <stackTrace><![CDATA[java.lang.ArithmeticException: division by zero
+	at lab.core.Calculator.divide(Calculator.java:8)
+	at lab.core.CalculatorTest.divideByZero(CalculatorTest.java:16)
+]]></stackTrace>
+    </rerunError>
+    <rerunError message="division by zero" type="java.lang.ArithmeticException">
+      <stackTrace><![CDATA[java.lang.ArithmeticException: division by zero
+	at lab.core.Calculator.divide(Calculator.java:8)
+	at lab.core.CalculatorTest.divideByZero(CalculatorTest.java:16)
+]]></stackTrace>
+    </rerunError>
+  </testcase>
+</testsuite>

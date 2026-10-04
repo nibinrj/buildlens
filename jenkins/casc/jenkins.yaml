@@ -1,0 +1,77 @@
+# Jenkins Configuration as Code for the local BuildLens Jenkins (Phase 1).
+# Nothing in Jenkins is configured by clicking (CLAUDE.md rule 7): a change made in the UI is lost at the next start.
+# Every secret comes from an environment variable set from .env by docker-compose.yml (rule 6).
+# Apply a change without a restart: ./tasks.ps1 seed
+
+jenkins:
+  systemMessage: >-
+    BuildLens local Jenkins. Configured only by jenkins/casc/jenkins.yaml and jenkins/jobs/seed.groovy;
+    changes made here in the UI are lost at the next start.
+  # Builds never run on the controller.
+  numExecutors: 0
+  mode: EXCLUSIVE
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${JENKINS_ADMIN_USER}"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+
+  # One local admin: every logged-in user may do everything, anonymous users see nothing.
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+  nodes:
+    - permanent:
+        name: "agent-1"
+        nodeDescription: "Inbound agent container: JDK 21, Maven, Go, buildlens CLI"
+        labelString: "linux maven go"
+        mode: NORMAL
+        numExecutors: 1
+        remoteFS: "/home/jenkins/agent"
+        retentionStrategy: "always"
+        launcher:
+          inbound:
+            webSocket: true
+
+unclassified:
+  location:
+    url: "http://localhost:8080/"
+
+  # D-020 = A: the library is read from this repository on GitHub, folder shared-library/.
+  globalLibraries:
+    libraries:
+      - name: "buildlens"
+        defaultVersion: "main"
+        allowVersionOverride: true
+        implicit: false
+        includeInChangesets: false
+        retriever:
+          modernSCM:
+            libraryPath: "shared-library/"
+            scm:
+              gitSource:
+                remote: "https://github.com/nibinrj/buildlens.git"
+                credentialsId: "github-token"
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: "github-token"
+              description: "GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env"
+              username: "${GITHUB_USERNAME}"
+              password: "${GITHUB_TOKEN}"
+          - string:
+              scope: GLOBAL
+              id: "buildlens-ingest-key"
+              description: "BuildLens ingest API key, from .env"
+              secret: "${BUILDLENS_INGEST_KEY}"
+
+# Job DSL: the multibranch jobs. Re-run on every start and by ./tasks.ps1 seed.
+jobs:
+  - file: /etc/jenkins/jobs/seed.groovy

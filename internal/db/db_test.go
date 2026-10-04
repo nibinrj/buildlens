@@ -5,7 +5,6 @@ import (
 	"errors"
 	"io"
 	"log/slog"
-	"os"
 	"slices"
 	"testing"
 	"time"
@@ -14,15 +13,10 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
-	"github.com/testcontainers/testcontainers-go"
-	tcpostgres "github.com/testcontainers/testcontainers-go/modules/postgres"
 
+	"github.com/nibinrj/buildlens/internal/dbtest"
 	"github.com/nibinrj/buildlens/internal/store"
 )
-
-// postgresImage is the same pinned image docker-compose.yml runs.
-// BUILDLENS_TEST_POSTGRES_IMAGE overrides it, for example to try a new version before pinning it.
-const postgresImage = "postgres:18.6-alpine3.24@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873"
 
 // wantTables is every table in the plan's data model (docs/plan.md, "Tables").
 var wantTables = []string{
@@ -30,37 +24,12 @@ var wantTables = []string{
 	"repository", "stage_run", "test_case", "test_run",
 }
 
-// startPostgres runs a throwaway Postgres in Docker and returns a pool to it.
-// The container is removed when the test ends.
+// startPostgres runs a throwaway Postgres in Docker (internal/dbtest) and returns a pool to it.
 func startPostgres(t *testing.T) *pgxpool.Pool {
 	t.Helper()
-	if testing.Short() {
-		t.Skip("needs Docker; skipped with -short")
-	}
-	ctx := context.Background()
+	url := dbtest.URL(t)
 
-	image := postgresImage
-	if v := os.Getenv("BUILDLENS_TEST_POSTGRES_IMAGE"); v != "" {
-		image = v
-	}
-
-	ctr, err := tcpostgres.Run(ctx, image,
-		tcpostgres.WithDatabase("buildlens"),
-		tcpostgres.WithUsername("buildlens"),
-		tcpostgres.WithPassword("test-only-password"),
-		tcpostgres.BasicWaitStrategies(),
-	)
-	testcontainers.CleanupContainer(t, ctr)
-	if err != nil {
-		t.Fatalf("start postgres container: %v", err)
-	}
-
-	url, err := ctr.ConnectionString(ctx, "sslmode=disable")
-	if err != nil {
-		t.Fatalf("connection string: %v", err)
-	}
-
-	openCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	openCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	pool, err := Open(openCtx, url)
 	if err != nil {
@@ -102,6 +71,19 @@ func TestMigrations(t *testing.T) {
 	if !slices.Equal(got, wantTables) {
 		t.Fatalf("tables after migrate = %v, want %v", got, wantTables)
 	}
+
+	t.Run("00002 adds build.tested_tree_sha", func(t *testing.T) {
+		var nullable string
+		err := pool.QueryRow(ctx, `
+			SELECT is_nullable FROM information_schema.columns
+			WHERE table_name = 'build' AND column_name = 'tested_tree_sha'`).Scan(&nullable)
+		if err != nil {
+			t.Fatalf("column lookup: %v", err)
+		}
+		if nullable != "YES" {
+			t.Errorf("tested_tree_sha is_nullable = %s, want YES", nullable)
+		}
+	})
 
 	t.Run("second run is a no-op", func(t *testing.T) {
 		if err := Migrate(ctx, pool, quietLogger()); err != nil {

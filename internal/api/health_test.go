@@ -68,7 +68,7 @@ func TestRouter(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			router := NewRouter(tc.db, logger)
+			router := NewRouter(Deps{DB: tc.db, Logger: logger, IngestKey: testKey})
 			req := httptest.NewRequestWithContext(t.Context(), tc.method, tc.path, nil)
 			rec := httptest.NewRecorder()
 
@@ -102,7 +102,7 @@ func TestRouter(t *testing.T) {
 // TestReadyzTimesOut proves a hung database makes /readyz fail after readyTimeout instead of hanging.
 func TestReadyzTimesOut(t *testing.T) {
 	logger := slog.New(slog.NewJSONHandler(io.Discard, nil))
-	router := NewRouter(fakePinger{block: true}, logger)
+	router := NewRouter(Deps{DB: fakePinger{block: true}, Logger: logger, IngestKey: testKey})
 
 	start := time.Now()
 	rec := httptest.NewRecorder()

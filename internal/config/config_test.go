@@ -8,7 +8,10 @@ import (
 )
 
 func TestLoad(t *testing.T) {
-	const dbURL = "postgres://u:p@localhost:5432/buildlens"
+	const (
+		dbURL = "postgres://u:p@localhost:5432/buildlens"
+		key   = "0123456789abcdef-test-key"
+	)
 
 	tests := []struct {
 		name    string
@@ -17,14 +20,16 @@ func TestLoad(t *testing.T) {
 		wantErr string // substring of the error; empty means no error expected
 	}{
 		{
-			name: "defaults with only the database URL",
-			env:  map[string]string{"BUILDLENS_DATABASE_URL": dbURL},
+			name: "defaults with only the required variables",
+			env:  map[string]string{"BUILDLENS_DATABASE_URL": dbURL, "BUILDLENS_INGEST_KEY": key},
 			want: Config{
 				HTTPAddr:        ":8080",
 				DatabaseURL:     dbURL,
 				ShutdownTimeout: 15 * time.Second,
 				LogLevel:        slog.LevelInfo,
 				MigrateOnStart:  true,
+				IngestKey:       key,
+				MaxUploadBytes:  64 << 20,
 			},
 		},
 		{
@@ -35,6 +40,8 @@ func TestLoad(t *testing.T) {
 				"BUILDLENS_SHUTDOWN_TIMEOUT": "3s",
 				"BUILDLENS_LOG_LEVEL":        "DEBUG",
 				"BUILDLENS_MIGRATE_ON_START": "false",
+				"BUILDLENS_INGEST_KEY":       key,
+				"BUILDLENS_MAX_UPLOAD_BYTES": "2097152",
 			},
 			want: Config{
 				HTTPAddr:        "127.0.0.1:9000",
@@ -42,7 +49,29 @@ func TestLoad(t *testing.T) {
 				ShutdownTimeout: 3 * time.Second,
 				LogLevel:        slog.LevelDebug,
 				MigrateOnStart:  false,
+				IngestKey:       key,
+				MaxUploadBytes:  2 << 20,
 			},
+		},
+		{
+			name:    "missing ingest key",
+			env:     map[string]string{"BUILDLENS_DATABASE_URL": dbURL},
+			wantErr: "BUILDLENS_INGEST_KEY is required",
+		},
+		{
+			name:    "ingest key too short",
+			env:     map[string]string{"BUILDLENS_DATABASE_URL": dbURL, "BUILDLENS_INGEST_KEY": "changeme"},
+			wantErr: "at least 16 characters",
+		},
+		{
+			name:    "upload limit not a number",
+			env:     map[string]string{"BUILDLENS_DATABASE_URL": dbURL, "BUILDLENS_INGEST_KEY": key, "BUILDLENS_MAX_UPLOAD_BYTES": "64MB"},
+			wantErr: "BUILDLENS_MAX_UPLOAD_BYTES",
+		},
+		{
+			name:    "upload limit below 1 MiB",
+			env:     map[string]string{"BUILDLENS_DATABASE_URL": dbURL, "BUILDLENS_INGEST_KEY": key, "BUILDLENS_MAX_UPLOAD_BYTES": "1000"},
+			wantErr: "at least 1 MiB",
 		},
 		{
 			name:    "missing database URL",
@@ -61,12 +90,12 @@ func TestLoad(t *testing.T) {
 		},
 		{
 			name:    "unknown log level",
-			env:     map[string]string{"BUILDLENS_DATABASE_URL": dbURL, "BUILDLENS_LOG_LEVEL": "verbose"},
+			env:     map[string]string{"BUILDLENS_DATABASE_URL": dbURL, "BUILDLENS_INGEST_KEY": key, "BUILDLENS_LOG_LEVEL": "verbose"},
 			wantErr: "BUILDLENS_LOG_LEVEL",
 		},
 		{
 			name:    "migrate flag not a boolean",
-			env:     map[string]string{"BUILDLENS_DATABASE_URL": dbURL, "BUILDLENS_MIGRATE_ON_START": "maybe"},
+			env:     map[string]string{"BUILDLENS_DATABASE_URL": dbURL, "BUILDLENS_INGEST_KEY": key, "BUILDLENS_MIGRATE_ON_START": "maybe"},
 			wantErr: "BUILDLENS_MIGRATE_ON_START",
 		},
 	}

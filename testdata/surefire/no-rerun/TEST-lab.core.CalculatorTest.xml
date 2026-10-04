@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="lab.core.CalculatorTest" time="0.122" tests="6" errors="2" skipped="1" failures="2" flakes="0">
+  <properties>
+  </properties>
+  <testcase name="wrongSum" classname="lab.core.CalculatorTest" time="0.064">
+    <failure message="deliberately wrong ==&gt; expected: &lt;5&gt; but was: &lt;4&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: deliberately wrong ==> expected: <5> but was: <4>
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:601)
+	at lab.core.CalculatorTest.wrongSum(CalculatorTest.java:14)
+]]></failure>
+  </testcase>
+  <testcase name="flakyAssertion" classname="lab.core.CalculatorTest" time="0.008">
+    <failure message="first attempt fails ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: first attempt fails ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:232)
+	at lab.core.CalculatorTest.flakyAssertion(CalculatorTest.java:22)
+]]></failure>
+  </testcase>
+  <testcase name="flakyException" classname="lab.core.CalculatorTest" time="0.002">
+    <error message="division by zero" type="java.lang.ArithmeticException"><![CDATA[java.lang.ArithmeticException: division by zero
+	at lab.core.Calculator.divide(Calculator.java:8)
+	at lab.core.CalculatorTest.flakyException(CalculatorTest.java:25)
+]]></error>
+  </testcase>
+  <testcase name="skippedTest" classname="lab.core.CalculatorTest" time="0.0">
+    <skipped message="fixture: skipped test"/>
+  </testcase>
+  <testcase name="addsNumbers" classname="lab.core.CalculatorTest" time="0.002"/>
+  <testcase name="divideByZero" classname="lab.core.CalculatorTest" time="0.002">
+    <error message="division by zero" type="java.lang.ArithmeticException"><![CDATA[java.lang.ArithmeticException: division by zero
+	at lab.core.Calculator.divide(Calculator.java:8)
+	at lab.core.CalculatorTest.divideByZero(CalculatorTest.java:16)
+]]></error>
+  </testcase>
+</testsuite>

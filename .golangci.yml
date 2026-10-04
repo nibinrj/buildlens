@@ -21,6 +21,12 @@ linters:
     - unconvert
     - usestdlibvars  # http.MethodGet instead of "GET", etc.
   settings:
+    errcheck:
+      # Printing a message to stdout/stderr: if that fails there is nothing useful left to do.
+      exclude-functions:
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
     govet:
       enable:
         - shadow

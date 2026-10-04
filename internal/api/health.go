@@ -18,12 +18,26 @@ type Pinger interface {
 // readyTimeout bounds the database ping so a hung database makes /readyz fail fast instead of hanging.
 const readyTimeout = 2 * time.Second
 
-// NewRouter returns the server's routes. Later prompts add the /api/v1 routes here.
-func NewRouter(db Pinger, logger *slog.Logger) http.Handler {
+// Deps is everything the routes need. Interfaces let handler tests use fakes instead of a database.
+type Deps struct {
+	DB             Pinger
+	Ingester       Ingester
+	Builds         BuildReader
+	IngestKey      string // required by every /api/v1 route
+	MaxUploadBytes int64
+	Logger         *slog.Logger
+}
+
+// NewRouter returns the server's routes.
+func NewRouter(d Deps) http.Handler {
 	mux := http.NewServeMux()
 	// Method patterns (Go 1.22+): other methods get 405 Method Not Allowed automatically.
 	mux.HandleFunc("GET /healthz", handleHealthz)
-	mux.HandleFunc("GET /readyz", handleReadyz(db, logger))
+	mux.HandleFunc("GET /readyz", handleReadyz(d.DB, d.Logger))
+
+	auth := requireKey(d.IngestKey)
+	mux.Handle("POST /api/v1/builds", auth(handleCreateBuild(d)))
+	mux.Handle("GET /api/v1/builds/{id}", auth(handleGetBuild(d)))
 	return mux
 }
 
