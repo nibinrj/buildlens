@@ -1,0 +1,40 @@
+# Private working notes and decision log (never committed, see notes/README.md)
+notes/
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Secrets
+.env
+*.env
+!.env.example
+
+# Go build output
+/bin/
+/dist/
+*.exe
+*.test
+*.out
+coverage.*
+
+# JVM (shared-library JenkinsPipelineUnit tests)
+target/
+
+# Demo database dumps
+*.dump
+/backups/
+
+# Terraform (Phase 2)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

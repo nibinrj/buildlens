@@ -1,0 +1,81 @@
+# Local BuildLens stack (Phase 1). Every container has a memory limit (CLAUDE.md rule 10).
+# Memory: postgres 384 MB + grafana 384 MB + buildlens-server 64 MB = 832 MB for P1.
+# Jenkins controller (1 GB) and agent (1.5 GB) join in P2: 3,392 MB (about 3.3 GiB) in total.
+# Grafana is 384 MB, not the plan's 256 MB: it idled at 87 % of 256 MB on 2026-10-04 (decision D-076).
+# Image tags and digests checked on 2026-10-04 (docs/study/P1-design.md, section 9).
+# Secrets come from .env (gitignored); copy .env.example first.
+
+name: buildlens
+
+services:
+  postgres:
+    image: postgres:18.6-alpine3.24@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+    volumes:
+      # Postgres 18+ images keep data under /var/lib/postgresql/18/docker; the volume goes on the parent.
+      - pgdata:/var/lib/postgresql
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"
+    mem_limit: 384m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  buildlens-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: buildlens-server:local
+    environment:
+      BUILDLENS_HTTP_ADDR: ":8080"
+      BUILDLENS_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      BUILDLENS_LOG_LEVEL: ${BUILDLENS_LOG_LEVEL:-info}
+      BUILDLENS_SHUTDOWN_TIMEOUT: 15s
+      # Tell the Go GC about the container limit (like -XX:MaxRAMPercentage for a JVM).
+      GOMEMLIMIT: 56MiB
+    ports:
+      - "127.0.0.1:${BUILDLENS_HOST_PORT:-8091}:8080"
+    mem_limit: 64m
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      # Distroless has no shell or curl: the binary probes its own /healthz.
+      test: ["CMD", "/usr/local/bin/buildlens-server", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # Docker sends SIGTERM, then SIGKILL after this grace period; it is longer than BUILDLENS_SHUTDOWN_TIMEOUT.
+    stop_grace_period: 20s
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:13.2.3@sha256:b28bae15e219c998fb0e0424ed724930cc61b1f61fb404d47c862f9a23f9e572
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:?set GRAFANA_ADMIN_USER in .env}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?set GRAFANA_ADMIN_PASSWORD in .env}
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: "false"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      # Datasource and dashboard provisioning arrive in P5 (grafana/provisioning, grafana/dashboards).
+    ports:
+      - "127.0.0.1:${GRAFANA_HOST_PORT:-3001}:3000"
+    mem_limit: 384m
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  grafana-data:

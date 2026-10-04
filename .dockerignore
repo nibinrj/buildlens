@@ -1,0 +1,12 @@
+# Keep secrets, private notes and build output out of the Docker build context.
+.git
+.env
+*.env
+notes/
+CLAUDE.local.md
+.claude/
+bin/
+dist/
+docs/
+**/*_test.go
+testdata/

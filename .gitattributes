@@ -1,0 +1,10 @@
+# LF everywhere: gofmt, shell scripts in Linux containers and Groovy all expect LF.
+# Overrides core.autocrlf=true set by Git for Windows.
+* text=auto eol=lf
+
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+*.png binary
+*.jpg binary
+*.dump binary

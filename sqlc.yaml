@@ -1,0 +1,21 @@
+# sqlc compiles queries/*.sql against the schema in migrations/ into typed Go in internal/store.
+# Run it with: ./tasks.ps1 generate   (sqlc 1.31.1 from its Docker image; see docs/study/P1-design.md)
+version: "2"
+sql:
+  - engine: postgresql
+    schema: migrations   # goose files; sqlc ignores the "-- +goose Down" sections
+    queries: queries
+    gen:
+      go:
+        package: store
+        out: internal/store
+        sql_package: pgx/v5
+        emit_pointers_for_null_types: true   # nullable text -> *string instead of pgtype.Text
+        overrides:
+          - db_type: timestamptz
+            go_type: time.Time
+          - db_type: timestamptz
+            nullable: true
+            go_type:
+              type: time.Time
+              pointer: true
