@@ -340,11 +340,44 @@ All of the following ran on 2026-10-04.
 
 Memory during a Maven build is measured on the first real lab build.
 
-**Not verified yet:** everything that needs a real Jenkins build. Each needs the GitHub token and the two repos
-pushed:
+**End to end, after the token was added and both repos pushed:**
 
-- the library loading from GitHub;
-- `timedStage` and `reportBuild` under real CPS (`System.currentTimeMillis`, `rawBuild.getLog`, the `env` append);
-- the agent's environment reaching `sh` steps;
-- `git rev-parse HEAD^{tree}` in a multibranch workspace;
-- branch indexing with the token.
+- **Lab build #2** (`buildlens-lab/main`, commit `868bbe8`) ran on `agent-1`:
+  - Jenkins loaded the library from GitHub (`Loading library buildlens@main:shared-library/`, commit `d358ec1`).
+  - Branch indexing used the token.
+  - Three timed stages ran, Maven ran 9 tests, and the result was SUCCESS.
+  - `buildlens report` printed `{"id":2,"created":true,"tests":9,"stages":3}`.
+- **`GET /api/v1/builds/2`** returns:
+  - the 3 stages with times: Checkout 7,229 ms, Build 5,349 ms, Test 8,932 ms;
+  - 9 PASSED tests with modules `core` and `api`;
+  - agent `agent-1` with lifecycle `LOCAL`, which proves the agent's environment reaches `sh` steps;
+  - `tested_tree_sha` `f978170...`, which equals `git rev-parse HEAD^{tree}` of the pushed commit, computed locally.
+- **Confirmed under real CPS:** `System.currentTimeMillis()`, `currentBuild.rawBuild.getLog(500)` and the
+  `env.BUILDLENS_STAGES` append all work in a trusted global library. The ingest key does not appear in the console;
+  only the arguments are printed.
+- **Peak memory during the build** (29 `docker stats` samples about every 2–3 s; a short spike could be missed):
+
+| Container | Peak |
+| --- | --- |
+| jenkins | 620 MiB |
+| agent | 318 MiB |
+| grafana | 265 MiB |
+| postgres | 41 MiB |
+| server | 4.7 MiB |
+| **sum of one sample** | **about 1.19 GiB** |
+
+**Incident: lab build #1 failed.**
+
+- **What happened:** at its first step, `currentBuild.currentResult` threw "No build record buildlens-lab/main#1 could
+  be located". `rawBuild` was null, so `reportBuild` only warned and build #1 is not in BuildLens. The controller
+  log then said `JENKINS-23152: .../branches/main/builds/1 already existed ... will create a fresh build #2`.
+- **Most likely cause:** the `main` branch job object was replaced while #1 ran. Two branch indexings overlapped
+  right after the controller restart: one at start-up, right after JCasC's Job DSL updated the multibranch job, and
+  one triggered by hand 20 s later. The running build then could not find itself.
+- **Not proven:** I did not reproduce it.
+- **Watch in P3:** whether a JCasC reload, or a restart while a build runs, repeats it. If it does, JCasC's `jobs:`
+  should not re-run on every start.
+
+**Harmless warning:** the github-branch-source plugin tries to set a commit status on GitHub and gets 403, because
+the token is read-only by design (D-014). Removing the warning needs either *Commit statuses: write* on the token,
+or a notification-skip trait from another plugin (owner's choice).
