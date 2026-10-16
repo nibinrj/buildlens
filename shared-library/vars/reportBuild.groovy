@@ -14,6 +14,9 @@ import com.cloudbees.groovy.cps.NonCPS
  *   credentialsId  secret-text credential with the ingest key; default 'buildlens-ingest-key'
  *   logLines       how many log lines to send; default 500
  *   strict         pass --strict to the CLI (it then exits non-zero on failure; still only a warning here)
+ *   reports        blocking XML globs; default: standard Surefire and Failsafe directories
+ *   quarantineReports  separate non-blocking XML globs, labelled QUARANTINE on upload
+ *   commit / tree  explicit tested source identifiers, used by the local uncommitted verification adapter
  *
  * The CLI reads the server URL and the agent lifecycle from the agent's environment
  * (BUILDLENS_SERVER_URL, BUILDLENS_AGENT_LIFECYCLE) and the job, build number, branch and PR from Jenkins's own
@@ -37,9 +40,9 @@ private void upload(Map args) {
     writeFile file: "${dir}/stages.json", text: stagesJson(env.BUILDLENS_STAGES)
 
     String repo = args.repo ?: repoFromRemote(gitOutput('git config --get remote.origin.url'))
-    String commit = gitOutput('git rev-parse HEAD')
+    String commit = args.commit ?: gitOutput('git rev-parse HEAD')
     // The tree hash identifies the tested content even when Jenkins builds a PR as a fresh merge commit (D-078).
-    String tree = gitOutput('git rev-parse HEAD^{tree}')
+    String tree = args.tree ?: gitOutput('git rev-parse HEAD^{tree}')
     String result = args.result ?: currentBuild.currentResult
 
     List<String> cmd = ['buildlens', 'report',
@@ -57,6 +60,8 @@ private void upload(Map args) {
     if (args.strict) {
         cmd << '--strict'
     }
+    if (args.reports) { cmd += ['--reports', args.reports] }
+    if (args.quarantineReports) { cmd += ['--quarantine-reports', args.quarantineReports] }
 
     // The key reaches the CLI only as the BUILDLENS_KEY variable; Jenkins masks it in the log.
     withCredentials([string(credentialsId: args.credentialsId ?: 'buildlens-ingest-key', variable: 'BUILDLENS_KEY')]) {

@@ -38,8 +38,11 @@ services:
       BUILDLENS_LOG_LEVEL: ${BUILDLENS_LOG_LEVEL:-info}
       BUILDLENS_SHUTDOWN_TIMEOUT: 15s
       BUILDLENS_INGEST_KEY: ${BUILDLENS_INGEST_KEY:?set BUILDLENS_INGEST_KEY in .env}
+      BUILDLENS_RULES_FILE: /etc/buildlens/config.yaml
       # Tell the Go GC about the container limit (like -XX:MaxRAMPercentage for a JVM).
       GOMEMLIMIT: 56MiB
+    volumes:
+      - ./config.yaml:/etc/buildlens/config.yaml:ro
     ports:
       - "127.0.0.1:${BUILDLENS_HOST_PORT:-8091}:8080"
     mem_limit: 64m

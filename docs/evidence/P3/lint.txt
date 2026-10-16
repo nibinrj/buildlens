@@ -1,0 +1,3 @@
+gofmt -l .: no files need formatting
+go vet ./...: ok
+0 issues.

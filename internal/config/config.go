@@ -2,23 +2,31 @@
 package config
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"log/slog"
+	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"go.yaml.in/yaml/v3"
+
+	"github.com/nibinrj/buildlens/internal/quarantine"
 )
 
 // Config is the server configuration. Every field comes from an environment variable.
 type Config struct {
-	HTTPAddr        string        // BUILDLENS_HTTP_ADDR, default ":8080"
-	DatabaseURL     string        // BUILDLENS_DATABASE_URL, required
-	ShutdownTimeout time.Duration // BUILDLENS_SHUTDOWN_TIMEOUT, default 15s
-	LogLevel        slog.Level    // BUILDLENS_LOG_LEVEL: debug, info, warn, error; default info
-	MigrateOnStart  bool          // BUILDLENS_MIGRATE_ON_START, default true
-	IngestKey       string        // BUILDLENS_INGEST_KEY, required, at least MinKeyLength characters; never logged
-	MaxUploadBytes  int64         // BUILDLENS_MAX_UPLOAD_BYTES, default 64 MiB: the largest POST /api/v1/builds body
+	HTTPAddr        string            // BUILDLENS_HTTP_ADDR, default ":8080"
+	DatabaseURL     string            // BUILDLENS_DATABASE_URL, required
+	ShutdownTimeout time.Duration     // BUILDLENS_SHUTDOWN_TIMEOUT, default 15s
+	LogLevel        slog.Level        // BUILDLENS_LOG_LEVEL: debug, info, warn, error; default info
+	MigrateOnStart  bool              // BUILDLENS_MIGRATE_ON_START, default true
+	IngestKey       string            // BUILDLENS_INGEST_KEY, required, at least MinKeyLength characters; never logged
+	MaxUploadBytes  int64             // BUILDLENS_MAX_UPLOAD_BYTES, default 64 MiB: the largest POST /api/v1/builds body
+	P3              quarantine.Config // BUILDLENS_RULES_FILE optional strict YAML; otherwise defaults
 }
 
 // MinKeyLength is the shortest API key the server accepts, so a placeholder like "changeme" fails at start.
@@ -32,6 +40,7 @@ func Load(getenv func(string) string) (Config, error) {
 		LogLevel:        slog.LevelInfo,
 		MigrateOnStart:  true,
 		MaxUploadBytes:  64 << 20,
+		P3:              quarantine.Defaults(),
 	}
 
 	if v := getenv("BUILDLENS_HTTP_ADDR"); v != "" {
@@ -86,5 +95,35 @@ func Load(getenv func(string) string) (Config, error) {
 		cfg.MaxUploadBytes = n
 	}
 
+	if path := getenv("BUILDLENS_RULES_FILE"); path != "" {
+		if err := loadPolicy(path, &cfg.P3); err != nil {
+			return Config{}, err
+		}
+	}
 	return cfg, nil
+}
+
+func loadPolicy(path string, policy *quarantine.Config) error {
+	f, err := os.Open(path) //nolint:gosec // trusted server startup configuration
+	if err != nil {
+		return fmt.Errorf("open BUILDLENS_RULES_FILE: %w", err)
+	}
+	defer f.Close() //nolint:errcheck // read-only config
+	data, err := io.ReadAll(io.LimitReader(f, (1<<20)+1))
+	if err != nil {
+		return fmt.Errorf("read P3 policy: %w", err)
+	}
+	if len(data) > 1<<20 {
+		return errors.New("P3 policy exceeds 1 MiB")
+	}
+	d := yaml.NewDecoder(bytes.NewReader(data))
+	d.KnownFields(true)
+	if err := d.Decode(policy); err != nil {
+		return fmt.Errorf("decode P3 policy: %w", err)
+	}
+	var extra any
+	if err := d.Decode(&extra); !errors.Is(err, io.EOF) {
+		return errors.New("P3 policy must contain exactly one YAML document")
+	}
+	return policy.Validate()
 }

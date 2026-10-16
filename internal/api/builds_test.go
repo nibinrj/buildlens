@@ -5,11 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"net/textproto"
 	"os"
 	"path/filepath"
 	"strings"
@@ -45,6 +47,7 @@ func (f fakeReader) GetBuild(context.Context, int64) (ingest.BuildView, error) {
 
 type part struct {
 	field, filename, content string
+	stage                    string
 }
 
 // multipartBody builds an upload the way the CLI does.
@@ -55,7 +58,12 @@ func multipartBody(t *testing.T, parts ...part) (io.Reader, string) {
 	for _, p := range parts {
 		var w io.Writer
 		var err error
-		if p.filename != "" {
+		if p.stage != "" {
+			h := make(textproto.MIMEHeader)
+			h.Set("Content-Disposition", fmt.Sprintf("form-data; name=%q; filename=%q", p.field, p.filename))
+			h.Set(upload.HeaderTestStage, p.stage)
+			w, err = mw.CreatePart(h)
+		} else if p.filename != "" {
 			w, err = mw.CreateFormFile(p.field, p.filename)
 		} else {
 			w, err = mw.CreateFormField(p.field)
@@ -119,6 +127,41 @@ func TestCreateBuild(t *testing.T) {
 		wantCalls   int
 		check       func(t *testing.T, f *fakeIngester, body []byte)
 	}{
+		{
+			name: "quarantine stage and log reach ingest", auth: "Bearer " + testKey,
+			body: func(t *testing.T) (io.Reader, string) {
+				return multipartBody(t, part{field: "metadata", content: validMeta},
+					part{field: "report", filename: reportPath, content: rerun, stage: "QUARANTINE"},
+					part{field: "log", filename: "log.txt", content: "ERROR: exit code 137"})
+			},
+			wantStatus: http.StatusOK, wantCalls: 1,
+			check: func(t *testing.T, f *fakeIngester, _ []byte) {
+				if len(f.got.Tests) != 0 || len(f.got.QuarantineTests) != 6 || f.got.LogTail != "ERROR: exit code 137" {
+					t.Fatalf("stage/log lost: %+v", f.got)
+				}
+			},
+		},
+		{
+			name: "unknown report stage", auth: "Bearer " + testKey,
+			body: func(t *testing.T) (io.Reader, string) {
+				return multipartBody(t, part{field: "metadata", content: validMeta}, part{field: "report", filename: reportPath, content: rerun, stage: "BANANA"})
+			},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name: "same testcase in both stages rejected", auth: "Bearer " + testKey,
+			body: func(t *testing.T) (io.Reader, string) {
+				return multipartBody(t, part{field: "metadata", content: validMeta}, part{field: "report", filename: reportPath, content: rerun}, part{field: "report", filename: reportPath, content: rerun, stage: "QUARANTINE"})
+			},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name: "duplicate log rejected", auth: "Bearer " + testKey,
+			body: func(t *testing.T) (io.Reader, string) {
+				return multipartBody(t, part{field: "metadata", content: validMeta}, part{field: "log", content: "a"}, part{field: "log", content: "b"})
+			},
+			wantStatus: http.StatusBadRequest,
+		},
 		{
 			name: "new build is created", auth: "Bearer " + testKey,
 			body: func(t *testing.T) (io.Reader, string) {

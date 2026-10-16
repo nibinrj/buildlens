@@ -10,6 +10,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/nibinrj/buildlens/internal/infra"
+	"github.com/nibinrj/buildlens/internal/quarantine"
 	"github.com/nibinrj/buildlens/internal/store"
 	"github.com/nibinrj/buildlens/internal/surefire"
 	"github.com/nibinrj/buildlens/internal/upload"
@@ -20,8 +22,10 @@ var ErrNotFound = errors.New("build not found")
 
 // Upload is one build as received: its metadata and every parsed test result.
 type Upload struct {
-	Meta  upload.Metadata
-	Tests []surefire.Result
+	Meta            upload.Metadata
+	Tests           []surefire.Result
+	QuarantineTests []surefire.Result
+	LogTail         string
 }
 
 // Result tells the caller what was stored.
@@ -34,18 +38,32 @@ type Result struct {
 
 // Service writes and reads builds.
 type Service struct {
-	pool *pgxpool.Pool
+	pool   *pgxpool.Pool
+	policy quarantine.Config
 }
 
 // NewService returns a Service using pool.
 func NewService(pool *pgxpool.Pool) *Service {
-	return &Service{pool: pool}
+	return NewServiceWithPolicy(pool, quarantine.Defaults())
+}
+
+// NewServiceWithPolicy uses validated P3 thresholds loaded by the server.
+func NewServiceWithPolicy(pool *pgxpool.Pool, policy quarantine.Config) *Service {
+	return &Service{pool: pool, policy: policy}
 }
 
 // Ingest stores u in one transaction: the repository and build rows are upserted, and the build's stage runs
 // and test runs are replaced. Nothing is stored if any step fails.
 func (s *Service) Ingest(ctx context.Context, u Upload) (Result, error) {
 	tests := surefire.Merge(u.Tests) // one row per test per build
+	quarantined := surefire.Merge(u.QuarantineTests)
+	for _, a := range tests {
+		for _, b := range quarantined {
+			if a.ClassName == b.ClassName && a.MethodName == b.MethodName {
+				return Result{}, fmt.Errorf("test %s#%s reported in both stages", a.ClassName, a.MethodName)
+			}
+		}
+	}
 
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
@@ -64,6 +82,10 @@ func (s *Service) Ingest(ctx context.Context, u Upload) (Result, error) {
 	repoID, err := q.EnsureRepository(ctx, store.EnsureRepositoryParams{Name: u.Meta.Repo, DefaultBranch: defaultBranch})
 	if err != nil {
 		return Result{}, fmt.Errorf("ensure repository: %w", err)
+	}
+	repo, err := q.LockRepository(ctx, u.Meta.Repo)
+	if err != nil {
+		return Result{}, fmt.Errorf("lock repository: %w", err)
 	}
 
 	b, err := q.UpsertBuild(ctx, buildParams(repoID, u.Meta))
@@ -91,15 +113,28 @@ func (s *Service) Ingest(ctx context.Context, u Upload) (Result, error) {
 	}
 
 	if len(tests) > 0 {
-		if err := insertTests(ctx, q, repoID, b.ID, tests); err != nil {
+		if err := insertTests(ctx, q, repoID, b.ID, tests, "BLOCKING"); err != nil {
 			return Result{}, err
 		}
+	}
+
+	if len(quarantined) > 0 {
+		if err := insertTests(ctx, q, repoID, b.ID, quarantined, "QUARANTINE"); err != nil {
+			return Result{}, err
+		}
+	}
+	match := infra.Classify(u.LogTail)
+	if err := q.SetBuildInfra(ctx, store.SetBuildInfraParams{ID: b.ID, InfraFailure: match.Failure(), InfraReason: nonEmpty(match.Reason)}); err != nil {
+		return Result{}, fmt.Errorf("attribute infrastructure: %w", err)
+	}
+	if err := quarantine.Apply(ctx, q, repo, b.ID, s.policy); err != nil {
+		return Result{}, err
 	}
 
 	if err := tx.Commit(ctx); err != nil {
 		return Result{}, fmt.Errorf("commit: %w", err)
 	}
-	return Result{BuildID: b.ID, Created: b.Inserted, Tests: len(tests), Stages: len(u.Meta.Stages)}, nil
+	return Result{BuildID: b.ID, Created: b.Inserted, Tests: len(tests) + len(quarantined), Stages: len(u.Meta.Stages)}, nil
 }
 
 func buildParams(repoID int64, m upload.Metadata) store.UpsertBuildParams {
@@ -126,7 +161,7 @@ func buildParams(repoID int64, m upload.Metadata) store.UpsertBuildParams {
 }
 
 // insertTests upserts every test case in one statement, then copies the runs in.
-func insertTests(ctx context.Context, q *store.Queries, repoID, buildID int64, tests []surefire.Result) error {
+func insertTests(ctx context.Context, q *store.Queries, repoID, buildID int64, tests []surefire.Result, stage string) error {
 	params := store.UpsertTestCasesParams{
 		RepositoryID: repoID,
 		Modules:      make([]string, len(tests)),
@@ -161,7 +196,7 @@ func insertTests(ctx context.Context, q *store.Queries, repoID, buildID int64, t
 			RerunFailures: int32(min(t.RerunFailures, 1<<30)), //nolint:gosec // capped above, cannot overflow
 			FailureType:   nonEmpty(t.FailureType),
 			FailureHash:   nonEmpty(t.FailureHash),
-			Stage:         "BLOCKING", // the quarantine stage arrives in P3
+			Stage:         stage,
 		})
 	}
 	if _, err := q.InsertTestRuns(ctx, runs); err != nil {
@@ -193,6 +228,7 @@ type BuildView struct {
 	DurationMs    *int64         `json:"duration_ms"`
 	Agent         AgentView      `json:"agent"`
 	InfraFailure  bool           `json:"infra_failure"`
+	InfraReason   *string        `json:"infra_reason"`
 	CreatedAt     time.Time      `json:"created_at"`
 	UpdatedAt     time.Time      `json:"updated_at"`
 	Stages        []StageView    `json:"stages"`
@@ -255,7 +291,7 @@ func (s *Service) GetBuild(ctx context.Context, id int64) (BuildView, error) {
 		PRNumber: b.PrNumber, CommitSHA: b.CommitSha, TestedTreeSHA: b.TestedTreeSha, Result: b.Result,
 		StartedAt: b.StartedAt, FinishedAt: b.FinishedAt, DurationMs: b.DurationMs,
 		Agent:        AgentView{Name: b.AgentName, InstanceType: b.AgentInstanceType, Lifecycle: b.AgentLifecycle},
-		InfraFailure: b.InfraFailure, CreatedAt: b.CreatedAt, UpdatedAt: b.UpdatedAt,
+		InfraFailure: b.InfraFailure, InfraReason: b.InfraReason, CreatedAt: b.CreatedAt, UpdatedAt: b.UpdatedAt,
 		Stages:      make([]StageView, 0, len(stages)),
 		TestSummary: map[string]int{},
 		Tests:       make([]TestView, 0, len(tests)),

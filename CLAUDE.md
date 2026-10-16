@@ -13,6 +13,9 @@ Written in Go: one HTTP service (buildlens-server) and one CLI (buildlens) that 
 No Kafka, no microservices, no ML, no web framework.
 
 ## Hard rules
+0. Owner update (2026-10-12): prioritize correctness, maintainability, failure-path coverage and
+   demonstrated end-to-end behavior. Do not reduce required work to save tokens.
+   Never create commits, stage changes or push on the owner's behalf; the owner reviews and commits.
 1. Explain before you build. Each prompt starts by writing or updating its study note in
    docs/study/. State what you are certain of and what you checked in official docs.
 2. Never guess a version. Pin every version (Go toolchain in go.mod, Go modules, Docker image tags,

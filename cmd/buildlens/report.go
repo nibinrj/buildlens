@@ -8,8 +8,10 @@ import (
 	"fmt"
 	"io"
 	"math/rand/v2"
+	"mime"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -36,7 +38,7 @@ type reportFlags struct {
 	buildNumber, pr                                                     string
 	startedAtMs, durationMs                                             string
 	agent, agentInstanceType, agentLifecycle                            string
-	stagesFile, logTailFile, reports, dir                               string
+	stagesFile, logTailFile, reports, quarantineReports, dir            string
 	strict                                                              bool
 	timeout                                                             time.Duration
 	retries                                                             int
@@ -69,6 +71,7 @@ func parseReportFlags(args []string, getenv func(string) string, out io.Writer) 
 	fs.StringVar(&f.stagesFile, "stages", "", "stages.json written by the shared library")
 	fs.StringVar(&f.logTailFile, "log-tail", "", "file with the last lines of the build log")
 	fs.StringVar(&f.reports, "reports", defaultReports, "comma-separated report globs, relative to --dir")
+	fs.StringVar(&f.quarantineReports, "quarantine-reports", "", "comma-separated non-blocking quarantine XML globs")
 	fs.StringVar(&f.dir, "dir", ".", "directory to search for reports (the workspace)")
 	fs.BoolVar(&f.strict, "strict", false, "exit 1 when the upload fails (default: warn and exit 0)")
 	fs.DurationVar(&f.timeout, "timeout", 30*time.Second, "timeout per upload attempt")
@@ -203,7 +206,15 @@ func (r reporter) run(ctx context.Context, args []string, getenv func(string) st
 		fmt.Fprintf(r.stderr, "buildlens report: no test reports matched %q under %s; uploading build metadata only\n", f.reports, f.dir)
 	}
 
-	body := uploadBody{meta: metaJSON, dir: f.dir, reports: reports, logTail: f.logTailFile}
+	var quarantineReports []string
+	if f.quarantineReports != "" {
+		quarantineReports, err = findReports(f.dir, strings.Split(f.quarantineReports, ","))
+		if err != nil {
+			fmt.Fprintln(r.stderr, "buildlens report:", err)
+			return exitUsage
+		}
+	}
+	body := uploadBody{meta: metaJSON, dir: f.dir, reports: reports, quarantineReports: quarantineReports, logTail: f.logTailFile}
 	answer, err := r.send(ctx, f, body)
 	if err != nil {
 		fmt.Fprintln(r.stderr, "buildlens report: WARNING: build not uploaded to BuildLens:", err)
@@ -213,16 +224,17 @@ func (r reporter) run(ctx context.Context, args []string, getenv func(string) st
 		return exitOK
 	}
 	fmt.Fprintf(r.stdout, "buildlens report: uploaded %s #%d with %d report file(s): %s\n",
-		meta.Job, meta.BuildNumber, len(reports), strings.TrimSpace(answer))
+		meta.Job, meta.BuildNumber, len(reports)+len(quarantineReports), strings.TrimSpace(answer))
 	return exitOK
 }
 
 // uploadBody is what one request sends. It is rebuilt for every attempt because a streamed body can be read once.
 type uploadBody struct {
-	meta    []byte
-	dir     string
-	reports []string // relative, slash-separated
-	logTail string
+	meta              []byte
+	dir               string
+	reports           []string // relative, slash-separated
+	quarantineReports []string
+	logTail           string
 }
 
 // statusError is an HTTP answer that will not change if the same request is sent again (4xx except 429),
@@ -320,26 +332,37 @@ func writeParts(mw *multipart.Writer, body uploadBody) error {
 		return err
 	}
 	for _, rel := range body.reports {
-		if err := copyFilePart(mw, upload.PartReport, rel, filepath.Join(body.dir, filepath.FromSlash(rel))); err != nil {
+		if err := copyFilePart(mw, upload.PartReport, rel, filepath.Join(body.dir, filepath.FromSlash(rel)), "BLOCKING"); err != nil {
+			return err
+		}
+	}
+	for _, rel := range body.quarantineReports {
+		if err := copyFilePart(mw, upload.PartReport, rel, filepath.Join(body.dir, filepath.FromSlash(rel)), "QUARANTINE"); err != nil {
 			return err
 		}
 	}
 	if body.logTail != "" {
-		if err := copyFilePart(mw, upload.PartLog, filepath.Base(body.logTail), body.logTail); err != nil {
+		if err := copyFilePart(mw, upload.PartLog, filepath.Base(body.logTail), body.logTail, ""); err != nil {
 			return err
 		}
 	}
 	return mw.Close()
 }
 
-func copyFilePart(mw *multipart.Writer, field, name, path string) error {
+func copyFilePart(mw *multipart.Writer, field, name, path, stage string) error {
 	f, err := os.Open(path) //nolint:gosec // paths come from the workspace search or the pipeline's own flags
 	if err != nil {
 		return fmt.Errorf("open %s: %w", path, err)
 	}
 	defer f.Close() //nolint:errcheck // read-only
 
-	w, err := mw.CreateFormFile(field, name)
+	h := make(textproto.MIMEHeader)
+	h.Set("Content-Disposition", mime.FormatMediaType("form-data", map[string]string{"name": field, "filename": name}))
+	h.Set("Content-Type", "application/octet-stream")
+	if stage != "" {
+		h.Set(upload.HeaderTestStage, stage)
+	}
+	w, err := mw.CreatePart(h)
 	if err != nil {
 		return err
 	}

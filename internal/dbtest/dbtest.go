@@ -7,6 +7,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/moby/moby/api/types/container"
+
 	"github.com/testcontainers/testcontainers-go"
 	tcpostgres "github.com/testcontainers/testcontainers-go/modules/postgres"
 )
@@ -35,6 +37,7 @@ func URL(t *testing.T) string {
 		tcpostgres.WithUsername("buildlens"),
 		tcpostgres.WithPassword("test-only-password"),
 		tcpostgres.BasicWaitStrategies(),
+		testcontainers.WithHostConfigModifier(func(c *container.HostConfig) { c.Memory = 384 << 20 }),
 	)
 	testcontainers.CleanupContainer(t, ctr)
 	if err != nil {

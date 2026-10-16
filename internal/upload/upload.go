@@ -11,9 +11,10 @@ import (
 
 // Multipart part names of an upload.
 const (
-	PartMetadata = "metadata" // JSON Metadata, required, sent first
-	PartReport   = "report"   // one Surefire/Failsafe XML file; the filename is its path relative to the workspace
-	PartLog      = "log"      // the build's log tail, plain text, optional
+	PartMetadata    = "metadata"               // JSON Metadata, required, sent first
+	PartReport      = "report"                 // one Surefire/Failsafe XML file; the filename is its path relative to the workspace
+	PartLog         = "log"                    // the build's log tail, plain text, optional
+	HeaderTestStage = "X-BuildLens-Test-Stage" // report parts: BLOCKING (default) or QUARANTINE
 )
 
 // Limits the server enforces on single parts (the whole body has its own limit).

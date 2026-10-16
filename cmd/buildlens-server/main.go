@@ -22,6 +22,7 @@ import (
 	"github.com/nibinrj/buildlens/internal/config"
 	"github.com/nibinrj/buildlens/internal/db"
 	"github.com/nibinrj/buildlens/internal/ingest"
+	"github.com/nibinrj/buildlens/internal/quarantine"
 )
 
 func main() {
@@ -68,10 +69,11 @@ func run(ctx context.Context, getenv func(string) string) error {
 		return fmt.Errorf("listen on %s: %w", cfg.HTTPAddr, err)
 	}
 
-	svc := ingest.NewService(pool)
+	svc := ingest.NewServiceWithPolicy(pool, cfg.P3)
+	quarantines := quarantine.NewService(pool, cfg.P3)
 	srv := &http.Server{
 		Handler: api.NewRouter(api.Deps{
-			DB: pool, Ingester: svc, Builds: svc,
+			DB: pool, Ingester: svc, Builds: svc, Quarantine: quarantines,
 			IngestKey: cfg.IngestKey, MaxUploadBytes: cfg.MaxUploadBytes, Logger: logger,
 		}),
 		ReadHeaderTimeout: 10 * time.Second,

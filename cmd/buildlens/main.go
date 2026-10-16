@@ -3,7 +3,7 @@
 // Usage:
 //
 //	buildlens report [flags]      upload one build's test reports, stage timings and log tail
-//	buildlens quarantine [flags]  fetch the quarantine list (not implemented until P3)
+//	buildlens quarantine [flags]  write Surefire exclusions or run-only patterns
 //	buildlens version
 //
 // "buildlens report" never fails a build because BuildLens is down: it prints a warning and exits 0,
@@ -26,7 +26,7 @@ var version = "dev"
 // Exit codes.
 const (
 	exitOK     = 0 // done, or failed without --strict (a warning was printed)
-	exitFailed = 1 // failed with --strict
+	exitFailed = 1 // report failed with --strict, or quarantine file could not be written
 	exitUsage  = 2 // bad flags or invalid input: a pipeline bug, not an outage
 )
 
@@ -47,7 +47,8 @@ func run(ctx context.Context, args []string, stdout, stderr io.Writer, getenv fu
 		r := reporter{client: &http.Client{}, sleep: sleepCtx, stdout: stdout, stderr: stderr}
 		return r.run(ctx, args[1:], getenv)
 	case "quarantine":
-		return runQuarantine(args[1:], stderr)
+		q := quarantineFetcher{client: &http.Client{}, stdout: stdout, stderr: stderr}
+		return q.run(ctx, args[1:], getenv)
 	case "version":
 		fmt.Fprintln(stdout, "buildlens", version)
 		return exitOK
@@ -66,15 +67,9 @@ func usage(w io.Writer) {
 
 commands:
   report      upload test reports, stage timings and the log tail of one build
-  quarantine  fetch the quarantined tests (implemented in P3)
+  quarantine  write quarantined tests as Surefire exclusion/include patterns
   version     print the version
 
 Run "buildlens <command> -h" for the flags of a command.
 `)
-}
-
-// runQuarantine is a stub until P3, which writes the Surefire excludes/includes files.
-func runQuarantine(_ []string, stderr io.Writer) int {
-	fmt.Fprintln(stderr, "buildlens quarantine: not implemented yet (arrives in P3); no tests are excluded")
-	return exitOK
 }

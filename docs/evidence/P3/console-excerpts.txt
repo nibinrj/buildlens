@@ -1,0 +1,29 @@
+Jenkins build #7
+[2026-10-12T17:52:17.360Z] BuildLens: blocking exclusions: lab.flaky.OrderTest#victim
+[2026-10-12T17:52:17.681Z] + mvn -B -ntp -Dbuildlens.flaky.seed=7 -Dbuildlens.flaky.clockMillis=7000 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-p3-local-20261012/lab/.buildlens/quarantine-excludes.txt verify
+[Pipeline] { (Quarantine)
+[2026-10-12T17:52:25.450Z] BuildLens: quarantine-only tests: lab.flaky.OrderTest#victim
+[2026-10-12T17:52:25.727Z] + mvn -B -ntp -Dbuildlens.flaky.seed=7 -Dbuildlens.flaky.clockMillis=7000 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-p3-local-20261012/lab/.buildlens/quarantine-only.txt test
+[2026-10-12T17:52:29.511Z] buildlens report: uploaded buildlens-p3-local-20261012 #7 with 7 report file(s): {"id":9,"created":true,"tests":13,"stages":4}
+Finished: SUCCESS
+Jenkins build #20
+[2026-10-12T17:59:42.256Z] BuildLens: blocking exclusions: lab.flaky.RandomTest#sometimesFails
+[2026-10-12T17:59:42.633Z] + mvn -B -ntp -Dbuildlens.flaky.seed=20 -Dbuildlens.flaky.clockMillis=20000 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-p3-local-20261012/lab/.buildlens/quarantine-excludes.txt verify
+[2026-10-12T17:59:48.686Z] [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.022 s <<< FAILURE! -- in lab.flaky.TimeTest
+[Pipeline] { (Quarantine)
+[2026-10-12T17:59:48.943Z] BuildLens: quarantine-only tests: lab.flaky.RandomTest#sometimesFails
+[2026-10-12T17:59:49.233Z] + mvn -B -ntp -Dbuildlens.flaky.seed=20 -Dbuildlens.flaky.clockMillis=20000 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-p3-local-20261012/lab/.buildlens/quarantine-only.txt test
+[2026-10-12T18:00:02.127Z] buildlens report: uploaded buildlens-p3-local-20261012 #20 with 6 report file(s): {"id":22,"created":true,"tests":13,"stages":4}
+Finished: SUCCESS
+Jenkins build #23
+[2026-10-12T18:04:49.786Z] BuildLens: blocking exclusions: lab.flaky.RandomTest#sometimesFails
+[2026-10-12T18:04:50.257Z] + mvn -B -ntp -Dbuildlens.flaky.seed=3 -Dbuildlens.flaky.clockMillis=3000 -Dsurefire.rerunFailingTestsCount=0 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-p3-local-20261012/lab/.buildlens/quarantine-excludes.txt verify
+[Pipeline] { (Quarantine)
+[2026-10-12T18:04:55.984Z] BuildLens: quarantine-only tests: lab.flaky.RandomTest#sometimesFails
+[2026-10-12T18:04:56.303Z] + mvn -B -ntp -Dbuildlens.flaky.seed=3 -Dbuildlens.flaky.clockMillis=3000 -Dsurefire.rerunFailingTestsCount=0 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-p3-local-20261012/lab/.buildlens/quarantine-only.txt test
+[2026-10-12T18:05:00.216Z] [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.089 s <<< FAILURE! -- in lab.flaky.RandomTest
+[2026-10-12T18:05:00.216Z] [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[2026-10-12T18:05:00.494Z] ERROR: quarantined test failed
+[2026-10-12T18:05:00.494Z] ERROR: one or more quarantined tests failed
+[2026-10-12T18:05:01.425Z] buildlens report: uploaded buildlens-p3-local-20261012 #23 with 6 report file(s): {"id":25,"created":true,"tests":13,"stages":4}
+Finished: SUCCESS

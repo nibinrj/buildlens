@@ -23,6 +23,7 @@ type Deps struct {
 	DB             Pinger
 	Ingester       Ingester
 	Builds         BuildReader
+	Quarantine     QuarantineService
 	IngestKey      string // required by every /api/v1 route
 	MaxUploadBytes int64
 	Logger         *slog.Logger
@@ -38,6 +39,9 @@ func NewRouter(d Deps) http.Handler {
 	auth := requireKey(d.IngestKey)
 	mux.Handle("POST /api/v1/builds", auth(handleCreateBuild(d)))
 	mux.Handle("GET /api/v1/builds/{id}", auth(handleGetBuild(d)))
+	mux.Handle("GET /api/v1/quarantine", auth(handleListQuarantine(d)))
+	mux.Handle("POST /api/v1/quarantine", auth(handleCreateQuarantine(d)))
+	mux.Handle("POST /api/v1/quarantine/{id}/release", auth(handleReleaseQuarantine(d)))
 	return mux
 }
 

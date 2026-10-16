@@ -58,9 +58,11 @@ func handleCreateBuild(d Deps) http.HandlerFunc {
 		}
 
 		var (
-			meta    *upload.Metadata
-			tests   []surefire.Result
-			reports int
+			meta        *upload.Metadata
+			tests       []surefire.Result
+			reports     int
+			quarantined []surefire.Result
+			logTail     *string
 		)
 		for {
 			part, err := mr.NextPart()
@@ -71,7 +73,7 @@ func handleCreateBuild(d Deps) http.HandlerFunc {
 				writeReadError(w, err, "read multipart body")
 				return
 			}
-			status, msg := readPart(part, &meta, &tests, &reports)
+			status, msg := readPart(part, &meta, &tests, &quarantined, &logTail, &reports)
 			_ = part.Close()
 			if status != 0 {
 				writeError(w, status, msg)
@@ -88,7 +90,19 @@ func handleCreateBuild(d Deps) http.HandlerFunc {
 			return
 		}
 
-		res, err := d.Ingester.Ingest(r.Context(), ingest.Upload{Meta: *meta, Tests: tests})
+		for _, a := range tests {
+			for _, b := range quarantined {
+				if a.ClassName == b.ClassName && a.MethodName == b.MethodName {
+					writeError(w, http.StatusBadRequest, "a test cannot appear in both blocking and quarantine reports")
+					return
+				}
+			}
+		}
+		tail := ""
+		if logTail != nil {
+			tail = *logTail
+		}
+		res, err := d.Ingester.Ingest(r.Context(), ingest.Upload{Meta: *meta, Tests: tests, QuarantineTests: quarantined, LogTail: tail})
 		if err != nil {
 			d.Logger.ErrorContext(r.Context(), "ingest failed", "job", meta.Job, "build_number", meta.BuildNumber, "err", err)
 			writeError(w, http.StatusInternalServerError, "could not store the build")
@@ -106,7 +120,7 @@ func handleCreateBuild(d Deps) http.HandlerFunc {
 }
 
 // readPart handles one multipart part. It returns a non-zero HTTP status and a message when the part is invalid.
-func readPart(part *multipart.Part, meta **upload.Metadata, tests *[]surefire.Result, reports *int) (int, string) {
+func readPart(part *multipart.Part, meta **upload.Metadata, tests, quarantined *[]surefire.Result, logTail **string, reports *int) (int, string) {
 	switch part.FormName() {
 	case upload.PartMetadata:
 		if *meta != nil {
@@ -123,6 +137,10 @@ func readPart(part *multipart.Part, meta **upload.Metadata, tests *[]surefire.Re
 		*meta = &m
 
 	case upload.PartReport:
+		stage := part.Header.Get(upload.HeaderTestStage)
+		if stage != "" && stage != "BLOCKING" && stage != "QUARANTINE" {
+			return http.StatusBadRequest, "invalid test stage"
+		}
 		name := rawFileName(part)
 		results, err := surefire.Parse(part, name)
 		if err != nil {
@@ -131,21 +149,29 @@ func readPart(part *multipart.Part, meta **upload.Metadata, tests *[]surefire.Re
 			}
 			return http.StatusBadRequest, "invalid report: " + err.Error()
 		}
-		*tests = append(*tests, results...)
+		if stage == "QUARANTINE" {
+			*quarantined = append(*quarantined, results...)
+		} else {
+			*tests = append(*tests, results...)
+		}
 		*reports++
 
 	case upload.PartLog:
-		// P3's infrastructure rules read the log tail; P2 only checks its size.
-		n, err := io.Copy(io.Discard, io.LimitReader(part, upload.MaxLogBytes+1))
+		if *logTail != nil {
+			return http.StatusBadRequest, "more than one log part"
+		}
+		data, err := io.ReadAll(io.LimitReader(part, upload.MaxLogBytes+1))
 		if err != nil {
 			if isTooLarge(err) {
 				return http.StatusRequestEntityTooLarge, "upload exceeds the size limit"
 			}
 			return http.StatusBadRequest, "read log part: " + err.Error()
 		}
-		if n > upload.MaxLogBytes {
+		if len(data) > upload.MaxLogBytes {
 			return http.StatusRequestEntityTooLarge, fmt.Sprintf("log part is larger than %d bytes", upload.MaxLogBytes)
 		}
+		tail := string(data)
+		*logTail = &tail
 
 	default:
 		return http.StatusBadRequest, fmt.Sprintf("unknown part %q", part.FormName())

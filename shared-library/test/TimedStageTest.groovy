@@ -86,6 +86,14 @@ class TimedStageTest extends BasePipelineTest {
     }
 
     @Test
+    void caughtQuarantineFailureRecordsStageWithoutChangingBuild() {
+        Map outcome = [result: 'SUCCESS']
+        timedStage.call('Quarantine', outcome) { outcome.result = 'UNSTABLE' }
+        assertEquals('UNSTABLE', records()[0].result)
+        assertEquals('SUCCESS', binding.getVariable('currentBuild').currentResult)
+    }
+
+    @Test
     void existingRecordsAreKept() {
         binding.getVariable('env').BUILDLENS_STAGES = '{"name":"Earlier","startedAt":1,"durationMs":2,"result":"SUCCESS"}\n'
         timedStage.call('Later') { 'ok' }

@@ -21,7 +21,7 @@
 #>
 param(
     [Parameter(Position = 0, Mandatory)]
-    [ValidateSet('up', 'down', 'logs', 'test', 'lint', 'generate', 'jenkins', 'seed')]
+    [ValidateSet('up', 'down', 'logs', 'test', 'lint', 'generate', 'jenkins', 'seed', 'drive')]
     [string] $Task,
 
     [Parameter(Position = 1, ValueFromRemainingArguments)]
@@ -61,6 +61,12 @@ function Invoke-InJenkins([string] $Script) {
 }
 
 switch ($Task) {
+    'drive' {
+        # Local P3 verification of uncommitted sources. See tools/p3-local.ps1.
+        $count = if ($Rest.Count) { [int]$Rest[0] } else { 20 }
+        & ./tools/p3-local.ps1 -Mode Prepare
+        & ./tools/p3-local.ps1 -Mode Run -Count $count
+    }
     'up' {
         Assert-EnvFile
         # --wait blocks until every service with a healthcheck reports healthy.
@@ -81,21 +87,24 @@ switch ($Task) {
             # An explicit DOCKER_HOST skips testcontainers' Docker detection, which failed on Windows when two
             # test binaries started containers at the same moment.
             if (-not $env:DOCKER_HOST) { $env:DOCKER_HOST = 'npipe:////./pipe/docker_engine' }
+            # Test cleanup owns each limited Postgres; avoid an unlimited auxiliary Ryuk container.
+            $env:TESTCONTAINERS_RYUK_DISABLED = 'true'
             go test -count=1 ./...
             break
         }
         $repo = (Resolve-Path .).Path
-        docker run --rm `
+        docker run --rm --memory 1536m `
             -v "${repo}:/src" -w /src `
             -v buildlens-gomod:/go/pkg/mod `
             -v buildlens-gocache:/root/.cache/go-build `
             -v /var/run/docker.sock:/var/run/docker.sock `
             -e TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal `
             -e TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock `
+            -e TESTCONTAINERS_RYUK_DISABLED=true `
             -e GOTOOLCHAIN=local `
             -e CGO_ENABLED=1 `
             $TestImage `
-            go test -race -count=1 ./...
+            go test -race -count=1 -p 1 ./...
 
         Write-Host 'shared-library: JenkinsPipelineUnit tests'
         Push-Location shared-library
@@ -154,7 +163,7 @@ esac
 
     'generate' {
         $repo = (Resolve-Path .).Path
-        docker run --rm -v "${repo}:/src" -w /src $SqlcImage generate
+        docker run --rm --memory 512m -v "${repo}:/src" -w /src $SqlcImage generate
         Write-Host 'sqlc generate: internal/store updated'
     }
 }

@@ -114,6 +114,17 @@ class ReportBuildTest extends BasePipelineTest {
     }
 
     @Test
+    void labelsSeparateReportsAndExplicitSnapshotIdentifiers() {
+        reportBuild.call(repo:'owner/lab',commit:COMMIT,tree:TREE,
+            reports:'**/target/surefire-reports/TEST-*.xml',
+            quarantineReports:'**/target/surefire-reports-quarantine/TEST-*.xml')
+        String cmd=theCommand()
+        assertTrue(cmd.contains("'--reports' '**/target/surefire-reports/TEST-*.xml'"),cmd)
+        assertTrue(cmd.contains("'--quarantine-reports' '**/target/surefire-reports-quarantine/TEST-*.xml'"),cmd)
+        assertTrue(cmd.contains("'--tree' '${TREE}'"),cmd)
+    }
+
+    @Test
     void cliFailureIsOnlyAWarning() {
         cliStatus = 1
 

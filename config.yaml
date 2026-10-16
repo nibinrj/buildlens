@@ -1,0 +1,11 @@
+# Optional P3 policy. Set BUILDLENS_RULES_FILE to this file; omitted keys keep defaults.
+rules:
+  r1_flaky_builds: 2
+  r1_window: 30
+  r2_window: 30
+  r3_flips: 3
+  r3_window: 30
+release_passes: 10
+cap_percent: 5
+cap_max_tests: 10
+cap_build_window: 30

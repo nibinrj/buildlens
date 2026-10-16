@@ -13,12 +13,18 @@ import groovy.json.JsonOutput
  * unstable during this stage (for example the junit step found failures). The body's exception is rethrown.
  */
 def call(String name, Closure body) {
+    return call(name, [:], body)
+}
+
+// A caught quarantine failure changes the stage result while preserving the build result.
+def call(String name, Map outcome, Closure body) {
     return stage(name) {
         long start = System.currentTimeMillis()
         String resultBefore = currentBuild.currentResult
         String result = 'SUCCESS'
         try {
             def value = body()
+            if (outcome.result) { result = outcome.result }
             if (resultBefore != 'UNSTABLE' && currentBuild.currentResult == 'UNSTABLE') {
                 result = 'UNSTABLE'
             }

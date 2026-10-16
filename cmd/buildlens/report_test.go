@@ -31,6 +31,7 @@ type fakeServer struct {
 }
 
 type recorded struct {
+	stages   []string
 	auth     string
 	parts    []string // "field:filename" in order
 	metadata upload.Metadata
@@ -48,6 +49,9 @@ func (f *fakeServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		_, dp, _ := mime.ParseMediaType(p.Header.Get("Content-Disposition"))
 		rec.parts = append(rec.parts, p.FormName()+":"+dp["filename"])
+		if p.FormName() == upload.PartReport {
+			rec.stages = append(rec.stages, p.Header.Get(upload.HeaderTestStage))
+		}
 		b, _ := io.ReadAll(p)
 		switch p.FormName() {
 		case upload.PartMetadata:
@@ -301,6 +305,27 @@ func TestReportWithoutReportsStillUploads(t *testing.T) {
 	}
 }
 
+func TestReportSeparatesStages(t *testing.T) {
+	fs := &fakeServer{statuses: []int{http.StatusCreated}}
+	srv := httptest.NewServer(fs)
+	defer srv.Close()
+	dir := workspace(t)
+	path := filepath.Join(dir, "flaky-lab", "target", "surefire-reports-quarantine", "TEST-lab.flaky.RandomTest.xml")
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, []byte("<testsuite/>"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	code, out, _ := runReport(t, jenkinsEnv(srv.URL), reportArgs(dir, "--quarantine-reports", "**/target/surefire-reports-quarantine/TEST-*.xml"))
+	if code != exitOK || len(fs.requests) != 1 {
+		t.Fatalf("exit %d output %s", code, out)
+	}
+	if !reflect.DeepEqual(fs.requests[0].stages, []string{"BLOCKING", "BLOCKING", "QUARANTINE"}) {
+		t.Fatalf("stages=%v", fs.requests[0].stages)
+	}
+}
+
 func TestGlobToRegexp(t *testing.T) {
 	tests := []struct {
 		glob  string
@@ -342,7 +367,7 @@ func TestRunCommands(t *testing.T) {
 		{nil, exitUsage, "usage: buildlens"},
 		{[]string{"version"}, exitOK, "buildlens dev"},
 		{[]string{"help"}, exitOK, "commands:"},
-		{[]string{"quarantine", "--repo", "x"}, exitOK, "not implemented yet"},
+		{[]string{"quarantine", "--repo", "x"}, exitUsage, "--server (or BUILDLENS_SERVER_URL) is required"},
 		{[]string{"deploy"}, exitUsage, `unknown command "deploy"`},
 		{[]string{"report", "-h"}, exitOK, "-server"},
 	}

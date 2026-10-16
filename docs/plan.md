@@ -11,11 +11,14 @@ Build Phase 1 (local, seven Claude Code prompts, written in Go) now; Phase 2 (Je
 3. Copy the **CLAUDE.md** section below into `CLAUDE.md` at the repo root. Claude Code reads it automatically every session.
 4. Paste the Phase 1 prompts into Claude Code one at a time, in order. Do not start the next prompt until the current one ends with passing tests and its output shown.
 5. After each prompt, read the tests it wrote first. They are the fastest way to see what the code claims to do.
-6. Commit after each prompt with the prompt number in the message (`P2: ingest + reporter`).
+6. The owner reviews and commits after each prompt with its number in the message (`P2: ingest + reporter`).
+   Agents leave all work uncommitted and never stage or push changes.
 
 **Rules for every prompt**
 
-- Use Opus at maximum effort. One prompt can run for a long time; let it finish.
+- Owner update, 2026-10-12: use the available plan for thorough implementation and verification.
+  Prioritize correctness, understandable design and reproducible evidence over saving tokens.
+  Model choice does not change the acceptance gates, memory limits or dependency approval rules.
 - If Claude Code asks a question, answer it. Do not tell it to "just decide" on versions, security groups or IAM.
 - If a prompt hits your usage limit mid-way, start the next session with: "Read CLAUDE.md and docs/plan.md, check git status and the last commit, and continue Prompt N from where it stopped."
 - Never accept "done" without the command output that proves it.

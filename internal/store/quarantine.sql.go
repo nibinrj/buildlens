@@ -12,7 +12,7 @@ import (
 
 const listActiveQuarantine = `-- name: ListActiveQuarantine :many
 SELECT q.id, q.test_case_id, q.reason_rule, q.quarantined_at, q.manual,
-       tc.module, tc.class_name, tc.method_name
+       tc.module, tc.class_name, tc.method_name, q.evidence, q.consecutive_passes
 FROM quarantine q
 JOIN test_case tc ON tc.id = q.test_case_id
 WHERE tc.repository_id = $1
@@ -21,14 +21,16 @@ ORDER BY q.quarantined_at, q.id
 `
 
 type ListActiveQuarantineRow struct {
-	ID            int64
-	TestCaseID    int64
-	ReasonRule    string
-	QuarantinedAt time.Time
-	Manual        bool
-	Module        string
-	ClassName     string
-	MethodName    string
+	ID                int64
+	TestCaseID        int64
+	ReasonRule        string
+	QuarantinedAt     time.Time
+	Manual            bool
+	Module            string
+	ClassName         string
+	MethodName        string
+	Evidence          []byte
+	ConsecutivePasses int32
 }
 
 // The tests currently quarantined in one repository, oldest first.
@@ -50,6 +52,8 @@ func (q *Queries) ListActiveQuarantine(ctx context.Context, repositoryID int64) 
 			&i.Module,
 			&i.ClassName,
 			&i.MethodName,
+			&i.Evidence,
+			&i.ConsecutivePasses,
 		); err != nil {
 			return nil, err
 		}

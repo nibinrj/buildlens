@@ -2,9 +2,13 @@ package config
 
 import (
 	"log/slog"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/nibinrj/buildlens/internal/quarantine"
 )
 
 func TestLoad(t *testing.T) {
@@ -30,6 +34,7 @@ func TestLoad(t *testing.T) {
 				MigrateOnStart:  true,
 				IngestKey:       key,
 				MaxUploadBytes:  64 << 20,
+				P3:              quarantine.Defaults(),
 			},
 		},
 		{
@@ -51,6 +56,7 @@ func TestLoad(t *testing.T) {
 				MigrateOnStart:  false,
 				IngestKey:       key,
 				MaxUploadBytes:  2 << 20,
+				P3:              quarantine.Defaults(),
 			},
 		},
 		{
@@ -117,5 +123,49 @@ func TestLoad(t *testing.T) {
 				t.Errorf("Load() = %+v, want %+v", got, tc.want)
 			}
 		})
+	}
+}
+
+func TestRulesFile(t *testing.T) {
+	for _, tc := range []struct {
+		name, yaml string
+		bad        bool
+	}{
+		{"partial overrides", "rules:\n  r1_flaky_builds: 3\nrelease_passes: 4\n", false},
+		{"unknown root", "release_passess: 4\n", true},
+		{"unknown nested", "rules:\n  r4: 2\n", true},
+		{"invalid threshold", "rules:\n  r1_flaky_builds: 31\n", true},
+		{"multiple documents", "release_passes: 4\n---\nrelease_passes: 5\n", true},
+		{"malformed", "rules: [", true},
+		{"empty", "", true},
+		{"oversized", "release_passes: 4\n#" + strings.Repeat("x", 1<<20), true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "rules.yaml")
+			if err := os.WriteFile(path, []byte(tc.yaml), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			cfg, err := Load(func(k string) string {
+				switch k {
+				case "BUILDLENS_DATABASE_URL":
+					return "postgres://localhost/test"
+				case "BUILDLENS_INGEST_KEY":
+					return "test-key-0123456789"
+				case "BUILDLENS_RULES_FILE":
+					return path
+				}
+				return ""
+			})
+			if (err != nil) != tc.bad {
+				t.Fatalf("Load error=%v, want bad=%v", err, tc.bad)
+			}
+			if !tc.bad && (cfg.P3.ReleasePasses != 4 || cfg.P3.Rules.R1FlakyBuilds != 3 || cfg.P3.CapMaxTests != 10) {
+				t.Fatalf("overrides/defaults=%+v", cfg.P3)
+			}
+		})
+	}
+	cfg := quarantine.Defaults()
+	if err := loadPolicy(filepath.Join(t.TempDir(), "missing"), &cfg); err == nil {
+		t.Fatal("missing policy accepted")
 	}
 }
