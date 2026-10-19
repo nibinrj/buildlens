@@ -15,18 +15,24 @@ import (
 	"go.yaml.in/yaml/v3"
 
 	"github.com/nibinrj/buildlens/internal/quarantine"
+	"github.com/nibinrj/buildlens/internal/regression"
 )
 
 // Config is the server configuration. Every field comes from an environment variable.
 type Config struct {
-	HTTPAddr        string            // BUILDLENS_HTTP_ADDR, default ":8080"
-	DatabaseURL     string            // BUILDLENS_DATABASE_URL, required
-	ShutdownTimeout time.Duration     // BUILDLENS_SHUTDOWN_TIMEOUT, default 15s
-	LogLevel        slog.Level        // BUILDLENS_LOG_LEVEL: debug, info, warn, error; default info
-	MigrateOnStart  bool              // BUILDLENS_MIGRATE_ON_START, default true
-	IngestKey       string            // BUILDLENS_INGEST_KEY, required, at least MinKeyLength characters; never logged
-	MaxUploadBytes  int64             // BUILDLENS_MAX_UPLOAD_BYTES, default 64 MiB: the largest POST /api/v1/builds body
-	P3              quarantine.Config // BUILDLENS_RULES_FILE optional strict YAML; otherwise defaults
+	HTTPAddr           string            // BUILDLENS_HTTP_ADDR, default ":8080"
+	DatabaseURL        string            // BUILDLENS_DATABASE_URL, required
+	ShutdownTimeout    time.Duration     // BUILDLENS_SHUTDOWN_TIMEOUT, default 15s
+	LogLevel           slog.Level        // BUILDLENS_LOG_LEVEL: debug, info, warn, error; default info
+	MigrateOnStart     bool              // BUILDLENS_MIGRATE_ON_START, default true
+	IngestKey          string            // BUILDLENS_INGEST_KEY, required, at least MinKeyLength characters; never logged
+	MaxUploadBytes     int64             // BUILDLENS_MAX_UPLOAD_BYTES, default 64 MiB: the largest POST /api/v1/builds body
+	P3                 quarantine.Config // BUILDLENS_RULES_FILE optional strict YAML; otherwise defaults
+	Regression         regression.Config
+	ReferenceInstance  string
+	PriceRegion        string
+	GitHubToken        string // BUILDLENS_GITHUB_TOKEN; separate from the read-only Jenkins token
+	GitHubRepositories string // comma separated allowlist; required when the token is set
 }
 
 // MinKeyLength is the shortest API key the server accepts, so a placeholder like "changeme" fails at start.
@@ -35,12 +41,15 @@ const MinKeyLength = 16
 // Load builds a Config from getenv. Pass os.Getenv in production and a map lookup in tests.
 func Load(getenv func(string) string) (Config, error) {
 	cfg := Config{
-		HTTPAddr:        ":8080",
-		ShutdownTimeout: 15 * time.Second,
-		LogLevel:        slog.LevelInfo,
-		MigrateOnStart:  true,
-		MaxUploadBytes:  64 << 20,
-		P3:              quarantine.Defaults(),
+		HTTPAddr:          ":8080",
+		ShutdownTimeout:   15 * time.Second,
+		LogLevel:          slog.LevelInfo,
+		MigrateOnStart:    true,
+		MaxUploadBytes:    64 << 20,
+		P3:                quarantine.Defaults(),
+		Regression:        regression.Defaults(),
+		ReferenceInstance: "t3.small",
+		PriceRegion:       "us-east-1",
 	}
 
 	if v := getenv("BUILDLENS_HTTP_ADDR"); v != "" {
@@ -96,14 +105,48 @@ func Load(getenv func(string) string) (Config, error) {
 	}
 
 	if path := getenv("BUILDLENS_RULES_FILE"); path != "" {
-		if err := loadPolicy(path, &cfg.P3); err != nil {
+		if err := loadPolicy(path, &cfg.P3, &cfg.Regression); err != nil {
 			return Config{}, err
+		}
+	}
+	if v := getenv("BUILDLENS_REFERENCE_INSTANCE"); v != "" {
+		cfg.ReferenceInstance = v
+	}
+	if v := getenv("BUILDLENS_PRICE_REGION"); v != "" {
+		cfg.PriceRegion = v
+	}
+	cfg.GitHubToken = getenv("BUILDLENS_GITHUB_TOKEN")
+	cfg.GitHubRepositories = strings.TrimSpace(getenv("BUILDLENS_GITHUB_REPOSITORIES"))
+	if cfg.GitHubToken != "" && cfg.GitHubRepositories == "" {
+		return Config{}, errors.New("BUILDLENS_GITHUB_REPOSITORIES is required when GitHub comments are enabled")
+	}
+	for _, repo := range strings.Split(cfg.GitHubRepositories, ",") {
+		if cfg.GitHubRepositories == "" {
+			break
+		}
+		parts := strings.Split(strings.TrimSpace(repo), "/")
+		if len(parts) != 2 || !validRepoPart(parts[0]) || !validRepoPart(parts[1]) {
+			return Config{}, errors.New("BUILDLENS_GITHUB_REPOSITORIES must contain owner/name entries")
 		}
 	}
 	return cfg, nil
 }
 
-func loadPolicy(path string, policy *quarantine.Config) error {
+func validRepoPart(s string) bool {
+	if s == "" || s == "." || s == ".." {
+		return false
+	}
+	for _, r := range s {
+		switch {
+		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9', r == '-', r == '_', r == '.':
+		default:
+			return false
+		}
+	}
+	return true
+}
+
+func loadPolicy(path string, policy *quarantine.Config, regressions ...*regression.Config) error {
 	f, err := os.Open(path) //nolint:gosec // trusted server startup configuration
 	if err != nil {
 		return fmt.Errorf("open BUILDLENS_RULES_FILE: %w", err)
@@ -118,12 +161,29 @@ func loadPolicy(path string, policy *quarantine.Config) error {
 	}
 	d := yaml.NewDecoder(bytes.NewReader(data))
 	d.KnownFields(true)
-	if err := d.Decode(policy); err != nil {
+	doc := struct {
+		quarantine.Config `yaml:",inline"`
+		Regression        regression.Config `yaml:"regression"`
+	}{*policy, regression.Defaults()}
+	if len(regressions) > 0 {
+		doc.Regression = *regressions[0]
+	}
+	if err := d.Decode(&doc); err != nil {
 		return fmt.Errorf("decode P3 policy: %w", err)
 	}
 	var extra any
 	if err := d.Decode(&extra); !errors.Is(err, io.EOF) {
 		return errors.New("P3 policy must contain exactly one YAML document")
 	}
-	return policy.Validate()
+	if err := doc.Regression.Validate(); err != nil {
+		return err
+	}
+	if err := doc.Validate(); err != nil {
+		return err
+	}
+	*policy = doc.Config
+	if len(regressions) > 0 {
+		*regressions[0] = doc.Regression
+	}
+	return nil
 }

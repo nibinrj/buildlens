@@ -20,7 +20,7 @@ import (
 
 // wantTables is every table in the plan's data model (docs/plan.md, "Tables").
 var wantTables = []string{
-	"alert", "build", "infra_event", "price", "quarantine",
+	"alert", "build", "infra_event", "pr_comment", "price", "quarantine",
 	"repository", "stage_run", "test_case", "test_run",
 }
 

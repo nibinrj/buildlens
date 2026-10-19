@@ -52,6 +52,7 @@ type Agent struct {
 	Name         string `json:"name,omitempty"`
 	InstanceType string `json:"instance_type,omitempty"`
 	Lifecycle    string `json:"lifecycle,omitempty"` // LOCAL, SPOT, ON_DEMAND
+	BusyMs       *int64 `json:"busy_ms,omitempty"`   // measured inside the allocated agent, excludes queue time
 }
 
 // Stage is one stage timed by the shared library's timedStage.
@@ -85,6 +86,8 @@ func (m Metadata) Validate() error {
 	check(m.FinishedAt == nil || !m.FinishedAt.Before(m.StartedAt), "finished_at is before started_at")
 	check(m.DurationMs == nil || *m.DurationMs >= 0, "duration_ms must not be negative")
 	check(lifecycles[m.Agent.Lifecycle], "agent.lifecycle must be LOCAL, SPOT or ON_DEMAND, got %q", m.Agent.Lifecycle)
+	check(m.Agent.BusyMs == nil || *m.Agent.BusyMs >= 0, "agent.busy_ms must not be negative")
+	check(m.Agent.BusyMs == nil || m.DurationMs == nil || *m.Agent.BusyMs <= *m.DurationMs, "agent.busy_ms must not exceed build duration")
 
 	for i, s := range m.Stages {
 		check(strings.TrimSpace(s.Name) != "", "stages[%d].name is required", i)

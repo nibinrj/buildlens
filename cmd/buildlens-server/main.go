@@ -15,12 +15,14 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
 	"github.com/nibinrj/buildlens/internal/api"
 	"github.com/nibinrj/buildlens/internal/config"
 	"github.com/nibinrj/buildlens/internal/db"
+	"github.com/nibinrj/buildlens/internal/github"
 	"github.com/nibinrj/buildlens/internal/ingest"
 	"github.com/nibinrj/buildlens/internal/quarantine"
 )
@@ -68,13 +70,36 @@ func run(ctx context.Context, getenv func(string) string) error {
 	if err != nil {
 		return fmt.Errorf("listen on %s: %w", cfg.HTTPAddr, err)
 	}
+	defer ln.Close() //nolint:errcheck // Serve also closes the listener
 
-	svc := ingest.NewServiceWithPolicy(pool, cfg.P3)
+	var repositories []string
+	if cfg.GitHubToken != "" {
+		for _, repo := range strings.Split(cfg.GitHubRepositories, ",") {
+			repositories = append(repositories, strings.TrimSpace(repo))
+		}
+	}
+	svc := ingest.NewServiceWithAnalysis(pool, cfg.P3, cfg.Regression, cfg.ReferenceInstance, cfg.PriceRegion, repositories)
+	var notify func()
+	if cfg.GitHubToken != "" {
+		client, err := github.NewClient(cfg.GitHubToken, repositories)
+		if err != nil {
+			return fmt.Errorf("configure GitHub client: %w", err)
+		}
+		worker := github.NewWorker(github.DatabaseStore{Pool: pool}, github.DatabaseSource{Pool: pool}, client, logger)
+		workerCtx, stopWorker := context.WithCancel(ctx)
+		done := make(chan struct{})
+		go func() { defer close(done); worker.Run(workerCtx) }()
+		defer func() { stopWorker(); <-done }()
+		notify = worker.Notify
+	} else {
+		logger.InfoContext(ctx, "GitHub comments disabled: BUILDLENS_GITHUB_TOKEN is unset")
+	}
 	quarantines := quarantine.NewService(pool, cfg.P3)
 	srv := &http.Server{
 		Handler: api.NewRouter(api.Deps{
 			DB: pool, Ingester: svc, Builds: svc, Quarantine: quarantines,
 			IngestKey: cfg.IngestKey, MaxUploadBytes: cfg.MaxUploadBytes, Logger: logger,
+			NotifyBuild: notify,
 		}),
 		ReadHeaderTimeout: 10 * time.Second,
 		// Bounds a slow upload; the body size is bounded separately by MaxUploadBytes.

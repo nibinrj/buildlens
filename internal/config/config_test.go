@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/nibinrj/buildlens/internal/quarantine"
+	"github.com/nibinrj/buildlens/internal/regression"
 )
 
 func TestLoad(t *testing.T) {
@@ -35,6 +36,7 @@ func TestLoad(t *testing.T) {
 				IngestKey:       key,
 				MaxUploadBytes:  64 << 20,
 				P3:              quarantine.Defaults(),
+				Regression:      regression.Defaults(), ReferenceInstance: "t3.small", PriceRegion: "us-east-1",
 			},
 		},
 		{
@@ -57,6 +59,7 @@ func TestLoad(t *testing.T) {
 				IngestKey:       key,
 				MaxUploadBytes:  2 << 20,
 				P3:              quarantine.Defaults(),
+				Regression:      regression.Defaults(), ReferenceInstance: "t3.small", PriceRegion: "us-east-1",
 			},
 		},
 		{

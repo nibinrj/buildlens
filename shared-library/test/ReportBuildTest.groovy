@@ -136,6 +136,25 @@ class ReportBuildTest extends BasePipelineTest {
     }
 
     @Test
+    void measuresAgentAllocationWithoutGuessingFromBuildStart() {
+        reportBuild.call(agentStartedAt: System.currentTimeMillis() - 1000L)
+        assertTrue(theCommand().contains("'--agent-busy-ms'"))
+    }
+
+    @Test
+    void missingAgentStartLeavesBusyTimeUnknown() {
+        reportBuild.call()
+        assertFalse(theCommand().contains('--agent-busy-ms'))
+    }
+
+    @Test
+    void futureAgentStartIsOnlyAWarning() {
+        reportBuild.call(agentStartedAt: System.currentTimeMillis() + 60000L)
+        assertTrue(reportCommands.isEmpty())
+        assertTrue(echoes.any { it.contains('WARNING') })
+    }
+
+    @Test
     void unexpectedErrorIsCaughtAndReported() {
         writeFileHook = { Map m -> throw new IOException('disk full') }
 

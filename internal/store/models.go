@@ -41,6 +41,8 @@ type Build struct {
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
 	TestedTreeSha     *string
+	Analysis          []byte
+	AgentBusyMs       *int64
 }
 
 type InfraEvent struct {
@@ -49,6 +51,20 @@ type InfraEvent struct {
 	EventType  string
 	EventTime  time.Time
 	Raw        []byte
+}
+
+type PrComment struct {
+	RepositoryID   int64
+	PrNumber       int32
+	BuildID        int64
+	DesiredVersion int64
+	SentVersion    int64
+	CommentID      *int64
+	Attempts       int32
+	NextAttemptAt  time.Time
+	LeaseUntil     *time.Time
+	LeaseToken     *string
+	LastError      *string
 }
 
 type Price struct {

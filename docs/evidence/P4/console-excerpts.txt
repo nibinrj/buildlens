@@ -1,0 +1,40 @@
+Initial run, Jenkins build 13
+[2026-10-16T14:59:09.567Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=300 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-145208/lab/.buildlens/quarantine-excludes.txt verify
+[2026-10-16T14:59:13.192Z] [INFO] Running lab.api.ControlledSlowTest
+[2026-10-16T14:59:13.448Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.304 s -- in lab.api.ControlledSlowTest
+[2026-10-16T14:59:14.817Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=300 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-145208/lab/.buildlens/quarantine-only.txt test
+[2026-10-16T14:59:18.889Z] buildlens report: uploaded buildlens-regression-local-20261016-145208 #13 with 8 report file(s): {"id":42,"created":true,"tests":14,"stages":4}
+Finished: SUCCESS
+
+Initial run, Jenkins build 14
+[2026-10-16T14:59:31.300Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=3000 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-145208/lab/.buildlens/quarantine-excludes.txt verify
+[2026-10-16T14:59:34.819Z] [INFO] Running lab.api.ControlledSlowTest
+[2026-10-16T14:59:38.071Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.003 s -- in lab.api.ControlledSlowTest
+[2026-10-16T14:59:39.078Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=3000 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-145208/lab/.buildlens/quarantine-only.txt test
+[2026-10-16T14:59:42.941Z] buildlens report: uploaded buildlens-regression-local-20261016-145208 #14 with 8 report file(s): {"id":43,"created":true,"tests":14,"stages":4}
+Finished: SUCCESS
+
+Initial run, Jenkins build 15
+[2026-10-16T15:00:04.545Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=3000 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-145208/lab/.buildlens/quarantine-excludes.txt verify
+[2026-10-16T15:00:08.433Z] [INFO] Running lab.api.ControlledSlowTest
+[2026-10-16T15:00:11.686Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.006 s -- in lab.api.ControlledSlowTest
+[2026-10-16T15:00:12.390Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=3000 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-145208/lab/.buildlens/quarantine-only.txt test
+[2026-10-16T15:00:16.262Z] buildlens report: uploaded buildlens-regression-local-20261016-145208 #15 with 8 report file(s): {"id":44,"created":true,"tests":14,"stages":4}
+Finished: SUCCESS
+
+Final run, Jenkins build 1
+[2026-10-16T15:09:51.337Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=3000 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-150934/lab/.buildlens/quarantine-excludes.txt verify
+[2026-10-16T15:09:54.668Z] [INFO] Running lab.api.ControlledSlowTest
+[2026-10-16T15:10:01.249Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.328 s -- in lab.api.ControlledSlowTest
+[2026-10-16T15:10:02.198Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=3000 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-150934/lab/.buildlens/quarantine-only.txt test
+[2026-10-16T15:10:05.966Z] buildlens report: uploaded buildlens-regression-local-20261016-150934 #1 with 7 report file(s): {"id":47,"created":true,"tests":14,"stages":4}
+Finished: SUCCESS
+
+Final run, Jenkins build 2
+[2026-10-16T15:10:23.338Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=3000 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-150934/lab/.buildlens/quarantine-excludes.txt verify
+[2026-10-16T15:10:27.377Z] [INFO] Running lab.api.ControlledSlowTest
+[2026-10-16T15:10:33.891Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.267 s -- in lab.api.ControlledSlowTest
+[2026-10-16T15:10:34.898Z] + mvn -B -ntp -Dbuildlens.flaky.seed=5 -Dbuildlens.flaky.clockMillis=5000 -Dbuildlens.slow.ms=3000 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-regression-local-20261016-150934/lab/.buildlens/quarantine-only.txt test
+[2026-10-16T15:10:39.316Z] buildlens report: uploaded buildlens-regression-local-20261016-150934 #2 with 7 report file(s): {"id":48,"created":true,"tests":14,"stages":4}
+Finished: SUCCESS
+

@@ -111,6 +111,9 @@ func handleCreateBuild(d Deps) http.HandlerFunc {
 
 		d.Logger.InfoContext(r.Context(), "build ingested", "build_id", res.BuildID, "created", res.Created,
 			"job", meta.Job, "build_number", meta.BuildNumber, "reports", reports, "tests", res.Tests, "stages", res.Stages)
+		if d.NotifyBuild != nil {
+			d.NotifyBuild()
+		}
 		status := http.StatusOK
 		if res.Created {
 			status = http.StatusCreated

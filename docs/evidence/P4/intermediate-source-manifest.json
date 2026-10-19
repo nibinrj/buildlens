@@ -1,0 +1,310 @@
+{
+  "date": "2026-10-16T15:02:25.1336715Z",
+  "job": "buildlens-regression-local-20261016-150224",
+  "snapshot_sha256": "973d342cefa27e3b727a87ddea2c52a97a532c3e8a7f3c86879f314a8679168a",
+  "snapshot_sha1": "2afc6d32713d2ece646786bf7d1c625536262e3a",
+  "lab_base_commit": "cecdc8a3d2842a80f84a5ed70dfa717610afd7d3",
+  "service_base_commit": "24f4542ca35f48758ef960deb97b9d6a02eda553",
+  "uncommitted": true,
+  "baseline_builds": 0,
+  "baseline_ms": 300,
+  "slow_ms": 3000,
+  "files": [
+    {
+      "path": "cmd\\buildlens\\busy_test.go",
+      "sha256": "ffb56e9b8a96feed9e30ab7a52929ea30a73633a3ba59d3f787bdc8011158922"
+    },
+    {
+      "path": "cmd\\buildlens\\glob.go",
+      "sha256": "fdc652d8d28dcd232792e2bbcbde1a57bec0d9d3b5a7d5d88ac206d5da28fb18"
+    },
+    {
+      "path": "cmd\\buildlens\\main.go",
+      "sha256": "c31f22b844ee6e2eb6cf83c35da10b31fff750c701265b37ee8063d624d1ae79"
+    },
+    {
+      "path": "cmd\\buildlens\\quarantine_test.go",
+      "sha256": "d570c95ebbda5abffa9613fe3fee5000b2cd3356195aa1975e335628ae6424a2"
+    },
+    {
+      "path": "cmd\\buildlens\\quarantine.go",
+      "sha256": "9e734e43c1f771ca976956a9cfa93a83a55a2a4d09be271a081f5a5cdc46def2"
+    },
+    {
+      "path": "cmd\\buildlens\\report_test.go",
+      "sha256": "e8def062082b473db1372f43c33c8229f42b487fae018b25cacf5e5ce12d026d"
+    },
+    {
+      "path": "cmd\\buildlens\\report.go",
+      "sha256": "991a2380873b5f61709fc72ab5f4a1311fa762f4922344bedead78860bd6b643"
+    },
+    {
+      "path": "cmd\\buildlens-server\\main_test.go",
+      "sha256": "4a95f754d2430f5d090f621179eef910d32ac1ebf42387ca77683dc2e30f2049"
+    },
+    {
+      "path": "cmd\\buildlens-server\\main.go",
+      "sha256": "afd3b51c04d9d55393e8c49078c5a8c249d8f290299bad838f04d96f373ae857"
+    },
+    {
+      "path": "internal\\api\\builds_test.go",
+      "sha256": "e93f77e18c065896b9252f53217243336a82b566838f74aa4ef22bec7b35b74b"
+    },
+    {
+      "path": "internal\\api\\builds.go",
+      "sha256": "044328f67c079bf758487b86ec1176f5605681d1591b43ede063ec2d41d466c3"
+    },
+    {
+      "path": "internal\\api\\health_test.go",
+      "sha256": "09f073ade955ef808c213517d49f63cd591eee97001cb2183816d4733aa7a533"
+    },
+    {
+      "path": "internal\\api\\health.go",
+      "sha256": "dd3c318ca63c35e16860cd80c8680e610cff7a18936dc5d8a523ed1a6b0cfd10"
+    },
+    {
+      "path": "internal\\api\\quarantine_test.go",
+      "sha256": "61bb6c4f4c50b8f6fc7ffd83954f0c0b4598721ccedbe84fac425d033acbecd8"
+    },
+    {
+      "path": "internal\\api\\quarantine.go",
+      "sha256": "c2a68c29ced4a3229cf4382075b227f0ea86647c1f21e8e3ada50428cc7c9a3d"
+    },
+    {
+      "path": "internal\\config\\config_test.go",
+      "sha256": "c9ae94089b010d974abeb4a90ea7de01cc4dee3367085cc9ab832274951b9cc6"
+    },
+    {
+      "path": "internal\\config\\config.go",
+      "sha256": "4c37d82236178d1b8f54610a04e44e1c71a7e282817c665bd74aeddbe7844643"
+    },
+    {
+      "path": "internal\\config\\p4_test.go",
+      "sha256": "0bfc72b9cebb8a29a2a27af2041a0f3f1cf6440797e6ffe28561fdcc732cc697"
+    },
+    {
+      "path": "internal\\cost\\cost_test.go",
+      "sha256": "f7864709a8286abef2cf1c2d501a1deeafe489f889e44104bd47514b5917cd49"
+    },
+    {
+      "path": "internal\\cost\\cost.go",
+      "sha256": "78ea7d66e9015a4f116f6629b531c1575c27954f819f5129b539394fe839f847"
+    },
+    {
+      "path": "internal\\db\\db_test.go",
+      "sha256": "423a46a3ce035b139a628daa5aeed3f49fadc7c7f0dea3253d80dd485bfa0c9a"
+    },
+    {
+      "path": "internal\\db\\db.go",
+      "sha256": "524618fba70617e1385c4d7a4a4bb8c3a6a730b0e474e8d37c58185fb852113e"
+    },
+    {
+      "path": "internal\\dbtest\\dbtest.go",
+      "sha256": "98938260a8ec243e839d9b0197cb5576fddae8715dfdabe7db00192e4d780d79"
+    },
+    {
+      "path": "internal\\github\\client_test.go",
+      "sha256": "3be4e5a2edd7b2b6f0dbdbde59bc97dc661635b45f6a205e0df6887f85763f11"
+    },
+    {
+      "path": "internal\\github\\client.go",
+      "sha256": "c49115fcee0bf2f7196b936065b074bbaa117134826ccac1ed2ea06aec4f6042"
+    },
+    {
+      "path": "internal\\github\\database_test.go",
+      "sha256": "020e024ad09b3f41c686241176603f27d5fff77c8ad04cfcd3c964530e316fcc"
+    },
+    {
+      "path": "internal\\github\\http_integration_test.go",
+      "sha256": "502e8a856838e62e7a640978de16d983fcef2921d6f95a14e51330e4f0d02021"
+    },
+    {
+      "path": "internal\\github\\summary.go",
+      "sha256": "835130493eb013f06feffd09063f9a5f3a73f862b764d31ee1ef90161ea56747"
+    },
+    {
+      "path": "internal\\github\\worker_test.go",
+      "sha256": "10f0a572c7746d441c79d1c1931164d9f3cc810f0c93266ca85fcbd6ba6358b5"
+    },
+    {
+      "path": "internal\\github\\worker.go",
+      "sha256": "c5884dba712045aff65615d7b32c47dbdd88c9fb1577581510087b3a6a5d08b4"
+    },
+    {
+      "path": "internal\\infra\\infra_test.go",
+      "sha256": "7a5f4346f6ed29359f69c99d7029447e408107e96fd0b6b30517a10792bec0d3"
+    },
+    {
+      "path": "internal\\infra\\infra.go",
+      "sha256": "adc931cfa6d0d580fbb053a3681f90e248fe690aea4f0df86620c1cfb83c6bf5"
+    },
+    {
+      "path": "internal\\ingest\\analysis_test.go",
+      "sha256": "0448326fb162448d7756a10a0cffe4cdfdaff7af666006a4d8a79784369e145f"
+    },
+    {
+      "path": "internal\\ingest\\analysis.go",
+      "sha256": "1aedf9355356e8c05197e057267d78f8e9546c11c0759caf39dc7ae02519673c"
+    },
+    {
+      "path": "internal\\ingest\\ingest_test.go",
+      "sha256": "a3e55c53df6bb16a044f8ae6bcdd945455ef62540d8d5ef929b320afe2f91340"
+    },
+    {
+      "path": "internal\\ingest\\ingest.go",
+      "sha256": "d9ca701bb8585e11bd0e41f2beae2fdd22ed79d50c80815ceaa63d266a309ac6"
+    },
+    {
+      "path": "internal\\ingest\\p3_rules_test.go",
+      "sha256": "cab9fcddaa5e755bf4bb59eaf28a8ea6774d660d8cfb3fe2417eb89d344147d6"
+    },
+    {
+      "path": "internal\\ingest\\p3_test.go",
+      "sha256": "416622166df2d7bd006dffdf1d1517ffb3e81de7c04e430dda0203e0499f0d02"
+    },
+    {
+      "path": "internal\\quarantine\\quarantine_test.go",
+      "sha256": "613bbc6a2a01fd189ed81f1d9afa6f094fd14c3306eb8097f8eb3fbb8a367d7f"
+    },
+    {
+      "path": "internal\\quarantine\\quarantine.go",
+      "sha256": "103acaab55d787bd9976dfcee0bf6566108e510b0794f1a04a3d7383c9374446"
+    },
+    {
+      "path": "internal\\quarantine\\service.go",
+      "sha256": "0333c21b0464c438d922f00acf06b87dbafe4f550e2345a70a5b294046a4640d"
+    },
+    {
+      "path": "internal\\regression\\regression_test.go",
+      "sha256": "f7c57a0cd71744cde85053cf58e65f376484f3543a27b0bab877b65ae388089e"
+    },
+    {
+      "path": "internal\\regression\\regression.go",
+      "sha256": "e6e4527fa363fc44f73e46d1ae2bc5d2e66022b9994ee840431413d57460901b"
+    },
+    {
+      "path": "internal\\rules\\rules_test.go",
+      "sha256": "9f69493a111c85a7f2c11e6180a4edbe90a0478b74244575744d6d2f66249007"
+    },
+    {
+      "path": "internal\\rules\\rules.go",
+      "sha256": "f366d1f2aad056a8225df4c8f479a52def7f428a68e36b324043c0839d193d37"
+    },
+    {
+      "path": "internal\\store\\analysis.sql.go",
+      "sha256": "3559af694bcaeac0a2af82b45c8b9c4cb356e0e70b392235b59ebc1a12117193"
+    },
+    {
+      "path": "internal\\store\\build.sql.go",
+      "sha256": "6117bae4213f25603bab907d7be461d9291f5a260bd3f557b3464d1fa67c40c4"
+    },
+    {
+      "path": "internal\\store\\copyfrom.go",
+      "sha256": "ec68d2b507540583382c2995f872983c713384101cbc1605015bdd07969cb3e8"
+    },
+    {
+      "path": "internal\\store\\db.go",
+      "sha256": "d4f11b3f6f38d79d0bd9ea3d408753812cab66a6d15e1006f7c42be20b74df4c"
+    },
+    {
+      "path": "internal\\store\\ingest.sql.go",
+      "sha256": "a9a671ca4649dbe1fb18ca9a151b1089c89f21dd9e07862a61d200a3a28fef51"
+    },
+    {
+      "path": "internal\\store\\models.go",
+      "sha256": "68106e674883cfcc1f9d6a9898be6a544faf3dc545c9d3f9ef7b7cb8d06aad06"
+    },
+    {
+      "path": "internal\\store\\p3.sql.go",
+      "sha256": "7a070da8148fbeafbd553a5f3e3eec46bbc97a69b6d575c82fcd571d5001ebd2"
+    },
+    {
+      "path": "internal\\store\\quarantine.sql.go",
+      "sha256": "231dac928f5cc38d5f8159860507f20089b5d2799174c0cc82c9f12346c55eb6"
+    },
+    {
+      "path": "internal\\store\\repository.sql.go",
+      "sha256": "d8562f7e6d156199f5d3b33d8a6a273a9b3a45636614435964673c68f0bb269e"
+    },
+    {
+      "path": "internal\\surefire\\surefire_test.go",
+      "sha256": "b4b2b25f710a0519423dda8fc8c416448ec958db0373fea8635a3a3ae8e8f4cb"
+    },
+    {
+      "path": "internal\\surefire\\surefire.go",
+      "sha256": "d95bc6ab1ed074d6a760ccf63b8237110ac79421a6d1f4d05ff552c147be19ec"
+    },
+    {
+      "path": "internal\\upload\\upload_test.go",
+      "sha256": "4e0806bf882c63aa618ad9e97aac8277b0f3f98c03c145b20f695fdf5e4d005e"
+    },
+    {
+      "path": "internal\\upload\\upload.go",
+      "sha256": "b896017cec017e3b6704ccc99e4d20af1069d257e68915b539a73347c74867a9"
+    },
+    {
+      "path": "queries\\analysis.sql",
+      "sha256": "298486c456ff667374b7a3e0aa0e904e756b281816f825f366b9f63f7c1f1d57"
+    },
+    {
+      "path": "queries\\build.sql",
+      "sha256": "b8ca9183dbbca9b41805ca6f66501b764b091ce85fbe23236f0dc1d39a6a9847"
+    },
+    {
+      "path": "queries\\ingest.sql",
+      "sha256": "cf51acd3e8a986def027231f84acf45f008d119a1459d001b5c033805eb572c4"
+    },
+    {
+      "path": "queries\\p3.sql",
+      "sha256": "778b56f924aa0897a45b5cf1cce61029d26dd8913f37aaa023a633ec77884f22"
+    },
+    {
+      "path": "queries\\quarantine.sql",
+      "sha256": "bbdae92e8d13ae471d9c680664014f7bce1bd63c23390fbc7fa76f3283be12f3"
+    },
+    {
+      "path": "queries\\repository.sql",
+      "sha256": "819cc78c5f0e0e5c9cece4d3a9a22e9dad50c2682c7ecf7e9bb799a4391fecb8"
+    },
+    {
+      "path": "migrations\\00001_init.sql",
+      "sha256": "02e3994ee99f1c3e34bb9fc00abd685ee2ffd5e683fd095b2272e8cd18166696"
+    },
+    {
+      "path": "migrations\\00002_build_tested_tree.sql",
+      "sha256": "ea0c22b2a943b926d2bdd5dd28878fd45779e51190560b5caf9049befdd763e5"
+    },
+    {
+      "path": "migrations\\00003_regression_cost_comments.sql",
+      "sha256": "8b379e223de8e7ca592347412194f8850307eb885de0a4093b02689449666a5a"
+    },
+    {
+      "path": "migrations\\embed.go",
+      "sha256": "e324644d55d255e0b1520827af0a646525ba072659258fb12ee1970842555932"
+    },
+    {
+      "path": "shared-library\\vars\\quarantineAwareTests.groovy",
+      "sha256": "48edebbd1b09ad896e0d3d795efd9755e30ee30325ca3695e4bbed2224626c89"
+    },
+    {
+      "path": "shared-library\\vars\\reportBuild.groovy",
+      "sha256": "7e842a4c14a4cb6276e5cccb3acde99e1e3ddd3d1dc45c234d96691e3f9e123d"
+    },
+    {
+      "path": "shared-library\\vars\\timedStage.groovy",
+      "sha256": "a9e778e2cc372b69659b058790c33647ac02713285497351287b8293134853e5"
+    },
+    {
+      "path": "config.yaml",
+      "sha256": "341ceada67bd96bc8b1ce816f6920ccef92a5bd7543c2ea84ff03f56cdd95e46"
+    },
+    {
+      "path": "go.mod",
+      "sha256": "0968b378768f498245019d1735f94d857f5c72393f7b8d331039dc76957ffdd4"
+    },
+    {
+      "path": "go.sum",
+      "sha256": "0e33300b41069fb7456809f655c17a01a591242e54039d4670f3f986ef1c1d5e"
+    }
+  ]
+}

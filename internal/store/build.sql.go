@@ -10,7 +10,7 @@ import (
 )
 
 const getBuild = `-- name: GetBuild :one
-SELECT id, repository_id, job_name, build_number, branch, pr_number, commit_sha, result, started_at, finished_at, duration_ms, agent_name, agent_instance_type, agent_lifecycle, infra_failure, infra_reason, cost_usd, created_at, updated_at, tested_tree_sha FROM build WHERE id = $1
+SELECT id, repository_id, job_name, build_number, branch, pr_number, commit_sha, result, started_at, finished_at, duration_ms, agent_name, agent_instance_type, agent_lifecycle, infra_failure, infra_reason, cost_usd, created_at, updated_at, tested_tree_sha, analysis, agent_busy_ms FROM build WHERE id = $1
 `
 
 func (q *Queries) GetBuild(ctx context.Context, id int64) (Build, error) {
@@ -37,12 +37,14 @@ func (q *Queries) GetBuild(ctx context.Context, id int64) (Build, error) {
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.TestedTreeSha,
+		&i.Analysis,
+		&i.AgentBusyMs,
 	)
 	return i, err
 }
 
 const getBuildByJobAndNumber = `-- name: GetBuildByJobAndNumber :one
-SELECT id, repository_id, job_name, build_number, branch, pr_number, commit_sha, result, started_at, finished_at, duration_ms, agent_name, agent_instance_type, agent_lifecycle, infra_failure, infra_reason, cost_usd, created_at, updated_at, tested_tree_sha FROM build WHERE job_name = $1 AND build_number = $2
+SELECT id, repository_id, job_name, build_number, branch, pr_number, commit_sha, result, started_at, finished_at, duration_ms, agent_name, agent_instance_type, agent_lifecycle, infra_failure, infra_reason, cost_usd, created_at, updated_at, tested_tree_sha, analysis, agent_busy_ms FROM build WHERE job_name = $1 AND build_number = $2
 `
 
 type GetBuildByJobAndNumberParams struct {
@@ -74,6 +76,8 @@ func (q *Queries) GetBuildByJobAndNumber(ctx context.Context, arg GetBuildByJobA
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.TestedTreeSha,
+		&i.Analysis,
+		&i.AgentBusyMs,
 	)
 	return i, err
 }

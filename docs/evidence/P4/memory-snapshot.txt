@@ -1,0 +1,5 @@
+buildlens-buildlens-server-1,6.988MiB / 64MiB
+buildlens-postgres-1,49.65MiB / 384MiB
+buildlens-jenkins-1,631.3MiB / 1GiB
+buildlens-jenkins-agent-1,193.5MiB / 1.5GiB
+buildlens-grafana-1,255.8MiB / 384MiB

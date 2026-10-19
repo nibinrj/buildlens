@@ -21,7 +21,7 @@
 #>
 param(
     [Parameter(Position = 0, Mandatory)]
-    [ValidateSet('up', 'down', 'logs', 'test', 'lint', 'generate', 'jenkins', 'seed', 'drive')]
+    [ValidateSet('up', 'down', 'logs', 'test', 'lint', 'generate', 'jenkins', 'seed', 'drive', 'regression-demo')]
     [string] $Task,
 
     [Parameter(Position = 1, ValueFromRemainingArguments)]
@@ -61,6 +61,9 @@ function Invoke-InJenkins([string] $Script) {
 }
 
 switch ($Task) {
+    'regression-demo' {
+        if ($Rest.Count) { & ./tools/regression-local.ps1 @Rest } else { & ./tools/regression-local.ps1 }
+    }
     'drive' {
         # Local P3 verification of uncommitted sources. See tools/p3-local.ps1.
         $count = if ($Rest.Count) { [int]$Rest[0] } else { 20 }
@@ -69,8 +72,12 @@ switch ($Task) {
     }
     'up' {
         Assert-EnvFile
+        # Compile one image at a time to keep builder memory within the local budget (D-098).
+        foreach ($service in @('buildlens-server', 'jenkins', 'jenkins-agent')) {
+            docker compose build $service
+        }
         # --wait blocks until every service with a healthcheck reports healthy.
-        docker compose up -d --build --wait
+        docker compose up -d --wait
         docker compose ps
     }
 

@@ -37,6 +37,7 @@ type reportFlags struct {
 	server, key, repo, defaultBranch, job, branch, commit, tree, result string
 	buildNumber, pr                                                     string
 	startedAtMs, durationMs                                             string
+	agentBusyMs                                                         string
 	agent, agentInstanceType, agentLifecycle                            string
 	stagesFile, logTailFile, reports, quarantineReports, dir            string
 	strict                                                              bool
@@ -66,6 +67,7 @@ func parseReportFlags(args []string, getenv func(string) string, out io.Writer) 
 	fs.StringVar(&f.startedAtMs, "started-at", "", "build start, epoch milliseconds")
 	fs.StringVar(&f.durationMs, "duration-ms", "", "build duration in milliseconds (default: now minus --started-at)")
 	fs.StringVar(&f.agent, "agent", getenv("NODE_NAME"), "agent name (env NODE_NAME)")
+	fs.StringVar(&f.agentBusyMs, "agent-busy-ms", "", "measured allocated-agent busy time in milliseconds; omit when unknown")
 	fs.StringVar(&f.agentInstanceType, "agent-instance-type", getenv("BUILDLENS_AGENT_INSTANCE_TYPE"), "agent instance type (env BUILDLENS_AGENT_INSTANCE_TYPE)")
 	fs.StringVar(&f.agentLifecycle, "agent-lifecycle", getenv("BUILDLENS_AGENT_LIFECYCLE"), "LOCAL, SPOT or ON_DEMAND (env BUILDLENS_AGENT_LIFECYCLE)")
 	fs.StringVar(&f.stagesFile, "stages", "", "stages.json written by the shared library")
@@ -145,6 +147,13 @@ func buildMetadata(f reportFlags, now time.Time) (upload.Metadata, error) {
 	}
 	end := m.StartedAt.Add(time.Duration(dur) * time.Millisecond)
 	m.DurationMs, m.FinishedAt = &dur, &end
+	if f.agentBusyMs != "" {
+		busy, err := strconv.ParseInt(f.agentBusyMs, 10, 64)
+		if err != nil {
+			return m, fmt.Errorf("--agent-busy-ms must be an integer: %w", err)
+		}
+		m.Agent.BusyMs = &busy
+	}
 
 	if f.stagesFile != "" {
 		if m.Stages, err = readStages(f.stagesFile); err != nil {

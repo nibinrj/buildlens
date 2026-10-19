@@ -51,7 +51,7 @@ func (q *Queries) EnsureRepository(ctx context.Context, arg EnsureRepositoryPara
 }
 
 const getBuildWithRepository = `-- name: GetBuildWithRepository :one
-SELECT b.id, b.repository_id, b.job_name, b.build_number, b.branch, b.pr_number, b.commit_sha, b.result, b.started_at, b.finished_at, b.duration_ms, b.agent_name, b.agent_instance_type, b.agent_lifecycle, b.infra_failure, b.infra_reason, b.cost_usd, b.created_at, b.updated_at, b.tested_tree_sha, r.name AS repository_name
+SELECT b.id, b.repository_id, b.job_name, b.build_number, b.branch, b.pr_number, b.commit_sha, b.result, b.started_at, b.finished_at, b.duration_ms, b.agent_name, b.agent_instance_type, b.agent_lifecycle, b.infra_failure, b.infra_reason, b.cost_usd, b.created_at, b.updated_at, b.tested_tree_sha, b.analysis, b.agent_busy_ms, r.name AS repository_name
 FROM build b
 JOIN repository r ON r.id = b.repository_id
 WHERE b.id = $1
@@ -86,6 +86,8 @@ func (q *Queries) GetBuildWithRepository(ctx context.Context, id int64) (GetBuil
 		&i.Build.CreatedAt,
 		&i.Build.UpdatedAt,
 		&i.Build.TestedTreeSha,
+		&i.Build.Analysis,
+		&i.Build.AgentBusyMs,
 		&i.RepositoryName,
 	)
 	return i, err
@@ -197,11 +199,11 @@ func (q *Queries) ListTestRuns(ctx context.Context, buildID int64) ([]ListTestRu
 const upsertBuild = `-- name: UpsertBuild :one
 INSERT INTO build (
     repository_id, job_name, build_number, branch, pr_number, commit_sha, tested_tree_sha, result,
-    started_at, finished_at, duration_ms, agent_name, agent_instance_type, agent_lifecycle
+    started_at, finished_at, duration_ms, agent_name, agent_instance_type, agent_lifecycle, agent_busy_ms
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7,
     $8, $9, $10, $11, $12,
-    $13, $14
+    $13, $14, $15
 )
 ON CONFLICT (job_name, build_number) DO UPDATE SET
     repository_id       = EXCLUDED.repository_id,
@@ -216,6 +218,7 @@ ON CONFLICT (job_name, build_number) DO UPDATE SET
     agent_name          = EXCLUDED.agent_name,
     agent_instance_type = EXCLUDED.agent_instance_type,
     agent_lifecycle     = EXCLUDED.agent_lifecycle,
+    agent_busy_ms       = EXCLUDED.agent_busy_ms,
     updated_at          = now()
 RETURNING id, (xmax = 0)::boolean AS inserted
 `
@@ -235,6 +238,7 @@ type UpsertBuildParams struct {
 	AgentName         *string
 	AgentInstanceType *string
 	AgentLifecycle    *string
+	AgentBusyMs       *int64
 }
 
 type UpsertBuildRow struct {
@@ -261,6 +265,7 @@ func (q *Queries) UpsertBuild(ctx context.Context, arg UpsertBuildParams) (Upser
 		arg.AgentName,
 		arg.AgentInstanceType,
 		arg.AgentLifecycle,
+		arg.AgentBusyMs,
 	)
 	var i UpsertBuildRow
 	err := row.Scan(&i.ID, &i.Inserted)

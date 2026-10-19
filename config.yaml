@@ -9,3 +9,9 @@ release_passes: 10
 cap_percent: 5
 cap_max_tests: 10
 cap_build_window: 30
+regression:
+  window: 20
+  min_samples: 10
+  mad_multiplier: 3
+  min_increase: 0.2
+  pr_jump: 0.5

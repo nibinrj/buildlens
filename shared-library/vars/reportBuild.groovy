@@ -17,6 +17,7 @@ import com.cloudbees.groovy.cps.NonCPS
  *   reports        blocking XML globs; default: standard Surefire and Failsafe directories
  *   quarantineReports  separate non-blocking XML globs, labelled QUARANTINE on upload
  *   commit / tree  explicit tested source identifiers, used by the local uncommitted verification adapter
+ *   agentStartedAt epoch milliseconds captured immediately inside node(); omit when allocation time is unknown
  *
  * The CLI reads the server URL and the agent lifecycle from the agent's environment
  * (BUILDLENS_SERVER_URL, BUILDLENS_AGENT_LIFECYCLE) and the job, build number, branch and PR from Jenkins's own
@@ -56,6 +57,11 @@ private void upload(Map args) {
     }
     if (tree) {
         cmd += ['--tree', tree]
+    }
+    if (args.agentStartedAt != null) {
+        long busy = System.currentTimeMillis() - (args.agentStartedAt as long)
+        if (busy < 0) { throw new IllegalArgumentException('agentStartedAt is in the future') }
+        cmd += ['--agent-busy-ms', "${busy}"]
     }
     if (args.strict) {
         cmd << '--strict'

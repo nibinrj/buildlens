@@ -13,11 +13,11 @@ RETURNING id;
 -- infra_failure, infra_reason and cost_usd are not set here: P3 and P4 compute them.
 INSERT INTO build (
     repository_id, job_name, build_number, branch, pr_number, commit_sha, tested_tree_sha, result,
-    started_at, finished_at, duration_ms, agent_name, agent_instance_type, agent_lifecycle
+    started_at, finished_at, duration_ms, agent_name, agent_instance_type, agent_lifecycle, agent_busy_ms
 ) VALUES (
     @repository_id, @job_name, @build_number, @branch, sqlc.narg(pr_number), @commit_sha, sqlc.narg(tested_tree_sha),
     @result, @started_at, sqlc.narg(finished_at), sqlc.narg(duration_ms), sqlc.narg(agent_name),
-    sqlc.narg(agent_instance_type), sqlc.narg(agent_lifecycle)
+    sqlc.narg(agent_instance_type), sqlc.narg(agent_lifecycle), sqlc.narg(agent_busy_ms)
 )
 ON CONFLICT (job_name, build_number) DO UPDATE SET
     repository_id       = EXCLUDED.repository_id,
@@ -32,6 +32,7 @@ ON CONFLICT (job_name, build_number) DO UPDATE SET
     agent_name          = EXCLUDED.agent_name,
     agent_instance_type = EXCLUDED.agent_instance_type,
     agent_lifecycle     = EXCLUDED.agent_lifecycle,
+    agent_busy_ms       = EXCLUDED.agent_busy_ms,
     updated_at          = now()
 RETURNING id, (xmax = 0)::boolean AS inserted;
 

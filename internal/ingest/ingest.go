@@ -3,6 +3,7 @@ package ingest
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/nibinrj/buildlens/internal/infra"
 	"github.com/nibinrj/buildlens/internal/quarantine"
+	"github.com/nibinrj/buildlens/internal/regression"
 	"github.com/nibinrj/buildlens/internal/store"
 	"github.com/nibinrj/buildlens/internal/surefire"
 	"github.com/nibinrj/buildlens/internal/upload"
@@ -38,8 +40,12 @@ type Result struct {
 
 // Service writes and reads builds.
 type Service struct {
-	pool   *pgxpool.Pool
-	policy quarantine.Config
+	pool              *pgxpool.Pool
+	policy            quarantine.Config
+	regression        regression.Config
+	referenceInstance string
+	priceRegion       string
+	commentRepos      map[string]bool
 }
 
 // NewService returns a Service using pool.
@@ -49,7 +55,16 @@ func NewService(pool *pgxpool.Pool) *Service {
 
 // NewServiceWithPolicy uses validated P3 thresholds loaded by the server.
 func NewServiceWithPolicy(pool *pgxpool.Pool, policy quarantine.Config) *Service {
-	return &Service{pool: pool, policy: policy}
+	return NewServiceWithAnalysis(pool, policy, regression.Defaults(), "t3.small", "us-east-1", nil)
+}
+
+// NewServiceWithAnalysis configures deterministic analysis and an explicit comment allowlist.
+func NewServiceWithAnalysis(pool *pgxpool.Pool, policy quarantine.Config, regressions regression.Config, instance, region string, repositories []string) *Service {
+	repos := make(map[string]bool, len(repositories))
+	for _, repo := range repositories {
+		repos[repo] = true
+	}
+	return &Service{pool: pool, policy: policy, regression: regressions, referenceInstance: instance, priceRegion: region, commentRepos: repos}
 }
 
 // Ingest stores u in one transaction: the repository and build rows are upserted, and the build's stage runs
@@ -130,6 +145,14 @@ func (s *Service) Ingest(ctx context.Context, u Upload) (Result, error) {
 	if err := quarantine.Apply(ctx, q, repo, b.ID, s.policy); err != nil {
 		return Result{}, err
 	}
+	if err := s.analyze(ctx, q, repo, b.ID, u.Meta, match.Failure()); err != nil {
+		return Result{}, fmt.Errorf("analyze build: %w", err)
+	}
+	if u.Meta.PRNumber != nil && s.commentRepos[u.Meta.Repo] {
+		if err := q.QueuePRComment(ctx, store.QueuePRCommentParams{RepositoryID: repoID, PrNumber: *u.Meta.PRNumber, BuildID: b.ID}); err != nil {
+			return Result{}, fmt.Errorf("queue PR comment: %w", err)
+		}
+	}
 
 	if err := tx.Commit(ctx); err != nil {
 		return Result{}, fmt.Errorf("commit: %w", err)
@@ -152,6 +175,7 @@ func buildParams(repoID int64, m upload.Metadata) store.UpsertBuildParams {
 		AgentName:         nonEmpty(m.Agent.Name),
 		AgentInstanceType: nonEmpty(m.Agent.InstanceType),
 		AgentLifecycle:    nonEmpty(m.Agent.Lifecycle),
+		AgentBusyMs:       m.Agent.BusyMs,
 	}
 	if m.FinishedAt != nil {
 		t := m.FinishedAt.UTC()
@@ -214,26 +238,27 @@ func nonEmpty(s string) *string {
 
 // BuildView is GET /api/v1/builds/{id}: a build with its stages and tests, for debugging.
 type BuildView struct {
-	ID            int64          `json:"id"`
-	Repository    string         `json:"repository"`
-	Job           string         `json:"job"`
-	BuildNumber   int32          `json:"build_number"`
-	Branch        string         `json:"branch"`
-	PRNumber      *int32         `json:"pr_number"`
-	CommitSHA     string         `json:"commit_sha"`
-	TestedTreeSHA *string        `json:"tested_tree_sha"`
-	Result        string         `json:"result"`
-	StartedAt     time.Time      `json:"started_at"`
-	FinishedAt    *time.Time     `json:"finished_at"`
-	DurationMs    *int64         `json:"duration_ms"`
-	Agent         AgentView      `json:"agent"`
-	InfraFailure  bool           `json:"infra_failure"`
-	InfraReason   *string        `json:"infra_reason"`
-	CreatedAt     time.Time      `json:"created_at"`
-	UpdatedAt     time.Time      `json:"updated_at"`
-	Stages        []StageView    `json:"stages"`
-	TestSummary   map[string]int `json:"test_summary"` // count per outcome
-	Tests         []TestView     `json:"tests"`
+	ID            int64           `json:"id"`
+	Repository    string          `json:"repository"`
+	Job           string          `json:"job"`
+	BuildNumber   int32           `json:"build_number"`
+	Branch        string          `json:"branch"`
+	PRNumber      *int32          `json:"pr_number"`
+	CommitSHA     string          `json:"commit_sha"`
+	TestedTreeSHA *string         `json:"tested_tree_sha"`
+	Result        string          `json:"result"`
+	StartedAt     time.Time       `json:"started_at"`
+	FinishedAt    *time.Time      `json:"finished_at"`
+	DurationMs    *int64          `json:"duration_ms"`
+	Agent         AgentView       `json:"agent"`
+	InfraFailure  bool            `json:"infra_failure"`
+	InfraReason   *string         `json:"infra_reason"`
+	CreatedAt     time.Time       `json:"created_at"`
+	UpdatedAt     time.Time       `json:"updated_at"`
+	Stages        []StageView     `json:"stages"`
+	TestSummary   map[string]int  `json:"test_summary"` // count per outcome
+	Tests         []TestView      `json:"tests"`
+	Analysis      json.RawMessage `json:"analysis"`
 }
 
 // AgentView is where the build ran.
@@ -241,6 +266,7 @@ type AgentView struct {
 	Name         *string `json:"name"`
 	InstanceType *string `json:"instance_type"`
 	Lifecycle    *string `json:"lifecycle"`
+	BusyMs       *int64  `json:"busy_ms"`
 }
 
 // StageView is one timed stage.
@@ -290,11 +316,12 @@ func (s *Service) GetBuild(ctx context.Context, id int64) (BuildView, error) {
 		ID: b.ID, Repository: row.RepositoryName, Job: b.JobName, BuildNumber: b.BuildNumber, Branch: b.Branch,
 		PRNumber: b.PrNumber, CommitSHA: b.CommitSha, TestedTreeSHA: b.TestedTreeSha, Result: b.Result,
 		StartedAt: b.StartedAt, FinishedAt: b.FinishedAt, DurationMs: b.DurationMs,
-		Agent:        AgentView{Name: b.AgentName, InstanceType: b.AgentInstanceType, Lifecycle: b.AgentLifecycle},
+		Agent:        AgentView{Name: b.AgentName, InstanceType: b.AgentInstanceType, Lifecycle: b.AgentLifecycle, BusyMs: b.AgentBusyMs},
 		InfraFailure: b.InfraFailure, InfraReason: b.InfraReason, CreatedAt: b.CreatedAt, UpdatedAt: b.UpdatedAt,
 		Stages:      make([]StageView, 0, len(stages)),
 		TestSummary: map[string]int{},
 		Tests:       make([]TestView, 0, len(tests)),
+		Analysis:    b.Analysis,
 	}
 	for _, st := range stages {
 		v.Stages = append(v.Stages, StageView{Name: st.Name, StartedAt: st.StartedAt, DurationMs: st.DurationMs, Result: st.Result})

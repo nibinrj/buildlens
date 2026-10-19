@@ -27,6 +27,7 @@ type Deps struct {
 	IngestKey      string // required by every /api/v1 route
 	MaxUploadBytes int64
 	Logger         *slog.Logger
+	NotifyBuild    func() // optional coalescing worker wake, called after committed ingest
 }
 
 // NewRouter returns the server's routes.
