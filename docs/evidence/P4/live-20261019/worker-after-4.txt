@@ -1,0 +1,5 @@
+buildlens-server-1  | {"time":"2026-10-19T07:16:03.946943757Z","level":"INFO","msg":"server listening","addr":"[::]:8080"}
+buildlens-server-1  | {"time":"2026-10-19T07:17:51.213168917Z","level":"INFO","msg":"build ingested","build_id":50,"created":true,"job":"buildlens-lab/PR-1","build_number":3,"reports":7,"tests":14,"stages":4}
+buildlens-server-1  | {"time":"2026-10-19T07:17:54.301566096Z","level":"INFO","msg":"PR comment work completed","repository_id":2,"pr":1,"version":1,"comment_id":6261856291}
+buildlens-server-1  | {"time":"2026-10-19T07:19:18.76973457Z","level":"INFO","msg":"build ingested","build_id":51,"created":true,"job":"buildlens-lab/PR-1","build_number":4,"reports":7,"tests":14,"stages":4}
+buildlens-server-1  | {"time":"2026-10-19T07:19:21.244528363Z","level":"INFO","msg":"PR comment work completed","repository_id":2,"pr":1,"version":2,"comment_id":6261856291}

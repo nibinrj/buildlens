@@ -1,0 +1,7 @@
+  [2026-10-19T08:06:57.918Z] + ./mvnw -B -ntp test
+> [2026-10-19T08:06:57.918Z] /home/jenkins/agent/workspace/buildlens-dogfood-local-20261019-080309@tmp/durable-2a5790f5/script.sh.copy: 1: ./mvnw: Permission denied
+  [Pipeline] }
+  [Pipeline] End of Pipeline
+> ERROR: script returned exit code 126
+> Finished: FAILURE
+  

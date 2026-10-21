@@ -1,0 +1,9 @@
+{
+  "contents_match": true,
+  "isolated_database": "buildlens_restore_20261019083605",
+  "verified_at": "2026-10-19T08:36:11.0429622Z",
+  "live_replacement_executed": false,
+  "dump_file": "backups/verified-20261019083605.dump",
+  "sha256": "ba7b96237bd119e2681565f7498e59687ddd27e694e0772fb316ce166c802a01",
+  "tables_compared": 11
+}

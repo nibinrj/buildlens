@@ -1,0 +1,179 @@
+Started by user admin
+Loading library buildlens@main:shared-library/
+Attempting to resolve main from remote references...
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+using GIT_ASKPASS to set credentials GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env
+ > git ls-remote -- https://github.com/nibinrj/buildlens.git # timeout=10
+Found match: refs/heads/main revision 70f1fc68ba771dc63dfda0e5b28979618689e243
+The recommended git tool is: NONE
+using credential github-token
+Cloning the remote Git repository
+Cloning with configured refspecs honoured and without tags
+Cloning repository https://github.com/nibinrj/buildlens.git
+ > git init /var/jenkins_home/workspace/buildlens-dogfood-local-20261019-081054@libs/648d2685889c2a61dc22c731b0b8a34467d3befe8e66417836fc7e8731e5ae3e # timeout=10
+Fetching upstream changes from https://github.com/nibinrj/buildlens.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+using GIT_ASKPASS to set credentials GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env
+ > git fetch --no-tags --force --progress -- https://github.com/nibinrj/buildlens.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/nibinrj/buildlens.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+Checking out Revision 70f1fc68ba771dc63dfda0e5b28979618689e243 (main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 70f1fc68ba771dc63dfda0e5b28979618689e243 # timeout=10
+Commit message: "Add duration regression alerts, reference cost, and durable PR summaries"
+[Pipeline] Start of Pipeline
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] properties
+[Pipeline] timeout
+Timeout set to expire in 20 min
+[Pipeline] {
+[Pipeline] node
+Running on agent-1 in /home/jenkins/agent/workspace/buildlens-dogfood-local-20261019-081054
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] deleteDir
+[Pipeline] sh
+[2026-10-19T08:11:10.209Z] + cp -R /tmp/buildlens-dogfood-local-20261019-081054/. .
+[Pipeline] echo
+[2026-10-19T08:11:10.233Z] Local source archive SHA256: 26459b9396e229a2aac61bd63ea09861dd60e4bab43fb2bb6d55d2e8d5d78de0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Static binaries)
+[Pipeline] sh
+[2026-10-19T08:11:10.567Z] + mkdir -p bin
+[2026-10-19T08:11:10.567Z] + GOMAXPROCS=2 GOMEMLIMIT=1200MiB CGO_ENABLED=0 go build -p 1 -trimpath -o bin/buildlens ./cmd/buildlens
+[2026-10-19T08:11:10.823Z] + GOMAXPROCS=2 GOMEMLIMIT=1200MiB CGO_ENABLED=0 go build -p 1 -trimpath -o bin/buildlens-server ./cmd/buildlens-server
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Go checks)
+[Pipeline] sh
+[2026-10-19T08:11:12.082Z] + sh tools/ci.sh
+[2026-10-19T08:11:12.082Z] DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+[2026-10-19T08:11:12.082Z]             Install the buildx component to build images with BuildKit:
+[2026-10-19T08:11:12.082Z]             https://docs.docker.com/go/buildx/
+[2026-10-19T08:11:12.082Z] 
+[2026-10-19T08:11:13.011Z] Sending build context to Docker daemon  31.11MB[2026-10-19T08:11:13.011Z] 
+[2026-10-19T08:11:13.011Z] Step 1/4 : FROM golangci/golangci-lint:v2.14.0@sha256:ad862ba6b3798cbe0fd9fd7408d498fd74fbd2623a92406b2fd3898faf0bf98f AS lint
+[2026-10-19T08:11:13.011Z]  ---> 70e7e4cbedc1
+[2026-10-19T08:11:13.011Z] Step 2/4 : FROM golang:1.27.1-trixie@sha256:3b77fc618ec235a1ab412de7737f120dd507c57e8d87de4cbb7994fb94275ed5
+[2026-10-19T08:11:13.011Z]  ---> ecb923204467
+[2026-10-19T08:11:13.011Z] Step 3/4 : COPY --from=lint /usr/bin/golangci-lint /usr/local/bin/golangci-lint
+[2026-10-19T08:11:13.011Z]  ---> Using cache
+[2026-10-19T08:11:13.267Z]  ---> 9a60f3b57a73
+[2026-10-19T08:11:13.267Z] Step 4/4 : ENV GOTOOLCHAIN=local CGO_ENABLED=1 TESTCONTAINERS_RYUK_DISABLED=true GOMEMLIMIT=1200MiB GOMAXPROCS=2
+[2026-10-19T08:11:13.267Z]  ---> Using cache
+[2026-10-19T08:11:13.267Z]  ---> 1917039f5789
+[2026-10-19T08:11:13.267Z] Successfully built 1917039f5789
+[2026-10-19T08:11:13.267Z] Successfully tagged buildlens-ci:local
+[2026-10-19T08:11:13.522Z] gofmt: clean
+[2026-10-19T08:11:14.892Z] go vet: PASS
+[2026-10-19T08:11:26.682Z] 0 issues.
+[2026-10-19T08:11:28.039Z] ok  	github.com/nibinrj/buildlens/cmd/buildlens	1.163s
+[2026-10-19T08:11:32.208Z] ok  	github.com/nibinrj/buildlens/cmd/buildlens-server	1.663s
+[2026-10-19T08:11:36.374Z] ok  	github.com/nibinrj/buildlens/internal/api	3.082s
+[2026-10-19T08:11:37.300Z] ok  	github.com/nibinrj/buildlens/internal/config	1.037s
+[2026-10-19T08:11:38.661Z] ok  	github.com/nibinrj/buildlens/internal/cost	1.010s
+[2026-10-19T08:11:48.596Z] ok  	github.com/nibinrj/buildlens/internal/db	7.488s
+[2026-10-19T08:11:48.596Z] ?   	github.com/nibinrj/buildlens/internal/dbtest	[no test files]
+[2026-10-19T08:12:00.207Z] ok  	github.com/nibinrj/buildlens/internal/github	10.449s
+[2026-10-19T08:12:01.565Z] ok  	github.com/nibinrj/buildlens/internal/infra	1.014s
+[2026-10-19T08:12:19.592Z] ok  	github.com/nibinrj/buildlens/internal/ingest	15.007s
+[2026-10-19T08:12:19.592Z] ok  	github.com/nibinrj/buildlens/internal/quarantine	1.011s
+[2026-10-19T08:12:20.150Z] ok  	github.com/nibinrj/buildlens/internal/regression	1.009s
+[2026-10-19T08:12:21.508Z] ok  	github.com/nibinrj/buildlens/internal/rules	1.010s
+[2026-10-19T08:12:21.509Z] ?   	github.com/nibinrj/buildlens/internal/store	[no test files]
+[2026-10-19T08:12:22.867Z] ok  	github.com/nibinrj/buildlens/internal/surefire	1.018s
+[2026-10-19T08:12:24.225Z] ok  	github.com/nibinrj/buildlens/internal/upload	1.009s
+[2026-10-19T08:12:24.225Z] ?   	github.com/nibinrj/buildlens/migrations	[no test files]
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Library tests)
+[Pipeline] sh
+[2026-10-19T08:12:26.759Z] + cd shared-library
+[2026-10-19T08:12:26.759Z] + mvn -B -ntp test
+[2026-10-19T08:12:28.124Z] [INFO] Scanning for projects...
+[2026-10-19T08:12:28.382Z] [INFO] 
+[2026-10-19T08:12:28.382Z] [INFO] ----------< io.github.nibinrj.buildlens:shared-library-tests >----------
+[2026-10-19T08:12:28.382Z] [INFO] Building BuildLens shared library tests 0-SNAPSHOT
+[2026-10-19T08:12:28.382Z] [INFO]   from pom.xml
+[2026-10-19T08:12:28.382Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T08:12:40.539Z] [INFO] 
+[2026-10-19T08:12:40.539Z] [INFO] --- gplus:5.1.0:addTestSources (default) @ shared-library-tests ---
+[2026-10-19T08:12:41.909Z] [INFO] 
+[2026-10-19T08:12:41.909Z] [INFO] --- resources:3.5.0:resources (default-resources) @ shared-library-tests ---
+[2026-10-19T08:12:41.909Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-dogfood-local-20261019-081054/shared-library/src/main/resources
+[2026-10-19T08:12:41.909Z] [INFO] 
+[2026-10-19T08:12:41.909Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ shared-library-tests ---
+[2026-10-19T08:12:41.909Z] [INFO] No sources to compile
+[2026-10-19T08:12:41.909Z] [INFO] 
+[2026-10-19T08:12:41.909Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ shared-library-tests ---
+[2026-10-19T08:12:41.909Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-dogfood-local-20261019-081054/shared-library/src/test/resources
+[2026-10-19T08:12:41.909Z] [INFO] 
+[2026-10-19T08:12:41.909Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ shared-library-tests ---
+[2026-10-19T08:12:41.909Z] [WARNING] I/O error reading dependency state: /home/jenkins/agent/workspace/buildlens-dogfood-local-20261019-081054/shared-library/target/classes: /home/jenkins/agent/workspace/buildlens-dogfood-local-20261019-081054/shared-library/target/classes
+[2026-10-19T08:12:41.909Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T08:12:41.909Z] [INFO] 
+[2026-10-19T08:12:41.909Z] [INFO] --- gplus:5.1.0:compileTests (default) @ shared-library-tests ---
+[2026-10-19T08:12:41.909Z] [INFO] Performing in-process compilation
+[2026-10-19T08:12:41.909Z] [INFO] Using isolated classloader, without GMavenPlus classpath.
+[2026-10-19T08:12:42.166Z] [INFO] Using Groovy 2.4.21 to perform compileTests.
+[2026-10-19T08:12:42.728Z] [INFO] Compiled 64 files.
+[2026-10-19T08:12:42.728Z] [INFO] 
+[2026-10-19T08:12:42.728Z] [INFO] --- surefire:3.6.0:test (default-test) @ shared-library-tests ---
+[2026-10-19T08:12:42.728Z] [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[2026-10-19T08:12:42.984Z] [INFO] 
+[2026-10-19T08:12:42.984Z] [INFO] -------------------------------------------------------
+[2026-10-19T08:12:42.984Z] [INFO]  T E S T S
+[2026-10-19T08:12:42.984Z] [INFO] -------------------------------------------------------
+[2026-10-19T08:12:43.915Z] [INFO] Running TimedStageTest
+[2026-10-19T08:12:44.847Z] [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.129 s -- in TimedStageTest
+[2026-10-19T08:12:44.847Z] [INFO] Running QuarantineAwareTestsTest
+[2026-10-19T08:12:45.415Z] [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.383 s -- in QuarantineAwareTestsTest
+[2026-10-19T08:12:45.415Z] [INFO] Running DogfoodPipelineTest
+[2026-10-19T08:12:45.415Z] [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 s -- in DogfoodPipelineTest
+[2026-10-19T08:12:45.415Z] [INFO] Running ReportBuildTest
+[2026-10-19T08:12:45.981Z] [INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.541 s -- in ReportBuildTest
+[2026-10-19T08:12:45.981Z] [INFO] 
+[2026-10-19T08:12:45.981Z] [INFO] Results:
+[2026-10-19T08:12:45.981Z] [INFO] 
+[2026-10-19T08:12:45.981Z] [INFO] Tests run: 29, Failures: 0, Errors: 0, Skipped: 0
+[2026-10-19T08:12:45.981Z] [INFO] 
+[2026-10-19T08:12:45.981Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T08:12:45.981Z] [INFO] BUILD SUCCESS
+[2026-10-19T08:12:45.981Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T08:12:45.981Z] [INFO] Total time:  17.700 s
+[2026-10-19T08:12:45.981Z] [INFO] Finished at: 2026-10-19T08:12:45Z
+[2026-10-19T08:12:45.981Z] [INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] writeFile
+[Pipeline] writeFile
+[Pipeline] withCredentials
+[2026-10-19T08:12:46.401Z] Masking supported pattern matches of $BUILDLENS_KEY
+[Pipeline] {
+[Pipeline] sh
+[2026-10-19T08:12:46.794Z] + buildlens report --repo nibinrj/buildlens --result SUCCESS --started-at 1792397467706 --stages .buildlens/stages.json --log-tail .buildlens/log-tail.txt --commit 70f1fc68ba771dc63dfda0e5b28979618689e243 --tree 9030d9103c831303b1e033afa4d7c00f67bbec5f --agent-busy-ms 96467 --reports shared-library/target/surefire-reports/TEST-*.xml
+[2026-10-19T08:12:46.794Z] buildlens report: uploaded buildlens-dogfood-local-20261019-081054 #1 with 4 report file(s): {"id":104,"created":true,"tests":29,"stages":4}
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+

@@ -4,8 +4,11 @@ Verified locally on 2026-10-16. The controlled slow test and the pre-existing
 flaky lab behavior are **injected**. These are local demonstration results,
 not production performance or precision measurements.
 
-Implementation and local verification are complete. The plan's live GitHub PR
-acceptance gate remains open: no PR comment was published in this run.
+Implementation and local verification were completed on 2026-10-16. The live
+GitHub PR gate was subsequently verified on 2026-10-19: two successful PR builds
+created and updated one real comment. See the [live evidence](live-20261019/README.md)
+for actual GitHub responses, build IDs and limitations. The October 16 results
+below remain the original local experiment.
 
 ## Real Jenkins runs
 
@@ -106,7 +109,13 @@ failures and errors. Migration tests apply, roll back and reapply the real schem
 version pins and memory limits. GitHub publication was explicitly disabled during
 local Jenkins verification. No agent Git staging, commit or push occurred.
 
-## Owner steps to finish the live PR gate
+## Original owner handoff (completed 2026-10-19)
+
+The following historical commands were completed by the owner. Do not rerun them
+for the existing PR. The separate token was configured and live publication was
+authorized; [PR #1](https://github.com/nibinrj/buildlens-lab/pull/1) now has one
+comment updated across builds #3 and #4. The remaining text records the handoff
+as written before that follow-up.
 
 The repository rules reserve staging, committing and pushing to the owner. Review
 the changes and the comment preview first. The following commands are suggestions
@@ -144,15 +153,15 @@ Job DSL setup, and run two PR builds with SLOW_MILLIS=10000. Existing local main
 history supplies a dated reference; for a fresh database, first collect at least
 13 comparable main builds with the controlled test present. Capture both comment
 API responses and confirm the comment ID is unchanged and both required sections
-are present. These steps remain outstanding.
+are present. These steps were completed in the linked live verification.
 
 ## Other unverified paths
 
-The final source has not run through normal GitHub multibranch/global-library
-checkout, because it is uncommitted. Naturally occurring duration regressions,
+The committed final source has now run through normal GitHub multibranch and
+global-library checkout in the live follow-up. Naturally occurring duration regressions,
 production threshold quality, sustained load, real AWS billing, multi-agent cost
 attribution, and a real GitHub permission/rate-limit incident are unverified.
-Local HTTP simulations do not substitute for the outstanding live PR gate.
+The local HTTP simulation and live GitHub evidence are recorded separately above.
 
 Reproduce a fresh local demonstration with `./tasks.ps1 regression-demo`; it appends
 real builds and stored history. `./tasks.ps1 regression-demo 0` reuses existing

@@ -1,0 +1,11 @@
+apiVersion: 1
+providers:
+  - name: BuildLens
+    orgId: 1
+    folder: BuildLens
+    type: file
+    disableDeletion: false
+    allowUiUpdates: false
+    updateIntervalSeconds: 15
+    options:
+      path: /var/lib/grafana/dashboards

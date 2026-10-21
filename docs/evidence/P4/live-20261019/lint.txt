@@ -1,0 +1,7 @@
+Command: ./tasks.ps1 lint
+Exit code: 0
+PowerShell informational output (observed in execution transcript):
+gofmt -l .: no files need formatting
+go vet ./...: ok
+Native golangci-lint output:
+0 issues.

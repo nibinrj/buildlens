@@ -1,0 +1,55 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "typeVersion": [
+                0,
+                0
+              ],
+              "executedQueryString": "WITH stage_totals AS (\n  SELECT s.build_id,s.name,sum(s.duration_ms) AS stage_ms\n  FROM stage_run s GROUP BY s.build_id,s.name\n), attributed AS (\n  SELECT s.name,b.cost_usd*s.stage_ms/NULLIF(sum(s.stage_ms) OVER (PARTITION BY b.id),0) AS usd\n  FROM stage_totals s JOIN build b ON b.id=s.build_id JOIN repository r ON r.id=b.repository_id\n  WHERE r.name='nibinrj/buildlens-lab' AND b.agent_lifecycle='LOCAL' AND b.started_at BETWEEN '2026-09-19T08:35:22.522Z' AND '2026-10-19T08:35:22.522Z'\n)\nSELECT name AS \"Stage\",sum(usd)::double precision AS \"Duration-weighted equivalent USD\"\nFROM attributed GROUP BY name ORDER BY 2 DESC NULLS LAST;"
+            },
+            "fields": [
+              {
+                "name": "Stage",
+                "type": "string",
+                "typeInfo": {
+                  "frame": "string",
+                  "nullable": true
+                }
+              },
+              {
+                "name": "Duration-weighted equivalent USD",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                "Test",
+                "Quarantine",
+                "Build",
+                "Checkout"
+              ],
+              [
+                0.004742048510629186,
+                0.003491328257027085,
+                0.003362813564693008,
+                0.00011980966765072062
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "generated_at": "2026-10-19T08:38:04.1345642Z",
+  "sha256": "0f3d295dbdf82b0f95e0c0e05b1f93300cbb1b9097968e00e19b640129bbf195",
+  "description": "Final dashboard viewport; displayed alert count covers all selected historical lab builds, not just the 50-build batch"
+}

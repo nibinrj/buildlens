@@ -1,0 +1,19 @@
+{
+  "started_at": "2026-10-19T08:08:05.7920671Z",
+  "finished_at": "2026-10-19T08:09:32.8136317Z",
+  "job": "buildlens-dogfood-local-20261019-080802",
+  "requested": 1,
+  "parameters": {},
+  "builds": [
+    {
+      "queue_id": 261,
+      "number": 1,
+      "result": "FAILURE",
+      "duration_ms": 78070,
+      "buildlens_id": 103,
+      "error": "Build 1 completed with FAILURE"
+    }
+  ],
+  "error": "Build 1 completed with FAILURE",
+  "verified_uploads": 0
+}

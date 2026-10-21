@@ -1,0 +1,55 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "typeVersion": [
+                0,
+                0
+              ],
+              "executedQueryString": "SELECT DISTINCT s.name AS __text,s.name AS __value FROM stage_run s JOIN build b ON b.id=s.build_id JOIN repository r ON r.id=b.repository_id WHERE r.name='nibinrj/buildlens-lab' ORDER BY 1"
+            },
+            "fields": [
+              {
+                "name": "__text",
+                "type": "string",
+                "typeInfo": {
+                  "frame": "string",
+                  "nullable": true
+                }
+              },
+              {
+                "name": "__value",
+                "type": "string",
+                "typeInfo": {
+                  "frame": "string",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                "Build",
+                "Checkout",
+                "Quarantine",
+                "Test"
+              ],
+              [
+                "Build",
+                "Checkout",
+                "Quarantine",
+                "Test"
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

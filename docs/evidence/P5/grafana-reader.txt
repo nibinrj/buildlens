@@ -1,0 +1,10 @@
+SELECT succeeded:
+ readable_builds 
+-----------------
+              78
+(1 row)
+
+Write denied even after disabling transaction read-only:
+SET
+ERROR:  permission denied for table build
+Expected nonzero psql exit: 3

@@ -1,0 +1,340 @@
+{
+  "id": null,
+  "uid": "buildlens-health",
+  "title": "BuildLens / Build health",
+  "description": "Build observations, outcomes and infrastructure attribution.",
+  "tags": [
+    "buildlens",
+    "local-demo"
+  ],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": false,
+  "refresh": "30s",
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "templating": {
+    "list": [
+      {
+        "query": "SELECT name AS __text,name AS __value FROM repository ORDER BY name",
+        "refresh": 1,
+        "multi": false,
+        "current": {
+          "text": "nibinrj/buildlens-lab",
+          "value": "nibinrj/buildlens-lab"
+        },
+        "type": "query",
+        "includeAll": false,
+        "label": "Repository",
+        "options": [],
+        "datasource": {
+          "uid": "buildlens-postgres",
+          "type": "grafana-postgresql-datasource"
+        },
+        "name": "repository"
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  },
+  "links": [
+    {
+      "type": "link",
+      "includeVars": true,
+      "keepTime": true,
+      "title": "Flaky",
+      "url": "/d/buildlens-flaky",
+      "targetBlank": false
+    },
+    {
+      "type": "link",
+      "includeVars": true,
+      "keepTime": true,
+      "title": "Regressions",
+      "url": "/d/buildlens-regressions",
+      "targetBlank": false
+    },
+    {
+      "type": "link",
+      "includeVars": true,
+      "keepTime": true,
+      "title": "Cost",
+      "url": "/d/buildlens-cost",
+      "targetBlank": false
+    },
+    {
+      "type": "link",
+      "includeVars": true,
+      "keepTime": true,
+      "title": "Health",
+      "url": "/d/buildlens-health",
+      "targetBlank": false
+    }
+  ],
+  "panels": [
+    {
+      "title": "Reading this dashboard",
+      "type": "text",
+      "id": 1,
+      "options": {
+        "mode": "markdown",
+        "content": "**Recorded observations only.** An empty reason table means no matching infrastructure-attributed builds. Infra failures are excluded from flaky rules. Sampled memory and reproducible batch results are recorded in docs/results.md."
+      },
+      "gridPos": {
+        "h": 4,
+        "x": 0,
+        "w": 24,
+        "y": 0
+      }
+    },
+    {
+      "id": 2,
+      "title": "Recorded builds",
+      "type": "stat",
+      "datasource": {
+        "uid": "buildlens-postgres",
+        "type": "grafana-postgresql-datasource"
+      },
+      "gridPos": {
+        "h": 5,
+        "x": 0,
+        "w": 12,
+        "y": 4
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT count(*) AS \"Recorded builds\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND $__timeFilter(b.started_at);",
+          "rawQuery": true,
+          "editorMode": "code",
+          "format": "table",
+          "datasource": {
+            "uid": "buildlens-postgres",
+            "type": "grafana-postgresql-datasource"
+          },
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "overrides": [],
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      },
+      "options": {
+        "reduceOptions": {
+          "fields": "",
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        },
+        "colorMode": "value",
+        "justifyMode": "auto",
+        "graphMode": "none",
+        "orientation": "horizontal",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Infrastructure-attributed builds",
+      "type": "stat",
+      "datasource": {
+        "uid": "buildlens-postgres",
+        "type": "grafana-postgresql-datasource"
+      },
+      "gridPos": {
+        "h": 5,
+        "x": 12,
+        "w": 12,
+        "y": 4
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT count(*) AS \"Infrastructure-attributed builds\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND b.infra_failure AND $__timeFilter(b.started_at);",
+          "rawQuery": true,
+          "editorMode": "code",
+          "format": "table",
+          "datasource": {
+            "uid": "buildlens-postgres",
+            "type": "grafana-postgresql-datasource"
+          },
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "overrides": [],
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      },
+      "options": {
+        "reduceOptions": {
+          "fields": "",
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        },
+        "colorMode": "value",
+        "justifyMode": "auto",
+        "graphMode": "none",
+        "orientation": "horizontal",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Builds per day / result",
+      "type": "timeseries",
+      "datasource": {
+        "uid": "buildlens-postgres",
+        "type": "grafana-postgresql-datasource"
+      },
+      "gridPos": {
+        "h": 8,
+        "x": 0,
+        "w": 16,
+        "y": 9
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT date_trunc('day',b.started_at) AS time,count(*)::double precision AS value,b.result AS metric\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND $__timeFilter(b.started_at)\nGROUP BY 1,b.result ORDER BY 1,b.result;",
+          "rawQuery": true,
+          "editorMode": "code",
+          "format": "time_series",
+          "datasource": {
+            "uid": "buildlens-postgres",
+            "type": "grafana-postgresql-datasource"
+          },
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "overrides": [],
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "auto",
+            "lineWidth": 2,
+            "spanNulls": false
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "legend": {
+          "placement": "bottom",
+          "displayMode": "list",
+          "calcs": []
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Infrastructure failures by reason",
+      "type": "table",
+      "datasource": {
+        "uid": "buildlens-postgres",
+        "type": "grafana-postgresql-datasource"
+      },
+      "gridPos": {
+        "h": 8,
+        "x": 16,
+        "w": 8,
+        "y": 9
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT COALESCE(b.infra_reason,'unspecified') AS \"Reason\",count(*) AS \"Builds\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND b.infra_failure AND $__timeFilter(b.started_at)\nGROUP BY 1 ORDER BY 2 DESC,1;",
+          "rawQuery": true,
+          "editorMode": "code",
+          "format": "table",
+          "datasource": {
+            "uid": "buildlens-postgres",
+            "type": "grafana-postgresql-datasource"
+          },
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "overrides": [],
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      },
+      "options": {
+        "footer": {
+          "show": false
+        },
+        "showHeader": true,
+        "cellHeight": "sm"
+      }
+    },
+    {
+      "id": 6,
+      "title": "Recent builds",
+      "type": "table",
+      "datasource": {
+        "uid": "buildlens-postgres",
+        "type": "grafana-postgresql-datasource"
+      },
+      "gridPos": {
+        "h": 10,
+        "x": 0,
+        "w": 24,
+        "y": 17
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT b.started_at AS \"Started\",b.job_name AS \"Job\",b.build_number AS \"Build\",b.branch AS \"Branch\",\n       b.result AS \"Result\",b.duration_ms AS \"Duration ms\",b.infra_failure AS \"Infrastructure failure\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND $__timeFilter(b.started_at)\nORDER BY b.started_at DESC,b.id DESC LIMIT 50;",
+          "rawQuery": true,
+          "editorMode": "code",
+          "format": "table",
+          "datasource": {
+            "uid": "buildlens-postgres",
+            "type": "grafana-postgresql-datasource"
+          },
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "overrides": [],
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      },
+      "options": {
+        "footer": {
+          "show": false
+        },
+        "showHeader": true,
+        "cellHeight": "sm"
+      }
+    }
+  ]
+}

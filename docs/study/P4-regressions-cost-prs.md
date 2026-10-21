@@ -1,5 +1,18 @@
 # Regression alerts, reference cost, and pull request comments
 
+## Live PR verification follow-up (2026-10-19)
+
+Before execution: the owner published BuildLens commit 70f1fc6, opened lab PR #1,
+saved the separate comment token locally and explicitly authorized creating and
+updating its sticky comment. Verify token presence without displaying its value.
+Use the existing Job DSL multibranch job and Git-backed shared library, retaining
+all container limits. Run two PR builds with the labelled injected 10000 ms delay;
+save Jenkins, authenticated BuildLens and GitHub comment response snapshots after
+each build, and compare the real comment IDs and required sections. The existing
+local main history is a dated baseline, not a fresh performance benchmark.
+The official GitHub issue-comment API and fine-grained-token instructions were
+checked during token setup. No new dependencies or versions are needed here.
+
 Started 2026-10-16 before implementation.
 
 ## Established requirements
@@ -124,8 +137,18 @@ all build/alert counts, source hashes, console excerpts, cost values and full
 check output. A separate HTTP/Postgres test creates and updates one simulated
 GitHub comment, with a rendered preview. It does not publish a real PR comment.
 
-The live GitHub gate remains open. No open lab PR existed when inspected; the
-owner must review/commit/push the prepared changes, create the demonstration PR
-and configure the separate comment token. Publication was disabled for all local
-Jenkins runs. The final normal multibranch path, production thresholds, sustained
-load, real AWS cost and multi-agent accounting remain unverified.
+Publication was disabled for the October 16 local Jenkins runs. On October 19,
+after owner commits/pushes, token setup and explicit publication authorization,
+normal Git-backed multibranch PR builds #3 and #4 succeeded (BuildLens IDs 50/51).
+They created and updated the same real comment, ID 6261856291, with regression,
+quarantine and reference-cost sections. Outbox delivered generations advance
+from 1 to 2. The injected controlled test reports 10001/10003 ms against 363.6 ms.
+See the [live evidence](../evidence/P4/live-20261019/README.md) for GitHub GET
+responses, console logs, exact source identity and successful delivery assertions.
+
+The retained baseline comes from older local snapshot jobs. Comparing their
+snapshot-copy Checkout stage with Git-backed checkout causes an incidental
+Checkout alert; it is not a source-code regression. Another short unchanged test
+alerts once and returns to NORMAL. Production threshold quality, sustained load,
+real AWS cost and multi-agent accounting remain unverified. The live PR gate
+is verified; no merge was performed.

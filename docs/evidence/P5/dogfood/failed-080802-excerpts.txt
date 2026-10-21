@@ -1,0 +1,7 @@
+  [2026-10-19T08:09:30.181Z] + sh ./mvnw -B -ntp test
+> [2026-10-19T08:09:31.544Z] Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised.
+  [2026-10-19T08:09:31.544Z] If you updated your Maven version, you need to update the specified distributionSha256Sum property.
+  [Pipeline] End of Pipeline
+> ERROR: script returned exit code 1
+> Finished: FAILURE
+  

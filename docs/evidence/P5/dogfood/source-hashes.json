@@ -1,0 +1,22 @@
+[
+  {
+    "path": "Jenkinsfile",
+    "sha256": "d68f956c8d3116913f83b6a9f7748d25646bff0c26aeb31277fa050c1ffe09e4"
+  },
+  {
+    "path": "tools/ci.sh",
+    "sha256": "450fff8de358bccedfe7524aa19e86657dbe36b2564de030a30f7a8020c20454"
+  },
+  {
+    "path": "tools/ci-inner.sh",
+    "sha256": "027dbfa00b640a894d0f6ca8ad6f46b5aaefd58e666088d6c0a9664ca9a42ef8"
+  },
+  {
+    "path": "Dockerfile.ci",
+    "sha256": "c5745e4a9a06cafe6c917f18224cd23e82438b6de61e9f7f467947491aa09ad1"
+  },
+  {
+    "path": "shared-library/test/DogfoodPipelineTest.groovy",
+    "sha256": "dfadecf39fab1921312f8f3fa9ba67a6e8e805840a08c5cc98973bb4e0900120"
+  }
+]

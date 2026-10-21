@@ -21,13 +21,15 @@
 #>
 param(
     [Parameter(Position = 0, Mandatory)]
-    [ValidateSet('up', 'down', 'logs', 'test', 'lint', 'generate', 'jenkins', 'seed', 'drive', 'regression-demo')]
+    [ValidateSet('up', 'down', 'logs', 'test', 'lint', 'generate', 'jenkins', 'grafana', 'seed', 'drive', 'prepare-lab', 'driver-token', 'dashboards', 'demo-dump', 'demo-restore', 'dogfood-local', 'regression-demo')]
     [string] $Task,
 
     [Parameter(Position = 1, ValueFromRemainingArguments)]
     [string[]] $Rest,
 
-    [switch] $Quick
+    [switch] $Quick,
+    [switch] $UsePassword,
+    [switch] $ReplaceLive
 )
 
 $ErrorActionPreference = 'Stop'
@@ -64,11 +66,36 @@ switch ($Task) {
     'regression-demo' {
         if ($Rest.Count) { & ./tools/regression-local.ps1 @Rest } else { & ./tools/regression-local.ps1 }
     }
+    'prepare-lab' { & ./tools/regression-local.ps1 -BaselineBuilds 0 -PrepareOnly }
     'drive' {
-        # Local P3 verification of uncommitted sources. See tools/p3-local.ps1.
-        $count = if ($Rest.Count) { [int]$Rest[0] } else { 20 }
-        & ./tools/p3-local.ps1 -Mode Prepare
-        & ./tools/p3-local.ps1 -Mode Run -Count $count
+        $count = if ($Rest.Count) { [int]$Rest[0] } else { 50 }
+        $job = if ($Rest.Count -gt 1) { $Rest[1] } else { 'buildlens-lab/main' }
+        $parameters=@{}
+        foreach($entry in @($Rest | Select-Object -Skip 2)) {
+            if($entry -notmatch '^([A-Za-z_][A-Za-z0-9_]*)=(.*)$'){throw 'Build parameters must be NAME=value'}
+            $parameters[$Matches[1]]=$Matches[2]
+        }
+        & ./tools/drive-builds.ps1 -Count $count -Job $job -Parameters $parameters -UsePassword:$UsePassword -MeasureMemory
+    }
+    'driver-token' { & ./tools/driver-token.ps1 }
+    'dogfood-local' { & ./tools/dogfood-local.ps1 }
+    'dashboards' {
+        & ./tools/generate-dashboards.ps1
+        & ./tools/provision-grafana.ps1
+        docker compose up -d --no-deps --force-recreate grafana
+        & ./tools/verify-grafana.ps1
+    }
+    'demo-dump' {
+        $dumpPath=if($Rest.Count){$Rest[0]}else{''}
+        & ./tools/demo-store.ps1 -Mode Dump -Path $dumpPath
+    }
+    'demo-restore' {
+        if(-not $Rest.Count){throw 'Provide the .dump path. Default restore creates an isolated database; -ReplaceLive requires owner confirmation.'}
+        & ./tools/demo-store.ps1 -Mode Restore -Path $Rest[0] -ReplaceLive:$ReplaceLive
+    }
+    'grafana' {
+        docker compose ps grafana
+        Write-Host 'Grafana: http://localhost:3001 / Dashboards / BuildLens (credentials from .env)'
     }
     'up' {
         Assert-EnvFile
@@ -76,6 +103,8 @@ switch ($Task) {
         foreach ($service in @('buildlens-server', 'jenkins', 'jenkins-agent')) {
             docker compose build $service
         }
+        docker compose up -d --wait postgres buildlens-server
+        & ./tools/provision-grafana.ps1
         # --wait blocks until every service with a healthcheck reports healthy.
         docker compose up -d --wait
         docker compose ps
@@ -90,6 +119,8 @@ switch ($Task) {
     }
 
     'test' {
+        & ./tools/tests/drive-builds.tests.ps1
+        & ./tools/tests/measurement.tests.ps1
         if ($Quick) {
             # An explicit DOCKER_HOST skips testcontainers' Docker detection, which failed on Windows when two
             # test binaries started containers at the same moment.

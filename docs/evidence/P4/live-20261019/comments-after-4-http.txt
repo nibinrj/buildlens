@@ -1,0 +1,29 @@
+HTTP/2.0 200 OK
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning
+Cache-Control: private, max-age=60, s-maxage=60
+Content-Security-Policy: default-src 'none'
+Content-Type: application/json; charset=utf-8
+Date: Mon, 19 Oct 2026 07:19:24 GMT
+Etag: W/"b8946876bded83cdfea6145fbc3e60239eb6e89935e9b1a37f61a136f5f8fb8f"
+Referrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin
+Server: github.com
+Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
+Vary: Accept, Authorization, Cookie, X-GitHub-OTP,Accept-Encoding, Accept, X-Requested-With
+X-Accepted-Oauth-Scopes: 
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+X-Github-Api-Version-Selected: 2022-11-28
+X-Github-Edge-Region: centralindia
+X-Github-Media-Type: github.v3; format=json
+X-Github-Request-Id: E620:13D2E1:4BA1167:71C7BC6:6AD5C47C
+X-Oauth-Client-Id: 178c6fc778ccc68e1d6a
+X-Oauth-Scopes: gist, read:org, repo, workflow
+X-Ratelimit-Limit: 5000
+X-Ratelimit-Remaining: 4946
+X-Ratelimit-Reset: 1792396933
+X-Ratelimit-Resource: core
+X-Ratelimit-Used: 54
+X-Xss-Protection: 0
+
+[{"url":"https://api.github.com/repos/nibinrj/buildlens-lab/issues/comments/6261856291","html_url":"https://github.com/nibinrj/buildlens-lab/pull/1#issuecomment-6261856291","issue_url":"https://api.github.com/repos/nibinrj/buildlens-lab/issues/1","id":6261856291,"node_id":"IC_kwDOU7dTnc8AAAABdTxYIw","user":{"login":"nibinrj","id":87687660,"node_id":"MDQ6VXNlcjg3Njg3NjYw","avatar_url":"https://avatars.githubusercontent.com/u/87687660?v=4","gravatar_id":"","url":"https://api.github.com/users/nibinrj","html_url":"https://github.com/nibinrj","followers_url":"https://api.github.com/users/nibinrj/followers","following_url":"https://api.github.com/users/nibinrj/following{/other_user}","gists_url":"https://api.github.com/users/nibinrj/gists{/gist_id}","starred_url":"https://api.github.com/users/nibinrj/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/nibinrj/subscriptions","organizations_url":"https://api.github.com/users/nibinrj/orgs","repos_url":"https://api.github.com/users/nibinrj/repos","events_url":"https://api.github.com/users/nibinrj/events{/privacy}","received_events_url":"https://api.github.com/users/nibinrj/received_events","type":"User","user_view_type":"public","site_admin":false},"created_at":"2026-10-19T07:17:54Z","updated_at":"2026-10-19T07:19:20Z","body":"<!-- buildlens:summary:v1 -->\n## BuildLens\n\nBuild **4** · SUCCESS · commit `e2d90246d6b3d055db9ad1165e2bf9ab95617871`\n\n### Quarantined tests\n\n- lab.flaky.TimeTest#expiresAtBoundary — R1, 3 consecutive quarantine passes\n\n### Regressions\n\n| Kind | Name | Status | Latest ms | Baseline samples | Median ms | Threshold ms |\n|---|---|---|---:|---:|---:|---:|\n| STAGE | Build | NORMAL | 3524 | 20 | 3855.00 | 5313.88 |\n| STAGE | Checkout | REGRESSION | 3217 | 20 | 21.50 | 48.19 |\n| STAGE | Quarantine | NORMAL | 3840 | 20 | 4290.00 | 6705.16 |\n| STAGE | Test | REGRESSION | 16572 | 20 | 6991.00 | 12697.53 |\n| TEST | lab.api.ControlledSlowTest#controlledWork | REGRESSION | 10003 | 19 | 303.00 | 363.60 |\n| TEST | lab.api.PriceServiceTest#emptyOrderIsZero | NORMAL | 5 | 20 | 5.00 | 7.22 |\n| TEST | lab.api.PriceServiceTest#totalsPrices | NORMAL | 32 | 20 | 31.50 | 42.62 |\n| TEST | lab.core.CalculatorTest#addRejectsOverflow | NORMAL | 4 | 20 | 5.00 | 11.67 |\n| TEST | lab.core.CalculatorTest#addsNumbers | NORMAL | 2 | 20 | 2.00 | 2.40 |\n| TEST | lab.core.CalculatorTest#divideRejectsZero | NORMAL | 2 | 20 | 5.00 | 13.90 |\n| TEST | lab.core.CalculatorTest#dividesNumbers | NORMAL | 1 | 20 | 3.00 | 7.45 |\n| TEST | lab.core.SlugsTest#makesSlugs(String, String)[1] | NORMAL | 31 | 20 | 33.50 | 53.52 |\n| TEST | lab.core.SlugsTest#makesSlugs(String, String)[2] | NORMAL | 2 | 20 | 2.00 | 6.45 |\n| TEST | lab.core.SlugsTest#makesSlugs(String, String)[3] | NORMAL | 2 | 20 | 3.00 | 7.45 |\n| TEST | lab.flaky.OrderTest#polluter | NORMAL | 5 | 20 | 26.00 | 94.94 |\n| TEST | lab.flaky.OrderTest#victim | INSUFFICIENT_DATA | 26 | 9 | 0.00 | 0.00 |\n| TEST | lab.flaky.RandomTest#sometimesFails | NORMAL | 2 | 13 | 4.00 | 4.80 |\n\n### Cost\n\n**$0.000174 USD — equivalent cost at reference price** (t3.small, us-east-1; $0.020900/hour).\n\nSource: reference: Linux/Unix t3.small us-east-1; checked 2026-10-16; https://aws.amazon.com/ec2/instance-types/t3/\n\nLocal reference cost excludes storage, networking, CPU credit charges and idle capacity.\n","author_association":"OWNER","reactions":{"url":"https://api.github.com/repos/nibinrj/buildlens-lab/issues/comments/6261856291/reactions","total_count":0,"+1":0,"-1":0,"laugh":0,"hooray":0,"confused":0,"heart":0,"rocket":0,"eyes":0},"performed_via_github_app":null,"minimized":null}]

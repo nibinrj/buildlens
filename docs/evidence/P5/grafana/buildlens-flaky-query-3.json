@@ -1,0 +1,63 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "type": "timeseries-wide",
+              "typeVersion": [
+                0,
+                1
+              ],
+              "executedQueryString": "SELECT date_trunc('day',q.quarantined_at) AS time, count(*)::double precision AS value, 'quarantined'::text AS metric\nFROM quarantine q JOIN test_case t ON t.id=q.test_case_id JOIN repository r ON r.id=t.repository_id\nWHERE r.name='nibinrj/buildlens-lab' AND q.quarantined_at BETWEEN '2026-09-19T08:35:32.884Z' AND '2026-10-19T08:35:32.885Z'\nGROUP BY 1\nUNION ALL\nSELECT date_trunc('day',q.released_at), count(*)::double precision, 'released'::text\nFROM quarantine q JOIN test_case t ON t.id=q.test_case_id JOIN repository r ON r.id=t.repository_id\nWHERE r.name='nibinrj/buildlens-lab' AND q.released_at IS NOT NULL AND q.released_at BETWEEN '2026-09-19T08:35:32.884Z' AND '2026-10-19T08:35:32.885Z'\nGROUP BY 1 ORDER BY 1,3;"
+            },
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "name": "quarantined",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              },
+              {
+                "name": "released",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                1791763200000,
+                1792108800000
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

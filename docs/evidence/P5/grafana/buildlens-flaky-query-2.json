@@ -1,0 +1,49 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "typeVersion": [
+                0,
+                0
+              ],
+              "executedQueryString": "WITH detections AS (\n  SELECT q.evidence,q.quarantined_at AS event_time,t.repository_id\n  FROM quarantine q JOIN test_case t ON t.id=q.test_case_id WHERE NOT q.manual\n  UNION ALL\n  SELECT a.payload,a.created_at,a.repository_id FROM alert a\n  WHERE a.type='FLAKY' AND a.payload->>'cap_reached'='true'\n)\nSELECT f->>'rule' AS \"Rule\",count(*) AS \"Evidence occurrences\"\nFROM detections d JOIN repository r ON r.id=d.repository_id\nCROSS JOIN LATERAL jsonb_array_elements(COALESCE(d.evidence->'findings','[]'::jsonb)) f\nWHERE r.name='nibinrj/buildlens-lab' AND d.event_time BETWEEN '2026-09-19T08:35:30.825Z' AND '2026-10-19T08:35:30.825Z'\nGROUP BY 1 ORDER BY 1;"
+            },
+            "fields": [
+              {
+                "name": "Rule",
+                "type": "string",
+                "typeInfo": {
+                  "frame": "string",
+                  "nullable": true
+                }
+              },
+              {
+                "name": "Evidence occurrences",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "int64",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                "R1"
+              ],
+              [
+                57
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

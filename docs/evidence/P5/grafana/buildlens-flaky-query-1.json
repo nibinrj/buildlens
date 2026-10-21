@@ -1,0 +1,38 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "typeVersion": [
+                0,
+                0
+              ],
+              "executedQueryString": "SELECT count(*) AS \"Quarantined now\"\nFROM quarantine q JOIN test_case t ON t.id=q.test_case_id\nJOIN repository r ON r.id=t.repository_id\nWHERE q.state='QUARANTINED' AND r.name='nibinrj/buildlens-lab';"
+            },
+            "fields": [
+              {
+                "name": "Quarantined now",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "int64",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                1
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-10-19T08:22:20.5661477Z",
+  "signed_in_by_owner": true,
+  "dashboards": [
+    "buildlens-health",
+    "buildlens-cost",
+    "buildlens-flaky",
+    "buildlens-regressions"
+  ],
+  "rendered_without_panel_error": true,
+  "scope": "Narrow in-app browser, stacked panels, mid-batch live totals; tables can scroll horizontally",
+  "screenshots": [
+    {
+      "file": "cost.jpg",
+      "captured_at": "2026-10-19T08:19:12.6755741Z",
+      "sha256": "bc1ebeb4cd47949869c2addcbf91cf01ba14f15088b976705d4add8daaf9a4ba"
+    },
+    {
+      "file": "flaky.jpg",
+      "captured_at": "2026-10-19T08:19:24.3077564Z",
+      "sha256": "ca79be6daf817841497490392aeca789b69842c32f7fd762e3b34f29acfd4155"
+    },
+    {
+      "file": "health.jpg",
+      "captured_at": "2026-10-19T08:19:05.9852897Z",
+      "sha256": "aa5da1e8824e0ad14584e392b23ad0c9cc859a6375b31e798f634bda1ac73bf4"
+    },
+    {
+      "file": "regressions.jpg",
+      "captured_at": "2026-10-19T08:19:37.4744402Z",
+      "sha256": "112fda1172c3bab7a25324f4c0094bb2ad4ebd6c2f26a3baab3489ade605c6b3"
+    }
+  ]
+}

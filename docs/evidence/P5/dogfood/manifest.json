@@ -1,0 +1,9 @@
+{
+  "uncommitted": true,
+  "service_base_commit": "70f1fc68ba771dc63dfda0e5b28979618689e243",
+  "jenkinsfile_sha256": "d68f956c8d3116913f83b6a9f7748d25646bff0c26aeb31277fa050c1ffe09e4",
+  "job": "buildlens-dogfood-local-20261019-081054",
+  "archive_sha1": "9030d9103c831303b1e033afa4d7c00f67bbec5f",
+  "archive_sha256": "26459b9396e229a2aac61bd63ea09861dd60e4bab43fb2bb6d55d2e8d5d78de0",
+  "tree_kind": "archive content identifier, not a Git tree"
+}

@@ -1,0 +1,47 @@
+{
+  "verified_at": "2026-10-19T07:20:18.0354638Z",
+  "single_comment_updated": true,
+  "required_sections_present": true,
+  "outbox_versions": [
+    1,
+    2
+  ],
+  "builds": [
+    {
+      "build_number": 3,
+      "build_id": 50,
+      "result": "SUCCESS",
+      "comment_id": 6261856291,
+      "comment_created_at": "2026-10-19T07:17:54Z",
+      "comment_updated_at": "2026-10-19T07:17:54Z",
+      "controlled_ms": 10001,
+      "baseline_samples": 19,
+      "threshold_ms": 363.6,
+      "busy_ms": 30472,
+      "cost_usd": "0.000177",
+      "regression_alerts": [
+        "Checkout",
+        "lab.api.ControlledSlowTest#controlledWork",
+        "lab.api.PriceServiceTest#totalsPrices"
+      ]
+    },
+    {
+      "build_number": 4,
+      "build_id": 51,
+      "result": "SUCCESS",
+      "comment_id": 6261856291,
+      "comment_created_at": "2026-10-19T07:17:54Z",
+      "comment_updated_at": "2026-10-19T07:19:20Z",
+      "controlled_ms": 10003,
+      "baseline_samples": 19,
+      "threshold_ms": 363.6,
+      "busy_ms": 29951,
+      "cost_usd": "0.000174",
+      "regression_alerts": [
+        "Checkout",
+        "Test",
+        "lab.api.ControlledSlowTest#controlledWork"
+      ]
+    }
+  ]
+}

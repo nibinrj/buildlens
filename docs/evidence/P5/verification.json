@@ -1,0 +1,17 @@
+{
+  "verified_at": "2026-10-19T08:39:02.0473344Z",
+  "measurement_builds": 50,
+  "successful_uploads": 50,
+  "grafana_queries": 22,
+  "restored_tables": 11,
+  "gofmt": "PASS",
+  "go_vet": "PASS",
+  "golangci_lint": "0 issues",
+  "go_race": "PASS",
+  "pipeline_tests": 29,
+  "driver_request_scenarios": 15,
+  "invalid_job_paths": 4,
+  "normal_git_dogfood": "pending owner commit/push",
+  "live_database_replacement": "not executed",
+  "git_writes": "none performed"
+}

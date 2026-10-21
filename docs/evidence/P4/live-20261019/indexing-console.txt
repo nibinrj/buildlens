@@ -1,0 +1,34 @@
+Started by timer
+[Mon Oct 19 07:13:11 UTC 2026] Starting branch indexing...
+Connecting to https://api.github.com using nibinrj/****** (GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env)
+Examining nibinrj/buildlens-lab
+
+  Getting remote pull requests...
+
+  Checking branches...
+
+  Getting remote branches...
+
+    Checking branch main
+      ‘Jenkinsfile’ found
+    Met criteria
+No changes detected: main (still at 868bbe8d1e2733480cfc84d0151d4ae5c93e8827)
+
+    Checking branch controlled-duration-regression
+Ignoring SCMHead{'controlled-duration-regression'} because current strategy excludes branches that ARE also filed as a pull request
+
+  2 branches were processed
+
+  Checking pull-requests...
+
+    Checking pull request #1
+      ‘Jenkinsfile’ found
+    Met criteria
+Scheduled build for branch: PR-1
+
+  1 pull requests were processed
+
+Finished examining nibinrj/buildlens-lab
+
+[Mon Oct 19 07:13:16 UTC 2026] Finished branch indexing. Indexing took 4.7 sec
+Finished: SUCCESS

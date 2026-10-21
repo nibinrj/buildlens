@@ -1,0 +1,36 @@
+[1/1] folder/lab branch #42 SUCCESS; BuildLens id 900
+Verified 1/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\success
+PASS success
+[1/1] folder/lab branch #42 SUCCESS; BuildLens id 900
+Verified 1/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\password-success
+PASS password success
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\unauthorized
+PASS unauthorized
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\missing-location
+PASS missing location
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\foreign-location
+PASS foreign location
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\cancelled
+PASS cancelled
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\queue-expired
+PASS queue expired
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\queue-timeout
+PASS queue timeout
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\build-timeout
+PASS build timeout
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\malformed-JSON
+PASS malformed JSON
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\wrong-queue
+PASS wrong queue
+[1/1] folder/lab branch #42 FAILURE; BuildLens id 900
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\failed-build
+PASS failed build
+[1/1] folder/lab branch #42 SUCCESS; BuildLens id 
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\missing-upload
+PASS missing upload
+Verified 0/1 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\uncertain
+PASS uncertain
+[1/2] folder/lab branch #42 SUCCESS; BuildLens id 900
+Verified 1/2 successful build uploads. Evidence: D:\dev\BuildLens\notes\experiments\buildlens-driver-tests-279bbddca2bf4168adc4b046c262cd83\duplicate-queue
+PASS duplicate queue
+Driver tests: 15 request scenarios and 4 invalid job paths passed.

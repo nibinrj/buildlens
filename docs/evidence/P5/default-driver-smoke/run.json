@@ -1,0 +1,19 @@
+{
+  "started_at": "2026-10-19T08:34:21.9868948Z",
+  "finished_at": "2026-10-19T08:34:51.4565711Z",
+  "job": "buildlens-lab/main",
+  "requested": 1,
+  "parameters": {},
+  "builds": [
+    {
+      "queue_id": 369,
+      "number": 3,
+      "result": "SUCCESS",
+      "duration_ms": 18997,
+      "buildlens_id": 155,
+      "error": null
+    }
+  ],
+  "error": null,
+  "verified_uploads": 1
+}

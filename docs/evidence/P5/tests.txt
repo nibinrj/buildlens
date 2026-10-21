@@ -1,0 +1,24 @@
+[2026-10-19T08:11:13.522Z] gofmt: clean
+[2026-10-19T08:11:14.892Z] go vet: PASS
+[2026-10-19T08:11:26.682Z] 0 issues.
+[2026-10-19T08:11:28.039Z] ok  	github.com/nibinrj/buildlens/cmd/buildlens	1.163s
+[2026-10-19T08:11:32.208Z] ok  	github.com/nibinrj/buildlens/cmd/buildlens-server	1.663s
+[2026-10-19T08:11:36.374Z] ok  	github.com/nibinrj/buildlens/internal/api	3.082s
+[2026-10-19T08:11:37.300Z] ok  	github.com/nibinrj/buildlens/internal/config	1.037s
+[2026-10-19T08:11:38.661Z] ok  	github.com/nibinrj/buildlens/internal/cost	1.010s
+[2026-10-19T08:11:48.596Z] ok  	github.com/nibinrj/buildlens/internal/db	7.488s
+[2026-10-19T08:12:00.207Z] ok  	github.com/nibinrj/buildlens/internal/github	10.449s
+[2026-10-19T08:12:01.565Z] ok  	github.com/nibinrj/buildlens/internal/infra	1.014s
+[2026-10-19T08:12:19.592Z] ok  	github.com/nibinrj/buildlens/internal/ingest	15.007s
+[2026-10-19T08:12:19.592Z] ok  	github.com/nibinrj/buildlens/internal/quarantine	1.011s
+[2026-10-19T08:12:20.150Z] ok  	github.com/nibinrj/buildlens/internal/regression	1.009s
+[2026-10-19T08:12:21.508Z] ok  	github.com/nibinrj/buildlens/internal/rules	1.010s
+[2026-10-19T08:12:22.867Z] ok  	github.com/nibinrj/buildlens/internal/surefire	1.018s
+[2026-10-19T08:12:24.225Z] ok  	github.com/nibinrj/buildlens/internal/upload	1.009s
+[2026-10-19T08:12:44.847Z] [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.129 s -- in TimedStageTest
+[2026-10-19T08:12:45.415Z] [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.383 s -- in QuarantineAwareTestsTest
+[2026-10-19T08:12:45.415Z] [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 s -- in DogfoodPipelineTest
+[2026-10-19T08:12:45.981Z] [INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.541 s -- in ReportBuildTest
+[2026-10-19T08:12:45.981Z] [INFO] Tests run: 29, Failures: 0, Errors: 0, Skipped: 0
+[2026-10-19T08:12:45.981Z] [INFO] BUILD SUCCESS
+Finished: SUCCESS

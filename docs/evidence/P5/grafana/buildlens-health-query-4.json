@@ -1,0 +1,25 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "typeVersion": [
+                0,
+                0
+              ],
+              "executedQueryString": "SELECT COALESCE(b.infra_reason,'unspecified') AS \"Reason\",count(*) AS \"Builds\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name='nibinrj/buildlens-lab' AND b.infra_failure AND b.started_at BETWEEN '2026-09-19T08:35:47.31Z' AND '2026-10-19T08:35:47.31Z'\nGROUP BY 1 ORDER BY 2 DESC,1;"
+            },
+            "fields": []
+          },
+          "data": {
+            "values": []
+          }
+        }
+      ]
+    }
+  }
+}

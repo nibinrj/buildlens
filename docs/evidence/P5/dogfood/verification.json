@@ -1,0 +1,17 @@
+{
+  "job": "buildlens-dogfood-local-20261019-081054",
+  "number": 1,
+  "queue_id": 263,
+  "result": "SUCCESS",
+  "duration_ms": 99604,
+  "buildlens_id": 104,
+  "source": "manifest.json",
+  "checks": [
+    "gofmt",
+    "go vet",
+    "golangci-lint",
+    "go test -race -count=1 -p 1 ./...",
+    "JenkinsPipelineUnit 29 tests"
+  ],
+  "normal_github_checkout": false
+}

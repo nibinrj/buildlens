@@ -1,0 +1,134 @@
+[
+  {
+    "status": "PASS",
+    "rows": 1,
+    "name": "Known local reference cost",
+    "dashboard": "buildlens-cost"
+  },
+  {
+    "status": "PASS",
+    "rows": 1,
+    "name": "Builds with unknown cost / all lifecycles",
+    "dashboard": "buildlens-cost"
+  },
+  {
+    "status": "PASS",
+    "rows": 151,
+    "name": "Equivalent cost per build / branch",
+    "dashboard": "buildlens-cost"
+  },
+  {
+    "status": "PASS",
+    "rows": 2,
+    "name": "Equivalent cost by branch",
+    "dashboard": "buildlens-cost"
+  },
+  {
+    "status": "PASS",
+    "rows": 4,
+    "name": "Stage cost / duration-weighted allocation",
+    "dashboard": "buildlens-cost"
+  },
+  {
+    "status": "PASS",
+    "rows": 2,
+    "name": "Variable: repository",
+    "dashboard": "buildlens-cost"
+  },
+  {
+    "status": "PASS",
+    "rows": 1,
+    "name": "Quarantined now",
+    "dashboard": "buildlens-flaky"
+  },
+  {
+    "status": "PASS",
+    "rows": 1,
+    "name": "Detection evidence by rule",
+    "dashboard": "buildlens-flaky"
+  },
+  {
+    "status": "PASS",
+    "rows": 2,
+    "name": "Quarantine activations and releases",
+    "dashboard": "buildlens-flaky"
+  },
+  {
+    "status": "PASS",
+    "rows": 1,
+    "name": "Active quarantine / current state",
+    "dashboard": "buildlens-flaky"
+  },
+  {
+    "status": "PASS",
+    "rows": 2,
+    "name": "Variable: repository",
+    "dashboard": "buildlens-flaky"
+  },
+  {
+    "status": "PASS",
+    "rows": 1,
+    "name": "Recorded builds",
+    "dashboard": "buildlens-health"
+  },
+  {
+    "status": "PASS",
+    "rows": 1,
+    "name": "Infrastructure-attributed builds",
+    "dashboard": "buildlens-health"
+  },
+  {
+    "status": "PASS",
+    "rows": 4,
+    "name": "Builds per day / result",
+    "dashboard": "buildlens-health"
+  },
+  {
+    "status": "PASS",
+    "rows": 0,
+    "name": "Infrastructure failures by reason",
+    "dashboard": "buildlens-health"
+  },
+  {
+    "status": "PASS",
+    "rows": 50,
+    "name": "Recent builds",
+    "dashboard": "buildlens-health"
+  },
+  {
+    "status": "PASS",
+    "rows": 2,
+    "name": "Variable: repository",
+    "dashboard": "buildlens-health"
+  },
+  {
+    "status": "PASS",
+    "rows": 1,
+    "name": "Regression alert rows",
+    "dashboard": "buildlens-regressions"
+  },
+  {
+    "status": "PASS",
+    "rows": 123,
+    "name": "Selected stage / measured, median, threshold",
+    "dashboard": "buildlens-regressions"
+  },
+  {
+    "status": "PASS",
+    "rows": 100,
+    "name": "Latest regression evidence",
+    "dashboard": "buildlens-regressions"
+  },
+  {
+    "status": "PASS",
+    "rows": 2,
+    "name": "Variable: repository",
+    "dashboard": "buildlens-regressions"
+  },
+  {
+    "status": "PASS",
+    "rows": 4,
+    "name": "Variable: stage",
+    "dashboard": "buildlens-regressions"
+  }
+]

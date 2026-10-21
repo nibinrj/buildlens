@@ -7,7 +7,8 @@ param(
     [ValidateRange(0,50)][int]$BaselineBuilds=13,
     [ValidateRange(0,10000)][int]$BaselineMillis=300,
     [ValidateRange(0,10000)][int]$SlowMillis=3000,
-    [string]$LabPath=(Join-Path (Split-Path $PSScriptRoot -Parent) '..\buildlens-lab')
+    [string]$LabPath=(Join-Path (Split-Path $PSScriptRoot -Parent) '..\buildlens-lab'),
+    [switch]$PrepareOnly
 )
 $ErrorActionPreference='Stop'
 $PSNativeCommandUseErrorActionPreference=$true
@@ -61,6 +62,7 @@ mkdir -p /tmp/buildlens-regression/evidence
 '@
 if(-not ($configured -match 'Regression local job configured by Job DSL')){throw "Job DSL did not confirm configuration: $($configured | Select-Object -First 3)"}
 $configured | Write-Host
+if($PrepareOnly){Write-Host "Prepared measurement job: $job; source manifest: $evidence/manifest.json"; return}
 In-Jenkins "mkdir -p /tmp/buildlens-regression/evidence/$job"
 $buildScript=@'
 set -eu

@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-10-19T07:37:33.7310493Z",
+  "finished_at": "2026-10-19T07:37:43.365333Z",
+  "job": "buildlens-regression-local-20261016-150934",
+  "requested": 50,
+  "parameters": {
+    "SLOW_MILLIS": "300"
+  },
+  "builds": [
+    {
+      "queue_id": 154,
+      "number": 3,
+      "result": "FAILURE",
+      "duration_ms": 5,
+      "buildlens_id": null,
+      "error": "Build 3 completed with FAILURE"
+    }
+  ],
+  "error": "Build 3 completed with FAILURE"
+}

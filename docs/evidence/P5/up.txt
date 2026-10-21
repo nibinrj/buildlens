@@ -1,0 +1,279 @@
+ Image buildlens-server:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 529B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.16kB 0.0s done
+#2 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#3 ...
+
+#4 [auth] docker/dockerfile:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#3 DONE 2.6s
+
+#5 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#5 CACHED
+
+#6 [internal] load metadata for docker.io/library/golang:1.27.1-alpine3.24@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414
+#6 ...
+
+#7 [auth] library/golang:pull token for registry-1.docker.io
+#7 DONE 0.0s
+
+#8 [internal] load metadata for gcr.io/distroless/static-debian13:nonroot@sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3
+#8 ...
+
+#6 [internal] load metadata for docker.io/library/golang:1.27.1-alpine3.24@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414
+#6 DONE 1.4s
+
+#8 [internal] load metadata for gcr.io/distroless/static-debian13:nonroot@sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3
+#8 DONE 1.6s
+
+#9 [internal] load .dockerignore
+#9 transferring context: 210B done
+#9 DONE 0.0s
+
+#10 [build 1/8] FROM docker.io/library/golang:1.27.1-alpine3.24@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414
+#10 DONE 0.0s
+
+#11 [stage-1 1/2] FROM gcr.io/distroless/static-debian13:nonroot@sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3
+#11 DONE 0.0s
+
+#12 [internal] load build context
+#12 transferring context: 2.41kB done
+#12 DONE 0.0s
+
+#13 [build 6/8] COPY internal/ internal/
+#13 CACHED
+
+#14 [build 5/8] COPY cmd/ cmd/
+#14 CACHED
+
+#15 [build 8/8] RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/buildlens-server ./cmd/buildlens-server
+#15 CACHED
+
+#16 [build 2/8] WORKDIR /src
+#16 CACHED
+
+#17 [build 4/8] RUN go mod download
+#17 CACHED
+
+#18 [build 7/8] COPY migrations/ migrations/
+#18 CACHED
+
+#19 [build 3/8] COPY go.mod go.sum ./
+#19 CACHED
+
+#20 [stage-1 2/2] COPY --from=build /out/buildlens-server /usr/local/bin/buildlens-server
+#20 CACHED
+
+#21 exporting to image
+#21 exporting layers done
+#21 writing image sha256:ef7145510c6eb71c0516409924819935acd920469b0397c3a4cae46a8bb58870 done
+#21 naming to docker.io/library/buildlens-server:local done
+#21 DONE 0.0s
+
+#22 resolving provenance for metadata file
+#22 DONE 0.0s
+ Image buildlens-server:local Built 
+ Image buildlens-jenkins:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 533B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.40kB 0.0s done
+#2 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#3 DONE 0.4s
+
+#4 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#4 CACHED
+
+#5 [internal] load metadata for docker.io/jenkins/jenkins:2.580.1-lts-jdk21@sha256:a660310e39ade10631f774bacd5219de767dfd08947ea5c32a739b5e5bb382c1
+#5 ...
+
+#6 [auth] jenkins/jenkins:pull token for registry-1.docker.io
+#6 DONE 0.0s
+
+#5 [internal] load metadata for docker.io/jenkins/jenkins:2.580.1-lts-jdk21@sha256:a660310e39ade10631f774bacd5219de767dfd08947ea5c32a739b5e5bb382c1
+#5 DONE 1.6s
+
+#7 [internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [1/5] FROM docker.io/jenkins/jenkins:2.580.1-lts-jdk21@sha256:a660310e39ade10631f774bacd5219de767dfd08947ea5c32a739b5e5bb382c1
+#8 DONE 0.0s
+
+#9 [internal] load build context
+#9 transferring context: 5.15kB 0.0s done
+#9 DONE 0.1s
+
+#10 [2/5] COPY --chown=jenkins:jenkins controller/plugins.txt /usr/share/jenkins/ref/plugins.txt
+#10 CACHED
+
+#11 [3/5] RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
+#11 CACHED
+
+#12 [4/5] COPY --chown=jenkins:jenkins controller/init.groovy.d/agent-secret.groovy /usr/share/jenkins/ref/init.groovy.d/agent-secret.groovy.override
+#12 CACHED
+
+#13 [5/5] RUN mkdir -p /buildlens-agent && chown jenkins:jenkins /buildlens-agent && chmod 750 /buildlens-agent
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 writing image sha256:a847127a396bb0cc915458109510a5ef677bced671c9468d4fcb83ca3a04b7f6 done
+#14 naming to docker.io/library/buildlens-jenkins:local done
+#14 DONE 0.0s
+
+#15 resolving provenance for metadata file
+#15 DONE 0.0s
+ Image buildlens-jenkins:local Built 
+ Image buildlens-jenkins-agent:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.38kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.71kB done
+#2 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#3 DONE 0.3s
+
+#4 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#4 CACHED
+
+#5 [internal] load metadata for docker.io/jenkins/inbound-agent:3391.va_37fa_a_305d6d-4-jdk21@sha256:c5d50ca09a7de45999983c69e0527499ca667efe00a85cf1ce5ed968b5b21719
+#5 DONE 0.0s
+
+#6 [internal] load metadata for docker.io/library/golang:1.27.1-alpine3.24@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414
+#6 DONE 0.0s
+
+#7 [internal] load metadata for docker.io/library/docker:29.8.0-cli-alpine3.24@sha256:eccaacfeed644c7de222ff047483568cb988dde95476fbaaf10ea2d04921bb66
+#7 ...
+
+#8 [auth] library/docker:pull token for registry-1.docker.io
+#8 DONE 0.0s
+
+#7 [internal] load metadata for docker.io/library/docker:29.8.0-cli-alpine3.24@sha256:eccaacfeed644c7de222ff047483568cb988dde95476fbaaf10ea2d04921bb66
+#7 DONE 1.5s
+
+#9 [internal] load .dockerignore
+#9 transferring context: 210B done
+#9 DONE 0.0s
+
+#10 [cli 1/8] FROM docker.io/library/golang:1.27.1-alpine3.24@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414
+#10 DONE 0.0s
+
+#11 [dockercli 1/1] FROM docker.io/library/docker:29.8.0-cli-alpine3.24@sha256:eccaacfeed644c7de222ff047483568cb988dde95476fbaaf10ea2d04921bb66
+#11 DONE 0.0s
+
+#12 [stage-2 1/7] FROM docker.io/jenkins/inbound-agent:3391.va_37fa_a_305d6d-4-jdk21@sha256:c5d50ca09a7de45999983c69e0527499ca667efe00a85cf1ce5ed968b5b21719
+#12 DONE 0.0s
+
+#13 [internal] load build context
+#13 transferring context: 3.32kB done
+#13 DONE 0.0s
+
+#14 [cli 8/8] RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/buildlens ./cmd/buildlens
+#14 CACHED
+
+#15 [stage-2 5/7] COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
+#15 CACHED
+
+#16 [cli 2/8] WORKDIR /src
+#16 CACHED
+
+#17 [stage-2 6/7] COPY jenkins/agent/entrypoint.sh /usr/local/bin/buildlens-agent-entrypoint
+#17 CACHED
+
+#18 [stage-2 2/7] RUN curl -fsSLo /tmp/maven.tar.gz "https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.9.16/apache-maven-3.9.16-bin.tar.gz"  && echo "831a8591fe20c8243b1dbe7d71e3244f31d1665b0804b2e825e38cbbe5ce0cafb8338851f90780735568773e0a6cd07bbec107cda0b896b008b861075358b6f6  /tmp/maven.tar.gz" | sha512sum -c -  && tar -xzf /tmp/maven.tar.gz -C /opt  && ln -s "/opt/apache-maven-3.9.16/bin/mvn" /usr/local/bin/mvn  && rm /tmp/maven.tar.gz
+#18 CACHED
+
+#19 [stage-2 3/7] RUN curl -fsSLo /tmp/go.tar.gz "https://go.dev/dl/go1.27.1.linux-amd64.tar.gz"  && echo "63d339f0da5ab53635a56f2490a7984dfe12dfcff22ad749f63edaf590168445  /tmp/go.tar.gz" | sha256sum -c -  && tar -xzf /tmp/go.tar.gz -C /usr/local  && rm /tmp/go.tar.gz
+#19 CACHED
+
+#20 [cli 3/8] COPY go.mod go.sum ./
+#20 CACHED
+
+#21 [cli 5/8] COPY cmd/ cmd/
+#21 CACHED
+
+#22 [cli 6/8] COPY internal/ internal/
+#22 CACHED
+
+#23 [stage-2 4/7] COPY --from=cli /out/buildlens /usr/local/bin/buildlens
+#23 CACHED
+
+#24 [cli 4/8] RUN go mod download
+#24 CACHED
+
+#25 [cli 7/8] COPY migrations/ migrations/
+#25 CACHED
+
+#26 [stage-2 7/7] RUN chmod 755 /usr/local/bin/buildlens-agent-entrypoint  && mkdir -p /home/jenkins/.m2 /buildlens-agent  && chown jenkins:jenkins /home/jenkins/.m2 /buildlens-agent  && chmod 750 /buildlens-agent
+#26 CACHED
+
+#27 exporting to image
+#27 exporting layers done
+#27 writing image sha256:93ae6f63e590fc432021dbe85f7d748039a36b93689397102121d5aa0c580eca done
+#27 naming to docker.io/library/buildlens-jenkins-agent:local done
+#27 DONE 0.0s
+
+#28 resolving provenance for metadata file
+#28 DONE 0.0s
+ Image buildlens-jenkins-agent:local Built 
+ Container buildlens-postgres-1 Running 
+ Container buildlens-buildlens-server-1 Running 
+ Container buildlens-grafana-1 Running 
+ Container buildlens-jenkins-agent-1 Running 
+ Container buildlens-jenkins-1 Running 
+ Container buildlens-postgres-1 Waiting 
+ Container buildlens-postgres-1 Healthy 
+ Container buildlens-postgres-1 Waiting 
+ Container buildlens-buildlens-server-1 Waiting 
+ Container buildlens-postgres-1 Healthy 
+ Container buildlens-buildlens-server-1 Healthy 
+Grafana read-only database role provisioned.
+ Container buildlens-jenkins-1 Running 
+ Container buildlens-postgres-1 Running 
+ Container buildlens-buildlens-server-1 Running 
+ Container buildlens-grafana-1 Running 
+ Container buildlens-jenkins-agent-1 Recreate 
+ Container buildlens-jenkins-agent-1 Recreated 
+ Container buildlens-postgres-1 Waiting 
+ Container buildlens-postgres-1 Waiting 
+ Container buildlens-postgres-1 Healthy 
+ Container buildlens-postgres-1 Healthy 
+ Container buildlens-buildlens-server-1 Waiting 
+ Container buildlens-buildlens-server-1 Healthy 
+ Container buildlens-jenkins-agent-1 Starting 
+ Container buildlens-jenkins-agent-1 Started 
+ Container buildlens-postgres-1 Waiting 
+ Container buildlens-buildlens-server-1 Waiting 
+ Container buildlens-grafana-1 Waiting 
+ Container buildlens-jenkins-1 Waiting 
+ Container buildlens-jenkins-agent-1 Waiting 
+ Container buildlens-postgres-1 Healthy 
+ Container buildlens-jenkins-agent-1 Healthy 
+ Container buildlens-jenkins-1 Healthy 
+ Container buildlens-buildlens-server-1 Healthy 
+ Container buildlens-grafana-1 Healthy 
+NAME                           IMAGE                                                                                              COMMAND                  SERVICE            CREATED          STATUS                    PORTS
+buildlens-buildlens-server-1   buildlens-server:local                                                                             "/usr/local/bin/buil…"   buildlens-server   46 minutes ago   Up 46 minutes (healthy)   127.0.0.1:8091->8080/tcp
+buildlens-grafana-1            grafana/grafana:13.2.3@sha256:b28bae15e219c998fb0e0424ed724930cc61b1f61fb404d47c862f9a23f9e572     "/run.sh"                grafana            26 minutes ago   Up 26 minutes             127.0.0.1:3001->3000/tcp
+buildlens-jenkins-1            buildlens-jenkins:local                                                                            "/usr/bin/tini -- /u…"   jenkins            6 days ago       Up 50 minutes (healthy)   127.0.0.1:8080->8080/tcp
+buildlens-jenkins-agent-1      buildlens-jenkins-agent:local                                                                      "/usr/local/bin/buil…"   jenkins-agent      2 seconds ago    Up Less than a second     
+buildlens-postgres-1           postgres:18.6-alpine3.24@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873   "docker-entrypoint.s…"   postgres           6 days ago       Up 50 minutes (healthy)   127.0.0.1:5433->5432/tcp

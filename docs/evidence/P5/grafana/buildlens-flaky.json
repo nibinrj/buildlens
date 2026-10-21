@@ -1,0 +1,323 @@
+{
+  "meta": {
+    "type": "db",
+    "canSave": true,
+    "canEdit": true,
+    "canAdmin": true,
+    "canStar": true,
+    "canDelete": true,
+    "slug": "buildlens-flaky-tests",
+    "url": "/d/buildlens-flaky/buildlens-flaky-tests",
+    "expires": "0001-01-01T00:00:00Z",
+    "created": "2026-10-19T07:35:42Z",
+    "updated": "2026-10-19T07:58:54Z",
+    "updatedBy": "Anonymous",
+    "createdBy": "Anonymous",
+    "version": 2,
+    "hasAcl": false,
+    "isFolder": false,
+    "apiVersion": "v0alpha1",
+    "folderId": 4400639164637184,
+    "folderUid": "eg1ofqnrybc3kf",
+    "folderTitle": "BuildLens",
+    "folderUrl": "/dashboards/f/eg1ofqnrybc3kf/buildlens",
+    "provisioned": true,
+    "provisionedExternalId": "flaky.json",
+    "annotationsPermissions": {
+      "dashboard": {
+        "canAdd": true,
+        "canEdit": true,
+        "canDelete": true
+      }
+    }
+  },
+  "dashboard": {
+    "annotations": {
+      "list": []
+    },
+    "description": "Current quarantine and stored detection evidence. Lab flakiness is injected.",
+    "editable": false,
+    "id": 4400639666520064,
+    "links": [
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Flaky",
+        "type": "link",
+        "url": "/d/buildlens-flaky"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Regressions",
+        "type": "link",
+        "url": "/d/buildlens-regressions"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Cost",
+        "type": "link",
+        "url": "/d/buildlens-cost"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Health",
+        "type": "link",
+        "url": "/d/buildlens-health"
+      }
+    ],
+    "panels": [
+      {
+        "gridPos": {
+          "h": 4,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "content": "**Injected lab behavior.** Current quarantine ignores the time range; event charts use it. Rule counts are evidence occurrences across activations and cap alerts, not distinct tests or production precision.",
+          "mode": "markdown"
+        },
+        "title": "Reading this dashboard",
+        "type": "text"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 6,
+          "x": 0,
+          "y": 4
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "auto",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) AS \"Quarantined now\"\nFROM quarantine q JOIN test_case t ON t.id=q.test_case_id\nJOIN repository r ON r.id=t.repository_id\nWHERE q.state='QUARANTINED' AND r.name=${repository:sqlstring};",
+            "refId": "A"
+          }
+        ],
+        "title": "Quarantined now",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 18,
+          "x": 6,
+          "y": 4
+        },
+        "id": 3,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "WITH detections AS (\n  SELECT q.evidence,q.quarantined_at AS event_time,t.repository_id\n  FROM quarantine q JOIN test_case t ON t.id=q.test_case_id WHERE NOT q.manual\n  UNION ALL\n  SELECT a.payload,a.created_at,a.repository_id FROM alert a\n  WHERE a.type='FLAKY' AND a.payload->>'cap_reached'='true'\n)\nSELECT f->>'rule' AS \"Rule\",count(*) AS \"Evidence occurrences\"\nFROM detections d JOIN repository r ON r.id=d.repository_id\nCROSS JOIN LATERAL jsonb_array_elements(COALESCE(d.evidence->'findings','[]'::jsonb)) f\nWHERE r.name=${repository:sqlstring} AND $__timeFilter(d.event_time)\nGROUP BY 1 ORDER BY 1;",
+            "refId": "A"
+          }
+        ],
+        "title": "Detection evidence by rule",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "fillOpacity": 8,
+              "lineWidth": 2,
+              "showPoints": "auto",
+              "spanNulls": false
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 9
+        },
+        "id": 4,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT date_trunc('day',q.quarantined_at) AS time, count(*)::double precision AS value, 'quarantined'::text AS metric\nFROM quarantine q JOIN test_case t ON t.id=q.test_case_id JOIN repository r ON r.id=t.repository_id\nWHERE r.name=${repository:sqlstring} AND $__timeFilter(q.quarantined_at)\nGROUP BY 1\nUNION ALL\nSELECT date_trunc('day',q.released_at), count(*)::double precision, 'released'::text\nFROM quarantine q JOIN test_case t ON t.id=q.test_case_id JOIN repository r ON r.id=t.repository_id\nWHERE r.name=${repository:sqlstring} AND q.released_at IS NOT NULL AND $__timeFilter(q.released_at)\nGROUP BY 1 ORDER BY 1,3;",
+            "refId": "A"
+          }
+        ],
+        "title": "Quarantine activations and releases",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 17
+        },
+        "id": 5,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT t.class_name||'#'||t.method_name AS \"Test\",q.reason_rule AS \"Rule\",\n       q.quarantined_at AS \"Quarantined at\",q.consecutive_passes AS \"Consecutive passes\",q.manual AS \"Manual\"\nFROM quarantine q JOIN test_case t ON t.id=q.test_case_id JOIN repository r ON r.id=t.repository_id\nWHERE r.name=${repository:sqlstring} AND q.state='QUARANTINED'\nORDER BY q.quarantined_at,q.id;",
+            "refId": "A"
+          }
+        ],
+        "title": "Active quarantine / current state",
+        "type": "table"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 39,
+    "tags": [
+      "buildlens",
+      "local-demo"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": "nibinrj/buildlens-lab",
+            "value": "nibinrj/buildlens-lab"
+          },
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "buildlens-postgres"
+          },
+          "includeAll": false,
+          "label": "Repository",
+          "multi": false,
+          "name": "repository",
+          "options": [],
+          "query": "SELECT name AS __text,name AS __value FROM repository ORDER BY name",
+          "refresh": 1,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-30d",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "utc",
+    "title": "BuildLens / Flaky tests",
+    "uid": "buildlens-flaky",
+    "version": 2
+  }
+}

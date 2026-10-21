@@ -1,0 +1,410 @@
+{
+  "meta": {
+    "type": "db",
+    "canSave": true,
+    "canEdit": true,
+    "canAdmin": true,
+    "canStar": true,
+    "canDelete": true,
+    "slug": "buildlens-reference-cost",
+    "url": "/d/buildlens-cost/buildlens-reference-cost",
+    "expires": "0001-01-01T00:00:00Z",
+    "created": "2026-10-19T07:35:42Z",
+    "updated": "2026-10-19T07:58:54Z",
+    "updatedBy": "Anonymous",
+    "createdBy": "Anonymous",
+    "version": 2,
+    "hasAcl": false,
+    "isFolder": false,
+    "apiVersion": "v0alpha1",
+    "folderId": 4400639164637184,
+    "folderUid": "eg1ofqnrybc3kf",
+    "folderTitle": "BuildLens",
+    "folderUrl": "/dashboards/f/eg1ofqnrybc3kf/buildlens",
+    "provisioned": true,
+    "provisionedExternalId": "cost.json",
+    "annotationsPermissions": {
+      "dashboard": {
+        "canAdd": true,
+        "canEdit": true,
+        "canDelete": true
+      }
+    }
+  },
+  "dashboard": {
+    "annotations": {
+      "list": []
+    },
+    "description": "Equivalent local compute cost at a dated reference price; never AWS spend.",
+    "editable": false,
+    "id": 4400639481970688,
+    "links": [
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Flaky",
+        "type": "link",
+        "url": "/d/buildlens-flaky"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Regressions",
+        "type": "link",
+        "url": "/d/buildlens-regressions"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Cost",
+        "type": "link",
+        "url": "/d/buildlens-cost"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Health",
+        "type": "link",
+        "url": "/d/buildlens-health"
+      }
+    ],
+    "panels": [
+      {
+        "gridPos": {
+          "h": 4,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "content": "**Equivalent reference cost, not AWS spend.** Totals include LOCAL builds only; unknown costs stay null. Stage costs allocate each known build cost by recorded stage duration, not separate metering. Storage, network, idle time and CPU credits are excluded.",
+          "mode": "markdown"
+        },
+        "title": "Reading this dashboard",
+        "type": "text"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "decimals": 6,
+            "unit": "currencyUSD"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 12,
+          "x": 0,
+          "y": 4
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "auto",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT sum(b.cost_usd)::double precision AS \"Equivalent reference USD\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND b.agent_lifecycle='LOCAL' AND $__timeFilter(b.started_at);",
+            "refId": "A"
+          }
+        ],
+        "title": "Known local reference cost",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 12,
+          "x": 12,
+          "y": 4
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "auto",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) AS \"Builds with unknown cost\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND b.cost_usd IS NULL AND $__timeFilter(b.started_at);",
+            "refId": "A"
+          }
+        ],
+        "title": "Builds with unknown cost / all lifecycles",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "fillOpacity": 8,
+              "lineWidth": 2,
+              "showPoints": "auto",
+              "spanNulls": false
+            },
+            "decimals": 6,
+            "unit": "currencyUSD"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 9
+        },
+        "id": 4,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT b.started_at AS time,b.cost_usd::double precision AS value,b.branch AS metric\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND b.agent_lifecycle='LOCAL' AND $__timeFilter(b.started_at)\nORDER BY b.started_at,b.id;",
+            "refId": "A"
+          }
+        ],
+        "title": "Equivalent cost per build / branch",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "short"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Equivalent reference USD"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "currencyUSD"
+                },
+                {
+                  "id": "decimals",
+                  "value": 6
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 17
+        },
+        "id": 5,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT b.branch AS \"Branch\",count(*) AS \"Builds\",count(b.cost_usd) AS \"Known cost builds\",\n       sum(b.cost_usd)::double precision AS \"Equivalent reference USD\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name=${repository:sqlstring} AND b.agent_lifecycle='LOCAL' AND $__timeFilter(b.started_at)\nGROUP BY b.branch ORDER BY 4 DESC NULLS LAST;",
+            "refId": "A"
+          }
+        ],
+        "title": "Equivalent cost by branch",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "short"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Duration-weighted equivalent USD"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "currencyUSD"
+                },
+                {
+                  "id": "decimals",
+                  "value": 6
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 17
+        },
+        "id": 6,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "WITH stage_totals AS (\n  SELECT s.build_id,s.name,sum(s.duration_ms) AS stage_ms\n  FROM stage_run s GROUP BY s.build_id,s.name\n), attributed AS (\n  SELECT s.name,b.cost_usd*s.stage_ms/NULLIF(sum(s.stage_ms) OVER (PARTITION BY b.id),0) AS usd\n  FROM stage_totals s JOIN build b ON b.id=s.build_id JOIN repository r ON r.id=b.repository_id\n  WHERE r.name=${repository:sqlstring} AND b.agent_lifecycle='LOCAL' AND $__timeFilter(b.started_at)\n)\nSELECT name AS \"Stage\",sum(usd)::double precision AS \"Duration-weighted equivalent USD\"\nFROM attributed GROUP BY name ORDER BY 2 DESC NULLS LAST;",
+            "refId": "A"
+          }
+        ],
+        "title": "Stage cost / duration-weighted allocation",
+        "type": "table"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 39,
+    "tags": [
+      "buildlens",
+      "local-demo"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": "nibinrj/buildlens-lab",
+            "value": "nibinrj/buildlens-lab"
+          },
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "buildlens-postgres"
+          },
+          "includeAll": false,
+          "label": "Repository",
+          "multi": false,
+          "name": "repository",
+          "options": [],
+          "query": "SELECT name AS __text,name AS __value FROM repository ORDER BY name",
+          "refresh": 1,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-30d",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "utc",
+    "title": "BuildLens / Reference cost",
+    "uid": "buildlens-cost",
+    "version": 2
+  }
+}

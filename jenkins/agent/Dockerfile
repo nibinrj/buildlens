@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+FROM docker:29.8.0-cli-alpine3.24@sha256:eccaacfeed644c7de222ff047483568cb988dde95476fbaaf10ea2d04921bb66 AS dockercli
 # Jenkins inbound agent: JDK 21 (from the base image), Maven, Go and the buildlens CLI.
 # Build context: the repository root (the CLI is built from cmd/buildlens). Versions checked 2026-10-04.
 
@@ -35,6 +36,7 @@ RUN curl -fsSLo /tmp/go.tar.gz "https://go.dev/dl/go${GO_VERSION}.linux-amd64.ta
 ENV PATH=/usr/local/go/bin:$PATH
 
 COPY --from=cli /out/buildlens /usr/local/bin/buildlens
+COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
 COPY jenkins/agent/entrypoint.sh /usr/local/bin/buildlens-agent-entrypoint
 # /buildlens-agent is the mount point of the volume shared with the controller. Whichever container mounts the
 # empty volume first copies its directory's owner into it, so both images must give it to jenkins (uid 1000).

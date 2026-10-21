@@ -1,0 +1,38 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "typeVersion": [
+                0,
+                0
+              ],
+              "executedQueryString": "SELECT count(*) AS \"Regression alert rows\"\nFROM alert a JOIN repository r ON r.id=a.repository_id\nWHERE r.name='nibinrj/buildlens-lab' AND a.type='REGRESSION' AND a.created_at BETWEEN '2026-09-19T08:35:55.551Z' AND '2026-10-19T08:35:55.551Z';"
+            },
+            "fields": [
+              {
+                "name": "Regression alert rows",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "int64",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                106
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

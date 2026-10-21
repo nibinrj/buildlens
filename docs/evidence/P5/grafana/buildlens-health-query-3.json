@@ -1,0 +1,55 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "type": "timeseries-wide",
+              "typeVersion": [
+                0,
+                1
+              ],
+              "executedQueryString": "SELECT date_trunc('day',b.started_at) AS time,count(*)::double precision AS value,b.result AS metric\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name='nibinrj/buildlens-lab' AND b.started_at BETWEEN '2026-09-19T08:35:45.257Z' AND '2026-10-19T08:35:45.257Z'\nGROUP BY 1,b.result ORDER BY 1,b.result;"
+            },
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "name": "SUCCESS",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                1791072000000,
+                1791763200000,
+                1792108800000,
+                1792368000000
+              ],
+              [
+                1,
+                27,
+                19,
+                104
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

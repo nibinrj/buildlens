@@ -1,0 +1,75 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "typeVersion": [
+                0,
+                0
+              ],
+              "executedQueryString": "SELECT b.branch AS \"Branch\",count(*) AS \"Builds\",count(b.cost_usd) AS \"Known cost builds\",\n       sum(b.cost_usd)::double precision AS \"Equivalent reference USD\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name='nibinrj/buildlens-lab' AND b.agent_lifecycle='LOCAL' AND b.started_at BETWEEN '2026-09-19T08:35:20.458Z' AND '2026-10-19T08:35:20.458Z'\nGROUP BY b.branch ORDER BY 4 DESC NULLS LAST;"
+            },
+            "fields": [
+              {
+                "name": "Branch",
+                "type": "string",
+                "typeInfo": {
+                  "frame": "string",
+                  "nullable": true
+                }
+              },
+              {
+                "name": "Builds",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "int64",
+                  "nullable": true
+                }
+              },
+              {
+                "name": "Known cost builds",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "int64",
+                  "nullable": true
+                }
+              },
+              {
+                "name": "Equivalent reference USD",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                "main",
+                "PR-1"
+              ],
+              [
+                148,
+                3
+              ],
+              [
+                119,
+                3
+              ],
+              [
+                0.011183,
+                0.000533
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

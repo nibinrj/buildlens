@@ -1,0 +1,34 @@
+{
+  "samples": 286,
+  "valid_samples": 286,
+  "errors": 0,
+  "first_sample": "2026-10-19T08:13:26.1367819Z",
+  "last_sample": "2026-10-19T08:33:48.8391793Z",
+  "start_delay_seconds": 0.4210091,
+  "maximum_gap_seconds": 4.5749965,
+  "peak_sum_mib": 1626.11,
+  "peak_at": "2026-10-19T08:21:56.7834897Z",
+  "configured_limit_mib": 3392,
+  "containers": [
+    {
+      "name": "buildlens-postgres-1",
+      "sampled_peak_mib": 67.59
+    },
+    {
+      "name": "buildlens-grafana-1",
+      "sampled_peak_mib": 368.9
+    },
+    {
+      "name": "buildlens-buildlens-server-1",
+      "sampled_peak_mib": 18.72
+    },
+    {
+      "name": "buildlens-jenkins-1",
+      "sampled_peak_mib": 658.9
+    },
+    {
+      "name": "buildlens-jenkins-agent-1",
+      "sampled_peak_mib": 602.7
+    }
+  ]
+}

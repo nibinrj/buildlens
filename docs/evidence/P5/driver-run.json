@@ -1,0 +1,413 @@
+{
+  "started_at": "2026-10-19T08:13:25.7157728Z",
+  "finished_at": "2026-10-19T08:33:48.8662505Z",
+  "job": "buildlens-regression-local-20261019-081321",
+  "requested": 50,
+  "parameters": {
+    "SLOW_MILLIS": "300"
+  },
+  "builds": [
+    {
+      "queue_id": 266,
+      "number": 1,
+      "result": "SUCCESS",
+      "duration_ms": 16853,
+      "buildlens_id": 105,
+      "error": null
+    },
+    {
+      "queue_id": 268,
+      "number": 2,
+      "result": "SUCCESS",
+      "duration_ms": 18120,
+      "buildlens_id": 106,
+      "error": null
+    },
+    {
+      "queue_id": 271,
+      "number": 3,
+      "result": "SUCCESS",
+      "duration_ms": 19576,
+      "buildlens_id": 107,
+      "error": null
+    },
+    {
+      "queue_id": 273,
+      "number": 4,
+      "result": "SUCCESS",
+      "duration_ms": 16378,
+      "buildlens_id": 108,
+      "error": null
+    },
+    {
+      "queue_id": 275,
+      "number": 5,
+      "result": "SUCCESS",
+      "duration_ms": 15866,
+      "buildlens_id": 109,
+      "error": null
+    },
+    {
+      "queue_id": 277,
+      "number": 6,
+      "result": "SUCCESS",
+      "duration_ms": 15836,
+      "buildlens_id": 110,
+      "error": null
+    },
+    {
+      "queue_id": 279,
+      "number": 7,
+      "result": "SUCCESS",
+      "duration_ms": 16268,
+      "buildlens_id": 111,
+      "error": null
+    },
+    {
+      "queue_id": 281,
+      "number": 8,
+      "result": "SUCCESS",
+      "duration_ms": 14417,
+      "buildlens_id": 112,
+      "error": null
+    },
+    {
+      "queue_id": 283,
+      "number": 9,
+      "result": "SUCCESS",
+      "duration_ms": 15789,
+      "buildlens_id": 113,
+      "error": null
+    },
+    {
+      "queue_id": 285,
+      "number": 10,
+      "result": "SUCCESS",
+      "duration_ms": 15697,
+      "buildlens_id": 114,
+      "error": null
+    },
+    {
+      "queue_id": 287,
+      "number": 11,
+      "result": "SUCCESS",
+      "duration_ms": 15842,
+      "buildlens_id": 115,
+      "error": null
+    },
+    {
+      "queue_id": 289,
+      "number": 12,
+      "result": "SUCCESS",
+      "duration_ms": 14232,
+      "buildlens_id": 116,
+      "error": null
+    },
+    {
+      "queue_id": 291,
+      "number": 13,
+      "result": "SUCCESS",
+      "duration_ms": 16523,
+      "buildlens_id": 117,
+      "error": null
+    },
+    {
+      "queue_id": 293,
+      "number": 14,
+      "result": "SUCCESS",
+      "duration_ms": 24569,
+      "buildlens_id": 118,
+      "error": null
+    },
+    {
+      "queue_id": 295,
+      "number": 15,
+      "result": "SUCCESS",
+      "duration_ms": 18591,
+      "buildlens_id": 119,
+      "error": null
+    },
+    {
+      "queue_id": 297,
+      "number": 16,
+      "result": "SUCCESS",
+      "duration_ms": 17310,
+      "buildlens_id": 120,
+      "error": null
+    },
+    {
+      "queue_id": 299,
+      "number": 17,
+      "result": "SUCCESS",
+      "duration_ms": 14419,
+      "buildlens_id": 121,
+      "error": null
+    },
+    {
+      "queue_id": 301,
+      "number": 18,
+      "result": "SUCCESS",
+      "duration_ms": 14086,
+      "buildlens_id": 122,
+      "error": null
+    },
+    {
+      "queue_id": 303,
+      "number": 19,
+      "result": "SUCCESS",
+      "duration_ms": 15702,
+      "buildlens_id": 123,
+      "error": null
+    },
+    {
+      "queue_id": 305,
+      "number": 20,
+      "result": "SUCCESS",
+      "duration_ms": 16307,
+      "buildlens_id": 124,
+      "error": null
+    },
+    {
+      "queue_id": 307,
+      "number": 21,
+      "result": "SUCCESS",
+      "duration_ms": 17156,
+      "buildlens_id": 125,
+      "error": null
+    },
+    {
+      "queue_id": 309,
+      "number": 22,
+      "result": "SUCCESS",
+      "duration_ms": 14048,
+      "buildlens_id": 126,
+      "error": null
+    },
+    {
+      "queue_id": 311,
+      "number": 23,
+      "result": "SUCCESS",
+      "duration_ms": 15689,
+      "buildlens_id": 127,
+      "error": null
+    },
+    {
+      "queue_id": 313,
+      "number": 24,
+      "result": "SUCCESS",
+      "duration_ms": 16082,
+      "buildlens_id": 128,
+      "error": null
+    },
+    {
+      "queue_id": 315,
+      "number": 25,
+      "result": "SUCCESS",
+      "duration_ms": 15645,
+      "buildlens_id": 129,
+      "error": null
+    },
+    {
+      "queue_id": 317,
+      "number": 26,
+      "result": "SUCCESS",
+      "duration_ms": 14700,
+      "buildlens_id": 130,
+      "error": null
+    },
+    {
+      "queue_id": 319,
+      "number": 27,
+      "result": "SUCCESS",
+      "duration_ms": 14366,
+      "buildlens_id": 131,
+      "error": null
+    },
+    {
+      "queue_id": 321,
+      "number": 28,
+      "result": "SUCCESS",
+      "duration_ms": 16034,
+      "buildlens_id": 132,
+      "error": null
+    },
+    {
+      "queue_id": 323,
+      "number": 29,
+      "result": "SUCCESS",
+      "duration_ms": 15763,
+      "buildlens_id": 133,
+      "error": null
+    },
+    {
+      "queue_id": 325,
+      "number": 30,
+      "result": "SUCCESS",
+      "duration_ms": 16001,
+      "buildlens_id": 134,
+      "error": null
+    },
+    {
+      "queue_id": 327,
+      "number": 31,
+      "result": "SUCCESS",
+      "duration_ms": 15906,
+      "buildlens_id": 135,
+      "error": null
+    },
+    {
+      "queue_id": 329,
+      "number": 32,
+      "result": "SUCCESS",
+      "duration_ms": 16248,
+      "buildlens_id": 136,
+      "error": null
+    },
+    {
+      "queue_id": 332,
+      "number": 33,
+      "result": "SUCCESS",
+      "duration_ms": 15931,
+      "buildlens_id": 137,
+      "error": null
+    },
+    {
+      "queue_id": 334,
+      "number": 34,
+      "result": "SUCCESS",
+      "duration_ms": 15886,
+      "buildlens_id": 138,
+      "error": null
+    },
+    {
+      "queue_id": 336,
+      "number": 35,
+      "result": "SUCCESS",
+      "duration_ms": 14048,
+      "buildlens_id": 139,
+      "error": null
+    },
+    {
+      "queue_id": 338,
+      "number": 36,
+      "result": "SUCCESS",
+      "duration_ms": 15835,
+      "buildlens_id": 140,
+      "error": null
+    },
+    {
+      "queue_id": 340,
+      "number": 37,
+      "result": "SUCCESS",
+      "duration_ms": 16068,
+      "buildlens_id": 141,
+      "error": null
+    },
+    {
+      "queue_id": 343,
+      "number": 38,
+      "result": "SUCCESS",
+      "duration_ms": 14191,
+      "buildlens_id": 142,
+      "error": null
+    },
+    {
+      "queue_id": 345,
+      "number": 39,
+      "result": "SUCCESS",
+      "duration_ms": 15880,
+      "buildlens_id": 143,
+      "error": null
+    },
+    {
+      "queue_id": 347,
+      "number": 40,
+      "result": "SUCCESS",
+      "duration_ms": 14703,
+      "buildlens_id": 144,
+      "error": null
+    },
+    {
+      "queue_id": 349,
+      "number": 41,
+      "result": "SUCCESS",
+      "duration_ms": 19687,
+      "buildlens_id": 145,
+      "error": null
+    },
+    {
+      "queue_id": 351,
+      "number": 42,
+      "result": "SUCCESS",
+      "duration_ms": 16283,
+      "buildlens_id": 146,
+      "error": null
+    },
+    {
+      "queue_id": 353,
+      "number": 43,
+      "result": "SUCCESS",
+      "duration_ms": 15818,
+      "buildlens_id": 147,
+      "error": null
+    },
+    {
+      "queue_id": 355,
+      "number": 44,
+      "result": "SUCCESS",
+      "duration_ms": 15574,
+      "buildlens_id": 148,
+      "error": null
+    },
+    {
+      "queue_id": 357,
+      "number": 45,
+      "result": "SUCCESS",
+      "duration_ms": 13987,
+      "buildlens_id": 149,
+      "error": null
+    },
+    {
+      "queue_id": 359,
+      "number": 46,
+      "result": "SUCCESS",
+      "duration_ms": 13821,
+      "buildlens_id": 150,
+      "error": null
+    },
+    {
+      "queue_id": 361,
+      "number": 47,
+      "result": "SUCCESS",
+      "duration_ms": 16012,
+      "buildlens_id": 151,
+      "error": null
+    },
+    {
+      "queue_id": 363,
+      "number": 48,
+      "result": "SUCCESS",
+      "duration_ms": 15750,
+      "buildlens_id": 152,
+      "error": null
+    },
+    {
+      "queue_id": 365,
+      "number": 49,
+      "result": "SUCCESS",
+      "duration_ms": 13991,
+      "buildlens_id": 153,
+      "error": null
+    },
+    {
+      "queue_id": 367,
+      "number": 50,
+      "result": "SUCCESS",
+      "duration_ms": 15885,
+      "buildlens_id": 154,
+      "error": null
+    }
+  ],
+  "error": null,
+  "verified_uploads": 50
+}

@@ -1,0 +1,492 @@
+Started by user admin
+Connecting to https://api.github.com using nibinrj/****** (GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env)
+Obtained Jenkinsfile from e2d90246d6b3d055db9ad1165e2bf9ab95617871+868bbe8d1e2733480cfc84d0151d4ae5c93e8827 (aa54753f5f5e1de2f3d8622a39144645ff627f8c)
+Loading library buildlens@main:shared-library/
+Attempting to resolve main from remote references...
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+using GIT_ASKPASS to set credentials GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env
+ > git ls-remote -- https://github.com/nibinrj/buildlens.git # timeout=10
+Found match: refs/heads/main revision 70f1fc68ba771dc63dfda0e5b28979618689e243
+The recommended git tool is: NONE
+using credential github-token
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/buildlens-lab_PR-1@libs/648d2685889c2a61dc22c731b0b8a34467d3befe8e66417836fc7e8731e5ae3e/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/nibinrj/buildlens.git # timeout=10
+Fetching without tags
+Fetching upstream changes from https://github.com/nibinrj/buildlens.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+using GIT_ASKPASS to set credentials GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env
+ > git fetch --no-tags --force --progress -- https://github.com/nibinrj/buildlens.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Checking out Revision 70f1fc68ba771dc63dfda0e5b28979618689e243 (main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 70f1fc68ba771dc63dfda0e5b28979618689e243 # timeout=10
+Commit message: "Add duration regression alerts, reference cost, and durable PR summaries"
+
+Could not update commit status. Message: {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/commits/statuses#create-a-commit-status","status":"403"}
+
+[Pipeline] Start of Pipeline
+[Pipeline] properties
+[Pipeline] node
+Running on agent-1 in /home/jenkins/agent/workspace/buildlens-lab_PR-1
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] deleteDir
+[Pipeline] checkout
+[2026-10-19T07:17:20.705Z] The recommended git tool is: NONE
+[2026-10-19T07:17:20.714Z] using credential github-token
+[2026-10-19T07:17:20.724Z] Cloning the remote Git repository
+[2026-10-19T07:17:20.725Z] Cloning with configured refspecs honoured and without tags
+[2026-10-19T07:17:20.727Z] Cloning repository https://github.com/nibinrj/buildlens-lab.git
+[2026-10-19T07:17:20.727Z]  > git init /home/jenkins/agent/workspace/buildlens-lab_PR-1 # timeout=10
+[2026-10-19T07:17:20.734Z] Fetching upstream changes from https://github.com/nibinrj/buildlens-lab.git
+[2026-10-19T07:17:20.734Z]  > git --version # timeout=10
+[2026-10-19T07:17:20.737Z]  > git --version # 'git version 2.47.3'
+[2026-10-19T07:17:20.738Z] using GIT_ASKPASS to set credentials GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env
+[2026-10-19T07:17:20.742Z]  > git fetch --no-tags --force --progress -- https://github.com/nibinrj/buildlens-lab.git +refs/pull/1/head:refs/remotes/origin/PR-1 +refs/heads/main:refs/remotes/origin/main # timeout=10
+[2026-10-19T07:17:22.088Z] Fetching without tags
+[2026-10-19T07:17:22.069Z]  > git config remote.origin.url https://github.com/nibinrj/buildlens-lab.git # timeout=10
+[2026-10-19T07:17:22.073Z]  > git config --add remote.origin.fetch +refs/pull/1/head:refs/remotes/origin/PR-1 # timeout=10
+[2026-10-19T07:17:22.077Z]  > git config --add remote.origin.fetch +refs/heads/main:refs/remotes/origin/main # timeout=10
+[2026-10-19T07:17:22.085Z]  > git config remote.origin.url https://github.com/nibinrj/buildlens-lab.git # timeout=10
+[2026-10-19T07:17:22.090Z] Fetching upstream changes from https://github.com/nibinrj/buildlens-lab.git
+[2026-10-19T07:17:22.090Z] using GIT_ASKPASS to set credentials GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env
+[2026-10-19T07:17:22.093Z]  > git fetch --no-tags --force --progress -- https://github.com/nibinrj/buildlens-lab.git +refs/pull/1/head:refs/remotes/origin/PR-1 +refs/heads/main:refs/remotes/origin/main # timeout=10
+[2026-10-19T07:17:22.875Z] Merging remotes/origin/main commit 868bbe8d1e2733480cfc84d0151d4ae5c93e8827 into PR head commit e2d90246d6b3d055db9ad1165e2bf9ab95617871
+[2026-10-19T07:17:22.904Z] Merge succeeded, producing e2d90246d6b3d055db9ad1165e2bf9ab95617871
+[2026-10-19T07:17:22.905Z] Checking out Revision e2d90246d6b3d055db9ad1165e2bf9ab95617871 (PR-1)
+[2026-10-19T07:17:22.915Z] Commit message: "Add a controlled duration regression demonstration"
+[2026-10-19T07:17:22.876Z]  > git config core.sparsecheckout # timeout=10
+[2026-10-19T07:17:22.879Z]  > git checkout -f e2d90246d6b3d055db9ad1165e2bf9ab95617871 # timeout=10
+[2026-10-19T07:17:22.890Z]  > git remote # timeout=10
+[2026-10-19T07:17:22.893Z]  > git config --get remote.origin.url # timeout=10
+[2026-10-19T07:17:22.895Z] using GIT_ASKPASS to set credentials GitHub fine-grained token (read-only, nibinrj/buildlens and buildlens-lab), from .env
+[2026-10-19T07:17:22.897Z]  > git merge 868bbe8d1e2733480cfc84d0151d4ae5c93e8827 # timeout=10
+[2026-10-19T07:17:22.901Z]  > git rev-parse HEAD^{commit} # timeout=10
+[2026-10-19T07:17:22.906Z]  > git config core.sparsecheckout # timeout=10
+[2026-10-19T07:17:22.908Z]  > git checkout -f e2d90246d6b3d055db9ad1165e2bf9ab95617871 # timeout=10
+[2026-10-19T07:17:22.918Z]  > git rev-list --no-walk e2d90246d6b3d055db9ad1165e2bf9ab95617871 # timeout=10
+[2026-10-19T07:17:23.731Z] 
+[2026-10-19T07:17:23.731Z] Could not update commit status. Message: {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/commits/statuses#create-a-commit-status","status":"403"}
+[2026-10-19T07:17:23.731Z] 
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] sh
+[2026-10-19T07:17:24.112Z] + mvn -B -ntp -DskipTests package
+[2026-10-19T07:17:25.488Z] [INFO] Scanning for projects...
+[2026-10-19T07:17:25.488Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:25.488Z] [INFO] Reactor Build Order:
+[2026-10-19T07:17:25.488Z] [INFO] 
+[2026-10-19T07:17:25.488Z] [INFO] buildlens-lab                                                      [pom]
+[2026-10-19T07:17:25.488Z] [INFO] core (stable tests)                                                [jar]
+[2026-10-19T07:17:25.488Z] [INFO] api (price service and injected controlled duration test)          [jar]
+[2026-10-19T07:17:25.488Z] [INFO] flaky-lab (injected flakiness, from P3)                            [jar]
+[2026-10-19T07:17:25.488Z] [INFO] 
+[2026-10-19T07:17:25.488Z] [INFO] -----------< io.github.nibinrj.buildlens.lab:buildlens-lab >------------
+[2026-10-19T07:17:25.488Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T07:17:25.488Z] [INFO]   from pom.xml
+[2026-10-19T07:17:25.488Z] [INFO] --------------------------------[ pom ]---------------------------------
+[2026-10-19T07:17:25.488Z] [INFO] 
+[2026-10-19T07:17:25.488Z] [INFO] ----------------< io.github.nibinrj.buildlens.lab:core >----------------
+[2026-10-19T07:17:25.488Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T07:17:25.488Z] [INFO]   from core/pom.xml
+[2026-10-19T07:17:25.488Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:25.488Z] [INFO] 
+[2026-10-19T07:17:25.488Z] [INFO] --- resources:3.5.0:resources (default-resources) @ core ---
+[2026-10-19T07:17:25.750Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/core/src/main/resources
+[2026-10-19T07:17:25.750Z] [INFO] 
+[2026-10-19T07:17:25.750Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ core ---
+[2026-10-19T07:17:25.750Z] [INFO] Recompiling the module because of changed source code.
+[2026-10-19T07:17:25.750Z] [INFO] Compiling 2 source files with javac [debug release 21] to target/classes
+[2026-10-19T07:17:26.320Z] [INFO] 
+[2026-10-19T07:17:26.320Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ core ---
+[2026-10-19T07:17:26.577Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/core/src/test/resources
+[2026-10-19T07:17:26.577Z] [INFO] 
+[2026-10-19T07:17:26.577Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ core ---
+[2026-10-19T07:17:26.577Z] [INFO] Recompiling the module because of changed dependency.
+[2026-10-19T07:17:26.577Z] [INFO] Compiling 2 source files with javac [debug release 21] to target/test-classes
+[2026-10-19T07:17:26.837Z] [INFO] 
+[2026-10-19T07:17:26.837Z] [INFO] --- surefire:3.6.0:test (default-test) @ core ---
+[2026-10-19T07:17:26.837Z] [INFO] Tests are skipped.
+[2026-10-19T07:17:26.837Z] [INFO] 
+[2026-10-19T07:17:26.837Z] [INFO] --- jar:3.5.1:jar (default-jar) @ core ---
+[2026-10-19T07:17:27.095Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-lab_PR-1/core/target/core-0.1.0-SNAPSHOT.jar
+[2026-10-19T07:17:27.357Z] [INFO] 
+[2026-10-19T07:17:27.357Z] [INFO] ----------------< io.github.nibinrj.buildlens.lab:api >-----------------
+[2026-10-19T07:17:27.357Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T07:17:27.357Z] [INFO]   from api/pom.xml
+[2026-10-19T07:17:27.357Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:27.357Z] [INFO] 
+[2026-10-19T07:17:27.357Z] [INFO] --- resources:3.5.0:resources (default-resources) @ api ---
+[2026-10-19T07:17:27.357Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/api/src/main/resources
+[2026-10-19T07:17:27.357Z] [INFO] 
+[2026-10-19T07:17:27.357Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ api ---
+[2026-10-19T07:17:27.357Z] [INFO] Recompiling the module because of changed dependency.
+[2026-10-19T07:17:27.357Z] [INFO] Compiling 1 source file with javac [debug release 21] to target/classes
+[2026-10-19T07:17:27.357Z] [INFO] 
+[2026-10-19T07:17:27.357Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ api ---
+[2026-10-19T07:17:27.357Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/api/src/test/resources
+[2026-10-19T07:17:27.357Z] [INFO] 
+[2026-10-19T07:17:27.357Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ api ---
+[2026-10-19T07:17:27.357Z] [INFO] Recompiling the module because of changed dependency.
+[2026-10-19T07:17:27.357Z] [INFO] Compiling 2 source files with javac [debug release 21] to target/test-classes
+[2026-10-19T07:17:27.619Z] [INFO] 
+[2026-10-19T07:17:27.619Z] [INFO] --- surefire:3.6.0:test (default-test) @ api ---
+[2026-10-19T07:17:27.619Z] [INFO] Tests are skipped.
+[2026-10-19T07:17:27.619Z] [INFO] 
+[2026-10-19T07:17:27.619Z] [INFO] --- jar:3.5.1:jar (default-jar) @ api ---
+[2026-10-19T07:17:27.619Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-lab_PR-1/api/target/api-0.1.0-SNAPSHOT.jar
+[2026-10-19T07:17:27.619Z] [INFO] 
+[2026-10-19T07:17:27.619Z] [INFO] -------------< io.github.nibinrj.buildlens.lab:flaky-lab >--------------
+[2026-10-19T07:17:27.619Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T07:17:27.619Z] [INFO]   from flaky-lab/pom.xml
+[2026-10-19T07:17:27.619Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:27.619Z] [INFO] 
+[2026-10-19T07:17:27.619Z] [INFO] --- resources:3.5.0:resources (default-resources) @ flaky-lab ---
+[2026-10-19T07:17:27.619Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/src/main/resources
+[2026-10-19T07:17:27.619Z] [INFO] 
+[2026-10-19T07:17:27.619Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ flaky-lab ---
+[2026-10-19T07:17:27.619Z] [INFO] No sources to compile
+[2026-10-19T07:17:27.619Z] [INFO] 
+[2026-10-19T07:17:27.619Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ flaky-lab ---
+[2026-10-19T07:17:27.619Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/src/test/resources
+[2026-10-19T07:17:27.619Z] [INFO] 
+[2026-10-19T07:17:27.619Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ flaky-lab ---
+[2026-10-19T07:17:27.619Z] [WARNING] I/O error reading dependency state: /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/target/classes: /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/target/classes
+[2026-10-19T07:17:27.619Z] [INFO] Recompiling the module because of changed source code.
+[2026-10-19T07:17:27.619Z] [INFO] Compiling 3 source files with javac [debug release 21] to target/test-classes
+[2026-10-19T07:17:27.875Z] [INFO] 
+[2026-10-19T07:17:27.875Z] [INFO] --- surefire:3.6.0:test (default-test) @ flaky-lab ---
+[2026-10-19T07:17:27.875Z] [INFO] Tests are skipped.
+[2026-10-19T07:17:27.875Z] [INFO] 
+[2026-10-19T07:17:27.875Z] [INFO] --- jar:3.5.1:jar (default-jar) @ flaky-lab ---
+[2026-10-19T07:17:27.875Z] [WARNING] JAR will be empty - no content was marked for inclusion!
+[2026-10-19T07:17:27.875Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/target/flaky-lab-0.1.0-SNAPSHOT.jar
+[2026-10-19T07:17:27.875Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:27.875Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T07:17:27.875Z] [INFO] 
+[2026-10-19T07:17:27.875Z] [INFO] buildlens-lab ...................................... SUCCESS [  0.003 s]
+[2026-10-19T07:17:27.875Z] [INFO] core (stable tests) ................................ SUCCESS [  1.973 s]
+[2026-10-19T07:17:27.875Z] [INFO] api (price service and injected controlled duration test) SUCCESS [  0.309 s]
+[2026-10-19T07:17:27.875Z] [INFO] flaky-lab (injected flakiness, from P3) ............ SUCCESS [  0.192 s]
+[2026-10-19T07:17:27.875Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:27.875Z] [INFO] BUILD SUCCESS
+[2026-10-19T07:17:27.875Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:27.875Z] [INFO] Total time:  2.598 s
+[2026-10-19T07:17:27.875Z] [INFO] Finished at: 2026-10-19T07:17:27Z
+[2026-10-19T07:17:27.875Z] [INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] pwd
+[Pipeline] pwd
+[Pipeline] writeFile
+[Pipeline] writeFile
+[Pipeline] withCredentials
+[2026-10-19T07:17:28.110Z] Masking supported pattern matches of $BUILDLENS_KEY
+[Pipeline] {
+[Pipeline] sh
+[2026-10-19T07:17:28.434Z] + buildlens quarantine --repo nibinrj/buildlens-lab --format surefire-excludes --output /home/jenkins/agent/workspace/buildlens-lab_PR-1/.buildlens/quarantine-excludes.txt
+[2026-10-19T07:17:28.434Z] buildlens quarantine: wrote 1 test pattern(s) to /home/jenkins/agent/workspace/buildlens-lab_PR-1/.buildlens/quarantine-excludes.txt (surefire-excludes)
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] readFile
+[Pipeline] writeFile
+[Pipeline] echo
+[2026-10-19T07:17:28.572Z] BuildLens: blocking exclusions: lab.flaky.TimeTest#expiresAtBoundary
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] sh
+[2026-10-19T07:17:28.909Z] + mvn -B -ntp -Dbuildlens.flaky.seed=3 -Dbuildlens.flaky.clockMillis=3000 -Dbuildlens.slow.ms=10000 -Dmaven.test.failure.ignore=true -Dbuildlens.reportSuffix= -Dsurefire.excludesFile=/home/jenkins/agent/workspace/buildlens-lab_PR-1/.buildlens/quarantine-excludes.txt verify
+[2026-10-19T07:17:30.279Z] [INFO] Scanning for projects...
+[2026-10-19T07:17:30.279Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:30.280Z] [INFO] Reactor Build Order:
+[2026-10-19T07:17:30.280Z] [INFO] 
+[2026-10-19T07:17:30.280Z] [INFO] buildlens-lab                                                      [pom]
+[2026-10-19T07:17:30.280Z] [INFO] core (stable tests)                                                [jar]
+[2026-10-19T07:17:30.280Z] [INFO] api (price service and injected controlled duration test)          [jar]
+[2026-10-19T07:17:30.280Z] [INFO] flaky-lab (injected flakiness, from P3)                            [jar]
+[2026-10-19T07:17:30.280Z] [INFO] 
+[2026-10-19T07:17:30.280Z] [INFO] -----------< io.github.nibinrj.buildlens.lab:buildlens-lab >------------
+[2026-10-19T07:17:30.280Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T07:17:30.280Z] [INFO]   from pom.xml
+[2026-10-19T07:17:30.280Z] [INFO] --------------------------------[ pom ]---------------------------------
+[2026-10-19T07:17:30.280Z] [INFO] 
+[2026-10-19T07:17:30.280Z] [INFO] ----------------< io.github.nibinrj.buildlens.lab:core >----------------
+[2026-10-19T07:17:30.280Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T07:17:30.280Z] [INFO]   from core/pom.xml
+[2026-10-19T07:17:30.280Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:30.280Z] [INFO] 
+[2026-10-19T07:17:30.280Z] [INFO] --- resources:3.5.0:resources (default-resources) @ core ---
+[2026-10-19T07:17:30.536Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/core/src/main/resources
+[2026-10-19T07:17:30.536Z] [INFO] 
+[2026-10-19T07:17:30.536Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ core ---
+[2026-10-19T07:17:30.794Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T07:17:30.794Z] [INFO] 
+[2026-10-19T07:17:30.794Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ core ---
+[2026-10-19T07:17:30.794Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/core/src/test/resources
+[2026-10-19T07:17:30.794Z] [INFO] 
+[2026-10-19T07:17:30.794Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ core ---
+[2026-10-19T07:17:30.794Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T07:17:30.794Z] [INFO] 
+[2026-10-19T07:17:30.794Z] [INFO] --- surefire:3.6.0:test (default-test) @ core ---
+[2026-10-19T07:17:30.794Z] [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[2026-10-19T07:17:31.053Z] [INFO] 
+[2026-10-19T07:17:31.053Z] [INFO] -------------------------------------------------------
+[2026-10-19T07:17:31.053Z] [INFO]  T E S T S
+[2026-10-19T07:17:31.053Z] [INFO] -------------------------------------------------------
+[2026-10-19T07:17:31.618Z] [INFO] Running lab.core.SlugsTest
+[2026-10-19T07:17:31.618Z] [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.152 s -- in lab.core.SlugsTest
+[2026-10-19T07:17:31.618Z] [INFO] Running lab.core.CalculatorTest
+[2026-10-19T07:17:31.880Z] [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in lab.core.CalculatorTest
+[2026-10-19T07:17:31.880Z] [INFO] 
+[2026-10-19T07:17:31.880Z] [INFO] Results:
+[2026-10-19T07:17:31.880Z] [INFO] 
+[2026-10-19T07:17:31.880Z] [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+[2026-10-19T07:17:31.880Z] [INFO] 
+[2026-10-19T07:17:31.880Z] [INFO] 
+[2026-10-19T07:17:31.880Z] [INFO] --- jar:3.5.1:jar (default-jar) @ core ---
+[2026-10-19T07:17:32.137Z] [INFO] 
+[2026-10-19T07:17:32.137Z] [INFO] ----------------< io.github.nibinrj.buildlens.lab:api >-----------------
+[2026-10-19T07:17:32.137Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T07:17:32.137Z] [INFO]   from api/pom.xml
+[2026-10-19T07:17:32.137Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:32.138Z] [INFO] 
+[2026-10-19T07:17:32.138Z] [INFO] --- resources:3.5.0:resources (default-resources) @ api ---
+[2026-10-19T07:17:32.138Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/api/src/main/resources
+[2026-10-19T07:17:32.138Z] [INFO] 
+[2026-10-19T07:17:32.138Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ api ---
+[2026-10-19T07:17:32.138Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T07:17:32.138Z] [INFO] 
+[2026-10-19T07:17:32.138Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ api ---
+[2026-10-19T07:17:32.138Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/api/src/test/resources
+[2026-10-19T07:17:32.138Z] [INFO] 
+[2026-10-19T07:17:32.138Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ api ---
+[2026-10-19T07:17:32.138Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T07:17:32.138Z] [INFO] 
+[2026-10-19T07:17:32.138Z] [INFO] --- surefire:3.6.0:test (default-test) @ api ---
+[2026-10-19T07:17:32.138Z] [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[2026-10-19T07:17:32.138Z] [INFO] 
+[2026-10-19T07:17:32.138Z] [INFO] -------------------------------------------------------
+[2026-10-19T07:17:32.138Z] [INFO]  T E S T S
+[2026-10-19T07:17:32.138Z] [INFO] -------------------------------------------------------
+[2026-10-19T07:17:32.723Z] [INFO] Running lab.api.PriceServiceTest
+[2026-10-19T07:17:32.723Z] [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 s -- in lab.api.PriceServiceTest
+[2026-10-19T07:17:32.723Z] [INFO] Running lab.api.ControlledSlowTest
+[2026-10-19T07:17:45.942Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.00 s -- in lab.api.ControlledSlowTest
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] Results:
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] --- jar:3.5.1:jar (default-jar) @ api ---
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] -------------< io.github.nibinrj.buildlens.lab:flaky-lab >--------------
+[2026-10-19T07:17:45.942Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T07:17:45.942Z] [INFO]   from flaky-lab/pom.xml
+[2026-10-19T07:17:45.942Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] --- resources:3.5.0:resources (default-resources) @ flaky-lab ---
+[2026-10-19T07:17:45.942Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/src/main/resources
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ flaky-lab ---
+[2026-10-19T07:17:45.942Z] [INFO] No sources to compile
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ flaky-lab ---
+[2026-10-19T07:17:45.942Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/src/test/resources
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ flaky-lab ---
+[2026-10-19T07:17:45.942Z] [WARNING] I/O error reading dependency state: /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/target/classes: /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/target/classes
+[2026-10-19T07:17:45.942Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] --- surefire:3.6.0:test (default-test) @ flaky-lab ---
+[2026-10-19T07:17:45.942Z] [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] -------------------------------------------------------
+[2026-10-19T07:17:45.942Z] [INFO]  T E S T S
+[2026-10-19T07:17:45.942Z] [INFO] -------------------------------------------------------
+[2026-10-19T07:17:45.942Z] [INFO] Running lab.flaky.OrderTest
+[2026-10-19T07:17:45.942Z] [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s -- in lab.flaky.OrderTest
+[2026-10-19T07:17:45.942Z] [INFO] Running lab.flaky.RandomTest
+[2026-10-19T07:17:45.942Z] [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.014 s <<< FAILURE! -- in lab.flaky.RandomTest
+[2026-10-19T07:17:45.942Z] [ERROR] lab.flaky.RandomTest.sometimesFails -- Time elapsed: 0.008 s <<< FAILURE!
+[2026-10-19T07:17:45.942Z] org.opentest4j.AssertionFailedError: INJECTED random draw below policy threshold: 0.11345034205715454 ==> expected: <true> but was: <false>
+[2026-10-19T07:17:45.942Z] 	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:199)
+[2026-10-19T07:17:45.942Z] 	at lab.flaky.RandomTest.sometimesFails(RandomTest.java:13)
+[2026-10-19T07:17:45.942Z] 
+[2026-10-19T07:17:45.942Z] [INFO] Running lab.flaky.RandomTest
+[2026-10-19T07:17:45.942Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in lab.flaky.RandomTest
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] Results:
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [WARNING] Flakes: 
+[2026-10-19T07:17:45.942Z] [WARNING] lab.flaky.RandomTest.sometimesFails
+[2026-10-19T07:17:45.942Z] [ERROR]   Run 1: RandomTest.sometimesFails:13 INJECTED random draw below policy threshold: 0.11345034205715454 ==> expected: <true> but was: <false>
+[2026-10-19T07:17:45.942Z] [INFO]   Run 2: PASS
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [WARNING] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Flakes: 1
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] --- jar:3.5.1:jar (default-jar) @ flaky-lab ---
+[2026-10-19T07:17:45.942Z] [WARNING] JAR will be empty - no content was marked for inclusion!
+[2026-10-19T07:17:45.942Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:45.942Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T07:17:45.942Z] [INFO] 
+[2026-10-19T07:17:45.942Z] [INFO] buildlens-lab ...................................... SUCCESS [  0.002 s]
+[2026-10-19T07:17:45.942Z] [INFO] core (stable tests) ................................ SUCCESS [  1.829 s]
+[2026-10-19T07:17:45.942Z] [INFO] api (price service and injected controlled duration test) SUCCESS [ 10.814 s]
+[2026-10-19T07:17:45.942Z] [INFO] flaky-lab (injected flakiness, from P3) ............ SUCCESS [  0.692 s]
+[2026-10-19T07:17:45.942Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:45.942Z] [INFO] BUILD SUCCESS
+[2026-10-19T07:17:45.942Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:45.942Z] [INFO] Total time:  13.457 s
+[2026-10-19T07:17:45.942Z] [INFO] Finished at: 2026-10-19T07:17:43Z
+[2026-10-19T07:17:45.942Z] [INFO] ------------------------------------------------------------------------
+[Pipeline] junit
+[2026-10-19T07:17:45.983Z] Recording test results
+[2026-10-19T07:17:46.014Z] [Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Quarantine)
+[Pipeline] catchError
+[Pipeline] {
+[Pipeline] echo
+[2026-10-19T07:17:46.165Z] BuildLens: quarantine-only tests: lab.flaky.TimeTest#expiresAtBoundary
+[Pipeline] sh
+[2026-10-19T07:17:46.457Z] + mvn -B -ntp -Dbuildlens.flaky.seed=3 -Dbuildlens.flaky.clockMillis=3000 -Dbuildlens.slow.ms=10000 -Dmaven.test.failure.ignore=false -Dbuildlens.reportSuffix=-quarantine -Dsurefire.includesFile=/home/jenkins/agent/workspace/buildlens-lab_PR-1/.buildlens/quarantine-only.txt test
+[2026-10-19T07:17:47.836Z] [INFO] Scanning for projects...
+[2026-10-19T07:17:47.836Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:47.836Z] [INFO] Reactor Build Order:
+[2026-10-19T07:17:47.836Z] [INFO] 
+[2026-10-19T07:17:47.836Z] [INFO] buildlens-lab                                                      [pom]
+[2026-10-19T07:17:47.836Z] [INFO] core (stable tests)                                                [jar]
+[2026-10-19T07:17:47.836Z] [INFO] api (price service and injected controlled duration test)          [jar]
+[2026-10-19T07:17:47.836Z] [INFO] flaky-lab (injected flakiness, from P3)                            [jar]
+[2026-10-19T07:17:47.837Z] [INFO] 
+[2026-10-19T07:17:47.837Z] [INFO] -----------< io.github.nibinrj.buildlens.lab:buildlens-lab >------------
+[2026-10-19T07:17:47.837Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T07:17:47.837Z] [INFO]   from pom.xml
+[2026-10-19T07:17:47.837Z] [INFO] --------------------------------[ pom ]---------------------------------
+[2026-10-19T07:17:47.837Z] [INFO] 
+[2026-10-19T07:17:47.837Z] [INFO] ----------------< io.github.nibinrj.buildlens.lab:core >----------------
+[2026-10-19T07:17:47.837Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T07:17:47.837Z] [INFO]   from core/pom.xml
+[2026-10-19T07:17:47.837Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:47.837Z] [INFO] 
+[2026-10-19T07:17:47.837Z] [INFO] --- resources:3.5.0:resources (default-resources) @ core ---
+[2026-10-19T07:17:48.096Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/core/src/main/resources
+[2026-10-19T07:17:48.096Z] [INFO] 
+[2026-10-19T07:17:48.096Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ core ---
+[2026-10-19T07:17:48.353Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T07:17:48.353Z] [INFO] 
+[2026-10-19T07:17:48.353Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ core ---
+[2026-10-19T07:17:48.353Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/core/src/test/resources
+[2026-10-19T07:17:48.353Z] [INFO] 
+[2026-10-19T07:17:48.353Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ core ---
+[2026-10-19T07:17:48.353Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T07:17:48.353Z] [INFO] 
+[2026-10-19T07:17:48.353Z] [INFO] --- surefire:3.6.0:test (default-test) @ core ---
+[2026-10-19T07:17:48.353Z] [INFO] 
+[2026-10-19T07:17:48.353Z] [INFO] ----------------< io.github.nibinrj.buildlens.lab:api >-----------------
+[2026-10-19T07:17:48.353Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T07:17:48.353Z] [INFO]   from api/pom.xml
+[2026-10-19T07:17:48.353Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:48.353Z] [INFO] 
+[2026-10-19T07:17:48.353Z] [INFO] --- resources:3.5.0:resources (default-resources) @ api ---
+[2026-10-19T07:17:48.353Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/api/src/main/resources
+[2026-10-19T07:17:48.353Z] [INFO] 
+[2026-10-19T07:17:48.353Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ api ---
+[2026-10-19T07:17:48.353Z] [INFO] Recompiling the module because of changed dependency.
+[2026-10-19T07:17:48.353Z] [INFO] Compiling 1 source file with javac [debug release 21] to target/classes
+[2026-10-19T07:17:48.922Z] [INFO] 
+[2026-10-19T07:17:48.922Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ api ---
+[2026-10-19T07:17:48.922Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/api/src/test/resources
+[2026-10-19T07:17:48.922Z] [INFO] 
+[2026-10-19T07:17:48.922Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ api ---
+[2026-10-19T07:17:48.922Z] [INFO] Recompiling the module because of changed dependency.
+[2026-10-19T07:17:48.922Z] [INFO] Compiling 2 source files with javac [debug release 21] to target/test-classes
+[2026-10-19T07:17:49.183Z] [INFO] 
+[2026-10-19T07:17:49.184Z] [INFO] --- surefire:3.6.0:test (default-test) @ api ---
+[2026-10-19T07:17:49.184Z] [INFO] 
+[2026-10-19T07:17:49.184Z] [INFO] -------------< io.github.nibinrj.buildlens.lab:flaky-lab >--------------
+[2026-10-19T07:17:49.184Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T07:17:49.184Z] [INFO]   from flaky-lab/pom.xml
+[2026-10-19T07:17:49.184Z] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-10-19T07:17:49.184Z] [INFO] 
+[2026-10-19T07:17:49.184Z] [INFO] --- resources:3.5.0:resources (default-resources) @ flaky-lab ---
+[2026-10-19T07:17:49.184Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/src/main/resources
+[2026-10-19T07:17:49.184Z] [INFO] 
+[2026-10-19T07:17:49.184Z] [INFO] --- compiler:3.16.0:compile (default-compile) @ flaky-lab ---
+[2026-10-19T07:17:49.184Z] [INFO] No sources to compile
+[2026-10-19T07:17:49.184Z] [INFO] 
+[2026-10-19T07:17:49.184Z] [INFO] --- resources:3.5.0:testResources (default-testResources) @ flaky-lab ---
+[2026-10-19T07:17:49.184Z] [INFO] skip non existing resourceDirectory /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/src/test/resources
+[2026-10-19T07:17:49.184Z] [INFO] 
+[2026-10-19T07:17:49.184Z] [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ flaky-lab ---
+[2026-10-19T07:17:49.184Z] [WARNING] I/O error reading dependency state: /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/target/classes: /home/jenkins/agent/workspace/buildlens-lab_PR-1/flaky-lab/target/classes
+[2026-10-19T07:17:49.184Z] [INFO] Nothing to compile - all classes are up to date.
+[2026-10-19T07:17:49.184Z] [INFO] 
+[2026-10-19T07:17:49.184Z] [INFO] --- surefire:3.6.0:test (default-test) @ flaky-lab ---
+[2026-10-19T07:17:49.184Z] [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[2026-10-19T07:17:49.184Z] [INFO] 
+[2026-10-19T07:17:49.184Z] [INFO] -------------------------------------------------------
+[2026-10-19T07:17:49.184Z] [INFO]  T E S T S
+[2026-10-19T07:17:49.184Z] [INFO] -------------------------------------------------------
+[2026-10-19T07:17:50.118Z] [INFO] Running lab.flaky.TimeTest
+[2026-10-19T07:17:50.118Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 s -- in lab.flaky.TimeTest
+[2026-10-19T07:17:50.118Z] [INFO] 
+[2026-10-19T07:17:50.118Z] [INFO] Results:
+[2026-10-19T07:17:50.118Z] [INFO] 
+[2026-10-19T07:17:50.118Z] [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[2026-10-19T07:17:50.118Z] [INFO] 
+[2026-10-19T07:17:50.118Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:50.118Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T07:17:50.118Z] [INFO] 
+[2026-10-19T07:17:50.118Z] [INFO] buildlens-lab ...................................... SUCCESS [  0.003 s]
+[2026-10-19T07:17:50.118Z] [INFO] core (stable tests) ................................ SUCCESS [  0.674 s]
+[2026-10-19T07:17:50.118Z] [INFO] api (price service and injected controlled duration test) SUCCESS [  0.722 s]
+[2026-10-19T07:17:50.118Z] [INFO] flaky-lab (injected flakiness, from P3) ............ SUCCESS [  1.016 s]
+[2026-10-19T07:17:50.118Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:50.118Z] [INFO] BUILD SUCCESS
+[2026-10-19T07:17:50.118Z] [INFO] ------------------------------------------------------------------------
+[2026-10-19T07:17:50.118Z] [INFO] Total time:  2.554 s
+[2026-10-19T07:17:50.118Z] [INFO] Finished at: 2026-10-19T07:17:50Z
+[2026-10-19T07:17:50.118Z] [INFO] ------------------------------------------------------------------------
+[Pipeline] junit
+[2026-10-19T07:17:50.147Z] Recording test results
+[2026-10-19T07:17:50.187Z] [Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // catchError
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] writeFile
+[Pipeline] writeFile
+[Pipeline] sh
+[2026-10-19T07:17:50.699Z] + git rev-parse HEAD
+[Pipeline] sh
+[2026-10-19T07:17:51.004Z] + git rev-parse HEAD^{tree}
+[Pipeline] withCredentials
+[2026-10-19T07:17:51.053Z] Masking supported pattern matches of $BUILDLENS_KEY
+[Pipeline] {
+[Pipeline] sh
+[2026-10-19T07:17:51.376Z] + buildlens report --repo nibinrj/buildlens-lab --result SUCCESS --started-at 1792394235358 --stages .buildlens/stages.json --log-tail .buildlens/log-tail.txt --commit e2d90246d6b3d055db9ad1165e2bf9ab95617871 --tree 38e6ad7dfd34f42f3ec85063b7e0cc18d223c476 --agent-busy-ms 30472 --reports **/target/surefire-reports/TEST-*.xml --quarantine-reports **/target/surefire-reports-quarantine/TEST-*.xml
+[2026-10-19T07:17:51.376Z] buildlens report: uploaded buildlens-lab/PR-1 #3 with 7 report file(s): {"id":50,"created":true,"tests":14,"stages":4}
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+
+Could not update commit status. Message: {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/commits/statuses#create-a-commit-status","status":"403"}
+
+Finished: SUCCESS

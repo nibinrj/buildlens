@@ -1,0 +1,48 @@
+## console-1.txt
+[2026-10-19T08:13:37.176Z] + cp -R /tmp/buildlens-regression-snapshot/. .
+[2026-10-19T08:13:37.507Z] Uncommitted regression snapshot: 3ca3625d8a651660a204feec964e8662b48c673f897e10b25c6e119de7ea449b
+[2026-10-19T08:13:39.254Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T08:13:39.254Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T08:13:41.151Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-regression-local-20261019-081321/lab/core/target/core-0.1.0-SNAPSHOT.jar
+[2026-10-19T08:13:41.151Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T08:13:41.151Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-regression-local-20261019-081321/lab/api/target/api-0.1.0-SNAPSHOT.jar
+[2026-10-19T08:13:41.151Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T08:13:41.407Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-regression-local-20261019-081321/lab/flaky-lab/target/flaky-lab-0.1.0-SNAPSHOT.jar
+[2026-10-19T08:13:41.407Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T08:13:43.607Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T08:13:43.607Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T08:13:45.564Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T08:13:46.641Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T08:13:47.460Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T08:13:50.129Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T08:13:50.129Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T08:13:50.908Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T08:13:51.729Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T08:13:52.656Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T08:13:53.179Z] + buildlens report --repo nibinrj/buildlens-lab --result SUCCESS --started-at 1792397616489 --stages .buildlens/stages.json --log-tail .buildlens/log-tail.txt --commit e2d90246d6b3d055db9ad1165e2bf9ab95617871 --tree d558d96784c67b28b69975b58c21e81a4dcb21f3 --agent-busy-ms 16044 --strict --reports **/target/surefire-reports/TEST-*.xml --quarantine-reports **/target/surefire-reports-quarantine/TEST-*.xml
+[2026-10-19T08:13:53.179Z] buildlens report: uploaded buildlens-regression-local-20261019-081321 #1 with 7 report file(s): {"id":105,"created":true,"tests":14,"stages":4}
+Finished: SUCCESS
+## console-50.txt
+[2026-10-19T08:33:33.504Z] + cp -R /tmp/buildlens-regression-snapshot/. .
+[2026-10-19T08:33:33.770Z] Uncommitted regression snapshot: 3ca3625d8a651660a204feec964e8662b48c673f897e10b25c6e119de7ea449b
+[2026-10-19T08:33:35.318Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T08:33:35.318Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T08:33:38.773Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-regression-local-20261019-081321/lab/core/target/core-0.1.0-SNAPSHOT.jar
+[2026-10-19T08:33:38.773Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T08:33:39.028Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-regression-local-20261019-081321/lab/api/target/api-0.1.0-SNAPSHOT.jar
+[2026-10-19T08:33:39.028Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T08:33:39.283Z] [INFO] Building jar: /home/jenkins/agent/workspace/buildlens-regression-local-20261019-081321/lab/flaky-lab/target/flaky-lab-0.1.0-SNAPSHOT.jar
+[2026-10-19T08:33:39.283Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T08:33:41.267Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T08:33:41.267Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T08:33:42.963Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T08:33:44.036Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T08:33:44.595Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T08:33:46.180Z] [INFO] Building buildlens-lab 0.1.0-SNAPSHOT                              [1/4]
+[2026-10-19T08:33:46.180Z] [INFO] Building core (stable tests) 0.1.0-SNAPSHOT                        [2/4]
+[2026-10-19T08:33:46.692Z] [INFO] Building api (price service and injected controlled duration test) 0.1.0-SNAPSHOT [3/4]
+[2026-10-19T08:33:47.510Z] [INFO] Building flaky-lab (injected flakiness, from P3) 0.1.0-SNAPSHOT    [4/4]
+[2026-10-19T08:33:48.330Z] [INFO] Reactor Summary for buildlens-lab 0.1.0-SNAPSHOT:
+[2026-10-19T08:33:48.816Z] + buildlens report --repo nibinrj/buildlens-lab --result SUCCESS --started-at 1792398813072 --stages .buildlens/stages.json --log-tail .buildlens/log-tail.txt --commit e2d90246d6b3d055db9ad1165e2bf9ab95617871 --tree d558d96784c67b28b69975b58c21e81a4dcb21f3 --agent-busy-ms 15325 --strict --reports **/target/surefire-reports/TEST-*.xml --quarantine-reports **/target/surefire-reports-quarantine/TEST-*.xml
+[2026-10-19T08:33:48.816Z] buildlens report: uploaded buildlens-regression-local-20261019-081321 #50 with 7 report file(s): {"id":154,"created":true,"tests":14,"stages":4}
+Finished: SUCCESS

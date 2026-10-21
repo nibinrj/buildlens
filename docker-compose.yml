@@ -73,9 +73,12 @@ services:
       GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
       GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: "false"
       GF_USERS_ALLOW_SIGN_UP: "false"
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD:-}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
     volumes:
       - grafana-data:/var/lib/grafana
-      # Datasource and dashboard provisioning arrive in P5 (grafana/provisioning, grafana/dashboards).
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
     ports:
       - "127.0.0.1:${GRAFANA_HOST_PORT:-3001}:3000"
     mem_limit: 384m
@@ -121,6 +124,8 @@ services:
       context: .
       dockerfile: jenkins/agent/Dockerfile
     image: buildlens-jenkins-agent:local
+    # Trusted local jobs only. The socket is host-equivalent access; never expose fork discovery.
+    group_add: ["0"]
     environment:
       JENKINS_URL: http://jenkins:8080
       JENKINS_AGENT_NAME: agent-1
@@ -136,6 +141,7 @@ services:
       - agent-secret:/buildlens-agent:ro
       - agent-work:/home/jenkins/agent
       - maven-repo:/home/jenkins/.m2
+      - /var/run/docker.sock:/var/run/docker.sock
     mem_limit: 1536m
     depends_on:
       jenkins:

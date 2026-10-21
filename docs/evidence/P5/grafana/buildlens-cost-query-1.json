@@ -1,0 +1,38 @@
+{
+  "results": {
+    "A": {
+      "status": 200,
+      "frames": [
+        {
+          "schema": {
+            "refId": "A",
+            "meta": {
+              "typeVersion": [
+                0,
+                0
+              ],
+              "executedQueryString": "SELECT sum(b.cost_usd)::double precision AS \"Equivalent reference USD\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nWHERE r.name='nibinrj/buildlens-lab' AND b.agent_lifecycle='LOCAL' AND b.started_at BETWEEN '2026-09-19T08:35:14.271Z' AND '2026-10-19T08:35:14.275Z';"
+            },
+            "fields": [
+              {
+                "name": "Equivalent reference USD",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ]
+          },
+          "data": {
+            "values": [
+              [
+                0.011716
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

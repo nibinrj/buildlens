@@ -1,0 +1,26 @@
+[
+  {
+    "sha256": "93d192ad71dacb0ba0febd0c4f93f62773c61f198faca62020311e94459cf77d",
+    "path": "tools/drive-builds.ps1"
+  },
+  {
+    "sha256": "f9652893152b150b1f8fb06e3a42a95b205346912536a62f2baf1f2310965f37",
+    "path": "tools/jenkins-driver.ps1"
+  },
+  {
+    "sha256": "7ced913b50d068cb3caeb75313b6c28ba5693f4c8946a271b9283151d20d07bf",
+    "path": "tools/measure-memory.ps1"
+  },
+  {
+    "sha256": "b1a68f8d1faad8e7a22f872ab6635425affb64b2de8947a13c7fccd470eed9f9",
+    "path": "tools/results.sql"
+  },
+  {
+    "sha256": "dc85d76d713bb69dbb22b66532c2ed111e8b69125ff8f8101b6ee45ed073599e",
+    "path": "tools/export-results.ps1"
+  },
+  {
+    "sha256": "c7854ea2137bb9ee218b45033a428cc040b522b512146eeaaf6a96d192b05d0b",
+    "path": "tasks.ps1"
+  }
+]

@@ -1,0 +1,355 @@
+{
+  "meta": {
+    "type": "db",
+    "canSave": true,
+    "canEdit": true,
+    "canAdmin": true,
+    "canStar": true,
+    "canDelete": true,
+    "slug": "buildlens-duration-regressions",
+    "url": "/d/buildlens-regressions/buildlens-duration-regressions",
+    "expires": "0001-01-01T00:00:00Z",
+    "created": "2026-10-19T07:35:42Z",
+    "updated": "2026-10-19T07:58:54Z",
+    "updatedBy": "Anonymous",
+    "createdBy": "Anonymous",
+    "version": 2,
+    "hasAcl": false,
+    "isFolder": false,
+    "apiVersion": "v0alpha1",
+    "folderId": 4400639164637184,
+    "folderUid": "eg1ofqnrybc3kf",
+    "folderTitle": "BuildLens",
+    "folderUrl": "/dashboards/f/eg1ofqnrybc3kf/buildlens",
+    "provisioned": true,
+    "provisionedExternalId": "regressions.json",
+    "annotationsPermissions": {
+      "dashboard": {
+        "canAdd": true,
+        "canEdit": true,
+        "canDelete": true
+      }
+    }
+  },
+  "dashboard": {
+    "annotations": {
+      "list": []
+    },
+    "description": "Actual durations against stored baselines and thresholds.",
+    "editable": false,
+    "id": 4400639364530176,
+    "links": [
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Flaky",
+        "type": "link",
+        "url": "/d/buildlens-flaky"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Regressions",
+        "type": "link",
+        "url": "/d/buildlens-regressions"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Cost",
+        "type": "link",
+        "url": "/d/buildlens-cost"
+      },
+      {
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Health",
+        "type": "link",
+        "url": "/d/buildlens-health"
+      }
+    ],
+    "panels": [
+      {
+        "gridPos": {
+          "h": 4,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "content": "**Stored baseline evidence.** Select a stage. Gaps mean missing metrics or insufficient data. Snapshot copy and GitHub checkout measure different operations and can alert. Controlled slow tests are injected.",
+          "mode": "markdown"
+        },
+        "title": "Reading this dashboard",
+        "type": "text"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 6,
+          "x": 0,
+          "y": 4
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "auto",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT count(*) AS \"Regression alert rows\"\nFROM alert a JOIN repository r ON r.id=a.repository_id\nWHERE r.name=${repository:sqlstring} AND a.type='REGRESSION' AND $__timeFilter(a.created_at);",
+            "refId": "A"
+          }
+        ],
+        "title": "Regression alert rows",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "fillOpacity": 8,
+              "lineWidth": 2,
+              "showPoints": "auto",
+              "spanNulls": false
+            },
+            "unit": "ms"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Measured ms"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  }
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Baseline median"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "green",
+                    "mode": "fixed"
+                  }
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Threshold"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "red",
+                    "mode": "fixed"
+                  }
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 18,
+          "x": 6,
+          "y": 4
+        },
+        "id": 3,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "time_series",
+            "rawQuery": true,
+            "rawSql": "SELECT b.started_at AS time,\n       (e->>'current_ms')::double precision AS \"Measured ms\",\n       CASE WHEN e->>'status'<>'INSUFFICIENT_DATA' THEN (e->>'median_ms')::double precision END AS \"Baseline median\",\n       CASE WHEN e->>'status'<>'INSUFFICIENT_DATA' THEN (e->>'threshold_ms')::double precision END AS \"Threshold\"\nFROM build b JOIN repository r ON r.id=b.repository_id\nCROSS JOIN LATERAL jsonb_array_elements(COALESCE(b.analysis->'regressions','[]'::jsonb)) e\nWHERE r.name=${repository:sqlstring} AND $__timeFilter(b.started_at)\n  AND e->>'kind'='STAGE' AND e->>'name'=${stage:sqlstring}\nORDER BY b.started_at,b.id;",
+            "refId": "A"
+          }
+        ],
+        "title": "Selected stage / measured, median, threshold",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "buildlens-postgres"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 13
+        },
+        "id": 4,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "buildlens-postgres"
+            },
+            "editorMode": "code",
+            "format": "table",
+            "rawQuery": true,
+            "rawSql": "SELECT b.started_at AS \"Build time\",b.job_name AS \"Job\",b.build_number AS \"Build\",\n       a.payload->>'kind' AS \"Kind\",a.payload->>'name' AS \"Metric\",\n       (a.payload->>'current_ms')::bigint AS \"Latest ms\",\n       (a.payload->>'threshold_ms')::double precision AS \"Threshold ms\",\n       (a.payload->>'samples')::integer AS \"Baseline samples\"\nFROM alert a JOIN build b ON b.id=a.build_id JOIN repository r ON r.id=a.repository_id\nWHERE r.name=${repository:sqlstring} AND a.type='REGRESSION' AND $__timeFilter(b.started_at)\nORDER BY b.started_at DESC,a.id DESC LIMIT 100;",
+            "refId": "A"
+          }
+        ],
+        "title": "Latest regression evidence",
+        "type": "table"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 39,
+    "tags": [
+      "buildlens",
+      "local-demo"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": "nibinrj/buildlens-lab",
+            "value": "nibinrj/buildlens-lab"
+          },
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "buildlens-postgres"
+          },
+          "includeAll": false,
+          "label": "Repository",
+          "multi": false,
+          "name": "repository",
+          "options": [],
+          "query": "SELECT name AS __text,name AS __value FROM repository ORDER BY name",
+          "refresh": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "text": "Test",
+            "value": "Test"
+          },
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "buildlens-postgres"
+          },
+          "includeAll": false,
+          "label": "Stage",
+          "multi": false,
+          "name": "stage",
+          "options": [],
+          "query": "SELECT DISTINCT s.name AS __text,s.name AS __value FROM stage_run s JOIN build b ON b.id=s.build_id JOIN repository r ON r.id=b.repository_id WHERE r.name=${repository:sqlstring} ORDER BY 1",
+          "refresh": 1,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-30d",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "utc",
+    "title": "BuildLens / Duration regressions",
+    "uid": "buildlens-regressions",
+    "version": 2
+  }
+}
